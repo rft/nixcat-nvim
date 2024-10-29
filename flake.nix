@@ -147,6 +147,10 @@
           #     lua
           #   ]
           # ))
+          molten-nvim
+          hardtime-nvim
+          vim-fugitive
+          oil-nvim
         ];
         kickstart-debug = [
           nvim-dap
