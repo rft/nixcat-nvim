@@ -152,6 +152,7 @@
           vim-fugitive
           oil-nvim
           undotree
+          molokai
         ];
         kickstart-debug = [
           nvim-dap
