@@ -151,6 +151,7 @@
           hardtime-nvim
           vim-fugitive
           oil-nvim
+          undotree
         ];
         kickstart-debug = [
           nvim-dap

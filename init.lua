@@ -206,6 +206,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- plugin things
+vim.keymap.set('n', '<leader><F5>', vim.cmd.UndotreeToggle)
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -902,6 +905,7 @@ require('nixCatsUtils.lazyCat').setup(pluginList, nixLazyPath,
       }
     end,
   },
+  { 'mbbill/undotree', },
 
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
@@ -999,6 +1003,16 @@ require('nixCatsUtils.lazyCat').setup(pluginList, nixLazyPath,
    "m4xshen/hardtime.nvim",
    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
    opts = {}
+  },
+
+  {
+  'stevearc/oil.nvim',
+  ---@module 'oil'
+  ---@type oil.SetupOpts
+  opts = {},
+  -- Optional dependencies
+  dependencies = { { "echasnovski/mini.icons", opts = {} } },
+  -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
