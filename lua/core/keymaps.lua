@@ -21,12 +21,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
 -- Window management keybinds (Windows-style with SPC prefix)
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<leader>w/', '<C-w>v', { desc = 'Split window vertically' })
@@ -37,6 +31,10 @@ vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Move to right window' })
 vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Move to left window' })
 vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Move to lower window' })
 vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Move to upper window' })
+vim.keymap.set('n', '<leader>wL', '<C-w>L', { desc = 'Move window to right' })
+vim.keymap.set('n', '<leader>wH', '<C-w>H', { desc = 'Move window to left' })
+vim.keymap.set('n', '<leader>wJ', '<C-w>J', { desc = 'Move window to lower' })
+vim.keymap.set('n', '<leader>wK', '<C-w>K', { desc = 'Move window to upper' })
 
 
 -- delete single character without copying into register
