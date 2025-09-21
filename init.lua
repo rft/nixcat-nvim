@@ -105,9 +105,6 @@ require 'core.options'
 -- because nix is more likely to know if we have a nerd font or not.
 vim.g.have_nerd_font = nixCats 'have_nerd_font'
 
-
-
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -894,7 +891,6 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  { import = 'custom.plugins' },
   { import = 'plugins' },
 }, lazyOptions)
 
