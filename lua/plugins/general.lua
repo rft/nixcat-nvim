@@ -193,6 +193,66 @@ return {
     },
   },
   
+  -- No Neck Pain - Center buffer for focused writing
+  {
+    "shortcuts/no-neck-pain.nvim",
+    keys = {
+      { "<leader>tn", "<cmd>NoNeckPain<cr>", desc = "[T]oggle [n]eck saver (center mode)" },
+      { "<leader>tc", "<cmd>NoNeckPain<cr>", desc = "[T]oggle [c]enter mode" },
+      { "<leader>t+", function() 
+        require("no-neck-pain").resize(vim.api.nvim_win_get_width(0) + 5) 
+      end, desc = "[T]oggle width [+] (increase)" },
+      { "<leader>t-", function() 
+        require("no-neck-pain").resize(vim.api.nvim_win_get_width(0) - 5) 
+      end, desc = "[T]oggle width [-] (decrease)" },
+    },
+    config = function()
+      require("no-neck-pain").setup({
+        -- Width of the centered buffer
+        width = 100,
+        -- Buffer options
+        buffers = {
+          enabled = true,
+          left = { enabled = true },
+          right = { enabled = true },
+          colors = {
+            background = "#1a1b26", -- Dark background color
+            blend = -0.2,
+          },
+          bo = {
+            filetype = "no-neck-pain",
+            buftype = "nofile",
+            bufhidden = "hide",
+            buflisted = false,
+            swapfile = false,
+          },
+          wo = {
+            cursorline = false,
+            cursorcolumn = false,
+            colorcolumn = "0",
+            number = false,
+            relativenumber = false,
+            foldenable = false,
+            list = false,
+            wrap = false,
+            linebreak = false,
+          },
+        },
+        -- Integration with other plugins
+        integrations = {
+          NeoTree = {
+            position = "left",
+            reopen = true,
+          },
+          NvimDAPUI = {
+            position = "none",
+            reopen = true,
+          },
+        },
+      })
+    end,
+  },
+
   -- Save file keybind
   {
     "nvim-lua/plenary.nvim",
