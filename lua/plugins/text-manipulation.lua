@@ -22,6 +22,8 @@ return {
       { "<C-M-j>", "<Plug>(VM-Add-Cursor-Down)", desc = "Multicursor add line down" },
       { "<C-M-Up>", "<Plug>(VM-Add-Cursor-Up)", desc = "Multicursor add line up" },
       { "<C-M-Down>", "<Plug>(VM-Add-Cursor-Down)", desc = "Multicursor add line down" },
+      { "i", "<Plug>(VM-Visual-Cursors)", mode = "x", desc = "Add cursors to visual selection" },
+      { "I", "<Plug>(VM-Visual-Cursors)", mode = "x", desc = "Add cursors to visual selection" },
     },
   },
 }
