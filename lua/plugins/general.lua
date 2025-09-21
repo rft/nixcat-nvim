@@ -158,6 +158,14 @@ return {
     end,
   },
   
+  -- Open file (duplicate of search files)
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      { "<leader>of", "<cmd>Telescope find_files<cr>", desc = "[O]pen [f]ile" },
+    },
+  },
+  
   -- Save file keybind
   {
     "nvim-lua/plenary.nvim",
