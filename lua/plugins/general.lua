@@ -166,6 +166,24 @@ return {
     },
   },
   
+  -- Undotree
+  {
+    "mbbill/undotree",
+    keys = {
+      { "<leader>ou", "<cmd>UndotreeToggle<cr>", desc = "[O]pen [u]ndo tree" },
+    },
+    config = function()
+      -- Configure undotree
+      vim.g.undotree_WindowLayout = 2
+      vim.g.undotree_SplitWidth = 40
+      vim.g.undotree_SetFocusWhenToggle = 1
+      vim.g.undotree_ShortIndicators = 1
+      vim.g.undotree_DiffCommand = "diff"
+      vim.g.undotree_DiffpanelHeight = 10
+      vim.g.undotree_HelpLine = 0
+    end,
+  },
+  
   -- Save file keybind
   {
     "nvim-lua/plenary.nvim",
