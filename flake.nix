@@ -150,6 +150,9 @@
           no-neck-pain-nvim
           undotree
           vim-visual-multi
+          toggleterm-nvim
+          vim-move
+          trouble-nvim
         ];
         kickstart-debug = [
           nvim-dap

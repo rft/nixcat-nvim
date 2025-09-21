@@ -881,12 +881,13 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   -- NOTE: nixCats: instead of uncommenting them, you can enable them
   -- from the categories set in your packageDefinitions in your flake or other template!
   -- This is because within them, we used nixCats to check if it should be loaded!
-  require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
-  require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
-  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  -- NOTE: These plugins are now loaded automatically from lua/plugins/ directory
+  -- require 'plugins.debug',
+  -- require 'plugins.indent_line',
+  -- require 'plugins.lint',
+  -- require 'plugins.autopairs',
+  -- require 'plugins.neo-tree',
+  -- require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -894,6 +895,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
+  { import = 'plugins' },
 }, lazyOptions)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
