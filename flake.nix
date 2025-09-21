@@ -143,6 +143,13 @@
           #     lua
           #   ]
           # ))
+          flash-nvim
+          neogit
+          smart-open-nvim
+          oil-nvim
+          no-neck-pain-nvim
+          undotree
+          vim-visual-multi
         ];
         kickstart-debug = [
           nvim-dap
