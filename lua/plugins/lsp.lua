@@ -14,7 +14,6 @@ return {
       { "<leader>cc", "<cmd>make<cr>", desc = "Compile" },
       { "<leader>cd", vim.lsp.buf.definition, desc = "Jump to definition" },
       { "<leader>cD", vim.lsp.buf.references, desc = "See references" },
-      { "<leader>cf", vim.lsp.buf.format, desc = "Format region" },
       { "<leader>ck", vim.lsp.buf.hover, desc = "Jump to documentation" },
       { "<leader>cr", vim.lsp.buf.rename, desc = "Rename all references" },
       { "<leader>cs", function()

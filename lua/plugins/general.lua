@@ -184,6 +184,15 @@ return {
     end,
   },
   
+  -- Format commands
+  {
+    "neovim/nvim-lspconfig",
+    keys = {
+      { "<leader>ff", function() vim.lsp.buf.format() end, desc = "[F]ormat [f]ile" },
+      { "<leader>ff", function() vim.lsp.buf.format() end, mode = "v", desc = "[F]ormat region" },
+    },
+  },
+  
   -- Save file keybind
   {
     "nvim-lua/plenary.nvim",
