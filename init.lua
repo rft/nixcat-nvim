@@ -952,5 +952,40 @@ if ok then
   })
 end
 
+-- Precognition (managed by nix) - Show vim motions hints
+local ok_precognition, precognition = pcall(require, "precognition")
+if ok_precognition then
+  precognition.setup({
+    -- Make hints visible by default
+    startVisible = true,
+    showBlankVirtLine = true,
+    -- Show hints for these motions
+    hints = {
+      Caret = { text = "^", prio = 2 },
+      Dollar = { text = "$", prio = 1 },
+      MatchingParen = { text = "%", prio = 5 },
+      Zero = { text = "0", prio = 1 },
+      w = { text = "w", prio = 10 },
+      b = { text = "b", prio = 9 },
+      e = { text = "e", prio = 8 },
+      W = { text = "W", prio = 7 },
+      B = { text = "B", prio = 6 },
+      E = { text = "E", prio = 5 },
+    },
+    -- Highlight groups
+    gutterHints = {
+      G = { text = "G", prio = 10 },
+      gg = { text = "gg", prio = 9 },
+      PrevParagraph = { text = "{", prio = 8 },
+      NextParagraph = { text = "}", prio = 8 },
+    },
+  })
+
+  -- Add keybinding to toggle precognition
+  vim.keymap.set('n', '<leader>tp', function()
+    precognition.toggle()
+  end, { desc = '[T]oggle [p]recognition hints' })
+end
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
