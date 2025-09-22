@@ -253,6 +253,51 @@ return {
     end,
   },
 
+  -- Tiny Inline Diagnostics - Show diagnostics inline
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("tiny-inline-diagnostic").setup({
+        -- Show diagnostic text inline
+        signs = {
+          left = "",
+          right = "",
+          diag = "●",
+          arrow = "    ",
+          up_arrow = "    ",
+          vertical = " │",
+          vertical_end = " └"
+        },
+        hi = {
+          error = "DiagnosticError",
+          warn = "DiagnosticWarn", 
+          info = "DiagnosticInfo",
+          hint = "DiagnosticHint",
+          arrow = "NonText",
+          background = "CursorLine", -- Highlight group for background
+        },
+        blend = {
+          factor = 0.27,
+        },
+        options = {
+          -- Show the source of the diagnostic
+          show_source = false,
+          -- Throttle the update of the diagnostic
+          throttle = 20,
+          -- The minimum severity to show
+          softwrap = 15,
+          -- Use multiline messages
+          multilines = false,
+          -- Show all diagnostics on the line
+          show_all_diags_on_cursorline = false,
+          -- Enable diagnostic on insert mode
+          enable_on_insert = false,
+        }
+      })
+    end,
+  },
+
   -- Save file keybind
   {
     "nvim-lua/plenary.nvim",
