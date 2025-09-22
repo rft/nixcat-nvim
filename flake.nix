@@ -157,6 +157,8 @@
           tiny-inline-diagnostic-nvim
           precognition-nvim
           hardtime-nvim
+          neorg
+          neorg-telescope
         ];
         kickstart-debug = [
           nvim-dap
