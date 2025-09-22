@@ -103,13 +103,6 @@ home.packages = [ inputs.nano-nvim.packages.${system}.default ];
 - **`SPC e e`** - Show errors
 - **`SPC g g`** - Git interface (Neogit)
 
-### Unique Features
-- **Dual file browsers** - Traditional tree view and buffer-based editing
-- **Treesitter-aware jumping** - Navigate by code structure, not just text
-- **Comprehensive error handling** - Multiple ways to view and fix issues
-- **Movement learning** - Precognition shows efficient Vim motions
-- **Distraction-free writing** - Centered editing mode
-
 ## Configuration Structure
 
 ```
