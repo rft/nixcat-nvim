@@ -289,9 +289,9 @@ return {
           -- Use multiline messages
           multilines = false,
           -- Show all diagnostics on the line
-          show_all_diags_on_cursorline = false,
+          show_all_diags_on_cursorline = true,
           -- Enable diagnostic on insert mode
-          enable_on_insert = false,
+          enable_on_insert = true,
         }
       })
     end,
