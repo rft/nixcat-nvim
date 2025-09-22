@@ -1,56 +1,155 @@
-# This is the help for the nixCats lazy wrapper
+# Nano's Neovim Configuration
 
-Or well, most of the help for it. There is also help for it at [:h nixCats.luaUtils](https://nixcats.org/nixCats_luaUtils.html)
+A comprehensive Neovim configuration built with [nixCats](https://github.com/BirdeeHub/nixCats-nvim) and based on kickstart.nvim, featuring a fully configured development environment with modern plugins and intuitive keybinds.
 
-It is the entirety of [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) with very few changes, but uses nixCats to download everything
+## Features
 
-enter a new directory then run:
+### 🎯 **Core Features**
+- **Space-based keybinds** - Intuitive leader key mappings organized by category
+- **LSP integration** - Full language server support with diagnostics and code actions
+- **Treesitter** - Enhanced syntax highlighting and code understanding
+- **Telescope** - Fuzzy finding for files, buffers, and commands
+- **Git integration** - Neogit for comprehensive Git workflow
 
-`nix flake init -t github:BirdeeHub/nixCats-nvim#kickstart-nvim`
+### 🔧 **Enhanced Productivity**
+- **Multiple file browsers** - Neo-tree (sidebar) and Oil (buffer-based)
+- **Smart movement** - Flash.nvim for quick navigation with treesitter support
+- **Multi-cursor editing** - vim-visual-multi for efficient text manipulation
+- **Undo tree** - Visual undo history with undotree
+- **Inline diagnostics** - Real-time error display with tiny-inline-diagnostic
+- **Movement hints** - Precognition.nvim shows available motions
+- **Centered writing** - No-neck-pain for focused editing
 
-then to build, `nix build .`
+### 📋 **Key Categories**
+- **Files** (`SPC f`) - Save, format, tree, oil browser
+- **Buffers** (`SPC b`) - Buffer management and navigation
+- **Windows** (`SPC w`) - Window operations and layouts
+- **Code** (`SPC c`) - LSP operations, compilation, formatting
+- **Errors** (`SPC e`) - Error navigation and fixing
+- **Jump** (`SPC j`) - Advanced navigation with Flash and treesitter
+- **Git** (`SPC g`) - Git operations with Neogit
+- **Open** (`SPC o`) - Open terminal, files, undo tree
+- **Toggle** (`SPC t`) - Toggle various features and UI elements
 
-and the result will be found at `./result/bin/nvim`
+## Quick Start
 
-It also can work without any nix whatsoever.
-It has been adapted such that it works either way!
+### Try Without Installing
+You can try this configuration without committing to installing it:
 
-All notes about the lazy wrapper are in comments that begin with the string: `NOTE: nixCats:` so to find all of the info, search for that.
-
-One other note.
-
-If you install your grammars via `lazy.nvim` rather than `nix`, you will need to add a c compiler to your `lspsAndRuntimeDeps` section in your `categoryDefinitions`
-
-If you install your grammars via nix, the only methods supported via the `lazy.nvim` wrapper are the following.
-
-Summary: as long as `pkgs.neovimUtils.grammarToPlugin` is called on it somehow, it will work.
-
-Any other ways will still work in nixCats, but not when using the lazy wrapper, because the lazy wrapper has to add them back to the runtimepath.
-
-```nix
-pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-# or
-pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
-  nix
-  lua
-  # etc...
-]);
-# or
-pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: pkgs.vimPlugins.nvim-treesitter.allGrammars)
-# or
-builtins.attrValues pkgs.vimPlugins.nvim-treesitter.grammarPlugins
-# or
-pkgs.neovimUtils.grammarToPlugin pkgs.tree-sitter-grammars.somegrammar
+```bash
+nix run github:rft/nixcat-nvim
 ```
 
-### Disclaimer:
+### Install
 
-`lazy.nvim` technically works fine on with nix, HOWEVER it will block any other plugin manager, including nix, from installing anything on its own without also making a lazy.nvim plugin spec and making sure the names match.
+#### Nix Profile
+Install imperatively with:
 
-This is the reason for the lazy.nvim wrapper provided by the luaUtils optional template.
+```bash
+nix profile install github:rft/nixcat-nvim
+```
 
-It simply tells lazy about the location of things from nix, and sets a few compatibility options before calling the normal lazy setup function.
+#### Nix Flake Configuration
+Add to your `flake.nix` inputs:
 
-If you wish to download something from nix, the name lazy.nvim knows about and the name nix gave it must match. Otherwise, lazy.nvim will download it anyway.
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nano-nvim.url = "github:rft/nixcat-nvim";
+  };
+}
+```
 
-For how to address that, see the main init.lua of this template. and search for `NOTE: nixCats:`
+Then in your system or home-manager configuration:
+
+```nix
+# For system configuration
+environment.systemPackages = [ inputs.nano-nvim.packages.${system}.default ];
+
+# For home-manager
+home.packages = [ inputs.nano-nvim.packages.${system}.default ];
+```
+
+#### NixOS Configuration
+```nix
+# In your configuration.nix
+{ inputs, ... }: {
+  environment.systemPackages = [
+    inputs.nano-nvim.packages.${pkgs.system}.default
+  ];
+}
+```
+
+#### Home Manager
+```nix
+# In your home.nix
+{ inputs, ... }: {
+  home.packages = [
+    inputs.nano-nvim.packages.${pkgs.system}.default
+  ];
+}
+```
+
+## Key Highlights
+
+### Most Used Keybinds
+- **`SPC SPC`** - Command palette (most important!)
+- **`SPC f f`** - Format file/region
+- **`SPC f t`** - File tree (Neo-tree)
+- **`SPC f o`** - Oil file browser
+- **`SPC j t`** - Jump to treesitter nodes
+- **`SPC b b`** - Buffer search
+- **`SPC e e`** - Show errors
+- **`SPC g g`** - Git interface (Neogit)
+
+### Unique Features
+- **Dual file browsers** - Traditional tree view and buffer-based editing
+- **Treesitter-aware jumping** - Navigate by code structure, not just text
+- **Comprehensive error handling** - Multiple ways to view and fix issues
+- **Movement learning** - Precognition shows efficient Vim motions
+- **Distraction-free writing** - Centered editing mode
+
+## Configuration Structure
+
+```
+├── flake.nix              # Nix configuration and package definitions
+├── init.lua               # Main Neovim configuration entry point
+├── lua/
+│   ├── core/
+│   │   ├── keymaps.lua    # Core keybind definitions
+│   │   └── options.lua    # Neovim options and settings
+│   └── plugins/           # Plugin configurations
+│       ├── general.lua    # Core plugins (Oil, undotree, etc.)
+│       ├── buffers.lua    # Buffer management
+│       ├── errors.lua     # Error handling (Trouble)
+│       ├── git.lua        # Git integration (Neogit)
+│       ├── jump.lua       # Navigation (Flash + treesitter)
+│       ├── lsp.lua        # Language server configuration
+│       ├── search.lua     # Search functionality
+│       ├── terminal.lua   # Terminal integration
+│       └── text-manipulation.lua  # Text editing features
+```
+
+## Customization
+
+This configuration is built with nixCats, making it highly customizable:
+
+1. **Add plugins** - Add to `flake.nix` startupPlugins section
+2. **Modify keybinds** - Edit files in `lua/plugins/` or `lua/core/keymaps.lua`
+3. **Adjust settings** - Modify `lua/core/options.lua`
+4. **Configure categories** - Enable/disable feature sets in `flake.nix`
+
+## Dependencies
+
+All dependencies are managed by Nix:
+- **Language servers** - Lua, Nix, and development tools
+- **CLI tools** - ripgrep, fd, git
+- **Treesitter grammars** - All available grammars included
+- **Fonts** - Nerd font support for icons
+
+## Credits
+
+- Built on [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
+- Powered by [nixCats](https://github.com/BirdeeHub/nixCats-nvim)
+- Plugin ecosystem from the amazing Neovim community
