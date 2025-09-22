@@ -911,26 +911,26 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 
 -- Configure nix-managed plugins that are not handled by lazy
 -- Tiny Inline Diagnostics (managed by nix)
-local ok, tiny_inline_diagnostic = pcall(require, "tiny-inline-diagnostic")
+local ok, tiny_inline_diagnostic = pcall(require, 'tiny-inline-diagnostic')
 if ok then
-  tiny_inline_diagnostic.setup({
+  tiny_inline_diagnostic.setup {
     -- Show diagnostic text inline
     signs = {
-      left = "",
-      right = "",
-      diag = "●",
-      arrow = "    ",
-      up_arrow = "    ",
-      vertical = " │",
-      vertical_end = " └"
+      left = '',
+      right = '',
+      diag = '●',
+      arrow = '    ',
+      up_arrow = '    ',
+      vertical = ' │',
+      vertical_end = ' └',
     },
     hi = {
-      error = "DiagnosticError",
-      warn = "DiagnosticWarn",
-      info = "DiagnosticInfo",
-      hint = "DiagnosticHint",
-      arrow = "NonText",
-      background = "CursorLine", -- Highlight group for background
+      error = 'DiagnosticError',
+      warn = 'DiagnosticWarn',
+      info = 'DiagnosticInfo',
+      hint = 'DiagnosticHint',
+      arrow = 'NonText',
+      background = 'CursorLine', -- Highlight group for background
     },
     blend = {
       factor = 0.27,
@@ -948,43 +948,93 @@ if ok then
       show_all_diags_on_cursorline = true,
       -- Enable diagnostic on insert mode
       enable_on_insert = true,
-    }
-  })
+    },
+  }
 end
 
 -- Precognition (managed by nix) - Show vim motions hints
-local ok_precognition, precognition = pcall(require, "precognition")
+local ok_precognition, precognition = pcall(require, 'precognition')
 if ok_precognition then
-  precognition.setup({
+  precognition.setup {
     -- Make hints visible by default
     startVisible = true,
     showBlankVirtLine = true,
     -- Show hints for these motions
     hints = {
-      Caret = { text = "^", prio = 2 },
-      Dollar = { text = "$", prio = 1 },
-      MatchingParen = { text = "%", prio = 5 },
-      Zero = { text = "0", prio = 1 },
-      w = { text = "w", prio = 10 },
-      b = { text = "b", prio = 9 },
-      e = { text = "e", prio = 8 },
-      W = { text = "W", prio = 7 },
-      B = { text = "B", prio = 6 },
-      E = { text = "E", prio = 5 },
+      Caret = { text = '^', prio = 2 },
+      Dollar = { text = '$', prio = 0 }, -- Disabled by setting prio to 0
+      MatchingParen = { text = '%', prio = 5 },
+      Zero = { text = '0', prio = 0 }, -- Disabled by setting prio to 0
+      w = { text = 'w', prio = 10 },
+      b = { text = 'b', prio = 9 },
+      e = { text = 'e', prio = 8 },
+      W = { text = 'W', prio = 7 },
+      B = { text = 'B', prio = 6 },
+      E = { text = 'E', prio = 5 },
     },
     -- Highlight groups
     gutterHints = {
-      G = { text = "G", prio = 10 },
-      gg = { text = "gg", prio = 9 },
-      PrevParagraph = { text = "{", prio = 8 },
-      NextParagraph = { text = "}", prio = 8 },
+      G = { text = 'G', prio = 0 }, -- Disabled by setting prio to 0
+      gg = { text = 'gg', prio = 0 }, -- Disabled by setting prio to 0
+      PrevParagraph = { text = '{', prio = 8 },
+      NextParagraph = { text = '}', prio = 8 },
     },
-  })
+  }
 
   -- Add keybinding to toggle precognition
   vim.keymap.set('n', '<leader>tp', function()
     precognition.toggle()
   end, { desc = '[T]oggle [p]recognition hints' })
+end
+
+-- Hardtime (managed by nix) - Help break bad vim habits
+local ok_hardtime, hardtime = pcall(require, 'hardtime')
+if ok_hardtime then
+  hardtime.setup {
+    -- Enable by default
+    enabled = true,
+    -- Disable in certain filetypes
+    disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'oil' },
+    -- Maximum allowed repetitions
+    max_count = 3,
+    -- Time restriction in milliseconds
+    restriction_mode = 'block',
+    -- Restricted keys
+    restricted_keys = {
+      ['h'] = { 'n', 'x' },
+      ['j'] = { 'n', 'x' },
+      ['k'] = { 'n', 'x' },
+      ['l'] = { 'n', 'x' },
+      ['-'] = { 'n', 'x' },
+      ['+'] = { 'n', 'x' },
+      ['gj'] = { 'n', 'x' },
+      ['gk'] = { 'n', 'x' },
+      ['<CR>'] = { 'n', 'x' },
+      ['<C-M>'] = { 'n', 'x' },
+      ['<C-N>'] = { 'n', 'x' },
+      ['<C-P>'] = { 'n', 'x' },
+    },
+    -- Hints for better alternatives
+    hints = {
+      ['k^'] = {
+        message = function()
+          return 'Use - instead of k^'
+        end,
+        length = 2,
+      },
+      ['j$'] = {
+        message = function()
+          return 'Use + instead of j$'
+        end,
+        length = 2,
+      },
+    },
+  }
+
+  -- Add keybinding to toggle hardtime
+  vim.keymap.set('n', '<leader>th', function()
+    hardtime.toggle()
+  end, { desc = '[T]oggle [h]ardtime' })
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
