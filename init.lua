@@ -371,6 +371,16 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Enhanced project search with hidden files
+      vim.keymap.set('n', '<leader>sp', function()
+        builtin.live_grep {
+          additional_args = function() return {"--hidden", "--glob", "!.git/*"} end
+        }
+      end, { desc = '[S]earch [p]roject (enhanced fuzzy)' })
+
+      -- Standard project search (same as sg but semantic naming)
+      vim.keymap.set('n', '<leader>sP', builtin.live_grep, { desc = '[S]earch [P]roject (standard)' })
     end,
   },
 
