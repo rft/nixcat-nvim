@@ -253,10 +253,9 @@ return {
     end,
   },
 
-  -- Tiny Inline Diagnostics - Show diagnostics inline
+  -- Tiny Inline Diagnostics - Show diagnostics inline (managed by nix)
   {
-    "rachartier/tiny-inline-diagnostic.nvim",
-    event = "VeryLazy",
+    "tiny-inline-diagnostic.nvim",
     config = function()
       require("tiny-inline-diagnostic").setup({
         -- Show diagnostic text inline
@@ -297,6 +296,7 @@ return {
       })
     end,
   },
+
 
   -- Save file keybind
   {

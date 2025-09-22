@@ -153,6 +153,7 @@
           toggleterm-nvim
           vim-move
           trouble-nvim
+          hardtime-nvim
         ];
         kickstart-debug = [
           nvim-dap
