@@ -156,7 +156,6 @@
           hardtime-nvim
           tiny-inline-diagnostic-nvim
           precognition-nvim
-          hardtime-nvim
         ];
         kickstart-debug = [
           nvim-dap

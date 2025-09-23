@@ -337,6 +337,15 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+
+      -- Simple project picker using telescope
+      vim.keymap.set('n', '<leader>pp', function()
+        builtin.find_files({
+          prompt_title = "Find Projects",
+          cwd = "~/projects",
+          find_command = { "find", ".", "-type", "d", "-name", ".git", "-exec", "dirname", "{}", ";" },
+        })
+      end, { desc = '[P]roject [p]icker' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
