@@ -157,6 +157,7 @@
           tiny-inline-diagnostic-nvim
           precognition-nvim
           nvim-treesitter-context
+          rainbow-delimiters-nvim
         ];
         kickstart-debug = [
           nvim-dap
