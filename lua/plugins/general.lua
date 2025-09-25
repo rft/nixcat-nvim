@@ -158,14 +158,15 @@ return {
     end,
   },
   
-  -- Open file (duplicate of search files)
+  -- File search (primary keybinding)
   {
     "nvim-telescope/telescope.nvim",
     keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "[F]ind [f]iles" },
       { "<leader>of", "<cmd>Telescope find_files<cr>", desc = "[O]pen [f]ile" },
     },
   },
-  
+
   -- Undotree
   {
     "mbbill/undotree",
@@ -183,13 +184,13 @@ return {
       vim.g.undotree_HelpLine = 0
     end,
   },
-  
+
   -- Format commands
   {
     "neovim/nvim-lspconfig",
     keys = {
-      { "<leader>ff", function() vim.lsp.buf.format() end, desc = "[F]ormat [f]ile" },
-      { "<leader>ff", function() vim.lsp.buf.format() end, mode = "v", desc = "[F]ormat region" },
+      { "<leader>fm", function() vim.lsp.buf.format() end, desc = "[F]ormat [m]arkup/code" },
+      { "<leader>fm", function() vim.lsp.buf.format() end, mode = "v", desc = "[F]ormat region" },
     },
   },
   

@@ -101,6 +101,11 @@
           lua-language-server
           nixd
           stylua
+          python3Packages.python-lsp-server #TODO: Change to Astral ones later
+          rust-analyzer
+          clang-tools
+          haskell-language-server
+          gleam
         ];
         kickstart-debug = [
           delve

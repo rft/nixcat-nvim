@@ -580,18 +580,53 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       -- NOTE: nixCats: there is help in nixCats for lsps at `:h nixCats.LSPs` and also `:h nixCats.luaUtils`
       local servers = {}
-      -- servers.clangd = {},
-      -- servers.gopls = {},
-      -- servers.pyright = {},
-      -- servers.rust_analyzer = {},
-      -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-      --
-      -- Some languages (like typescript) have entire language plugins that can be useful:
-      --    https://github.com/pmizio/typescript-tools.nvim
-      --
-      -- But for many setups, the LSP (`tsserver`) will work just fine
-      -- servers.tsserver = {},
-      --
+
+      -- Python LSP
+      servers.pylsp = {
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = { enabled = true },
+              pyflakes = { enabled = true },
+              autopep8 = { enabled = true },
+              yapf = { enabled = false },
+            },
+          },
+        },
+      }
+
+      -- Rust LSP
+      servers.rust_analyzer = {
+        settings = {
+          ['rust-analyzer'] = {
+            cargo = {
+              allFeatures = true,
+            },
+            procMacro = {
+              enable = true,
+            },
+          },
+        },
+      }
+
+      -- C/C++ LSP
+      servers.clangd = {
+        cmd = { 'clangd', '--background-index', '--clang-tidy', '--header-insertion=iwyu' },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+      }
+
+      -- Haskell LSP
+      servers.hls = {
+        filetypes = { 'haskell', 'lhaskell' },
+        settings = {
+          haskell = {
+            formattingProvider = 'ormolu',
+          },
+        },
+      }
+
+      -- Gleam LSP
+      servers.gleam = {}
 
       -- NOTE: nixCats: nixd is not available on mason.
       -- Feel free to check the nixd docs for more configuration options:
