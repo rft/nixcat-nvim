@@ -158,6 +158,7 @@
           precognition-nvim
           nvim-treesitter-context
           rainbow-delimiters-nvim
+          markview-nvim
         ];
         kickstart-debug = [
           nvim-dap
