@@ -159,6 +159,7 @@
           nvim-treesitter-context
           rainbow-delimiters-nvim
           markview-nvim
+          harpoon2
         ];
         kickstart-debug = [
           nvim-dap
