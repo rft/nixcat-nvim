@@ -1055,6 +1055,20 @@ if ok_hardtime then
     max_count = 3,
     -- Time restriction in milliseconds
     restriction_mode = 'block',
+    -- Allow mouse actions
+    allow_different_key = true,
+    disabled_keys = {
+      ['<Up>'] = {},
+      ['<Down>'] = {},
+      ['<Left>'] = {},
+      ['<Right>'] = {},
+      ['<ScrollWheelUp>'] = {},
+      ['<ScrollWheelDown>'] = {},
+      ['<C-ScrollWheelUp>'] = {},
+      ['<C-ScrollWheelDown>'] = {},
+      ['<S-ScrollWheelUp>'] = {},
+      ['<S-ScrollWheelDown>'] = {},
+    },
     -- Restricted keys
     restricted_keys = {
       ['h'] = { 'n', 'x' },
