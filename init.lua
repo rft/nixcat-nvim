@@ -854,6 +854,10 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
     'navarasu/onedark.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      -- Configure onedark.nvim with warmer style
+      require('onedark').setup({
+        style = 'warmer'
+      })
       -- Load the colorscheme here. Some colorscheme plugins may offer multiple colorscheme choices or options.
       vim.cmd.colorscheme 'onedark'
 
