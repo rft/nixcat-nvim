@@ -1,21 +1,53 @@
 return {
   -- Jump operations
   {
-    "folke/flash.nvim",
+    'folke/flash.nvim',
     keys = {
-      { "<leader>jw", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Jump to word" },
-      { "<leader>jt", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Jump to treesitter node" },
-      { "<leader>jr", mode = "o", function() require("flash").remote() end, desc = "Remote flash" },
-      { "<leader>jR", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter search" },
-      { "<leader>jl", "<cmd>lua vim.ui.input({ prompt = 'Go to line: ' }, function(input) if input then vim.cmd('normal! ' .. input .. 'G') end end)<cr>", desc = "Jump to line" },
+      {
+        '<leader>jw',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').jump()
+        end,
+        desc = 'Jump to word',
+      },
+      {
+        '<leader>jt',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').treesitter()
+        end,
+        desc = 'Jump to treesitter node',
+      },
+      {
+        '<leader>jr',
+        mode = 'o',
+        function()
+          require('flash').remote()
+        end,
+        desc = 'Remote flash',
+      },
+      {
+        '<leader>jR',
+        mode = { 'o', 'x' },
+        function()
+          require('flash').treesitter_search()
+        end,
+        desc = 'Treesitter search',
+      },
+      {
+        '<leader>jl',
+        "<cmd>lua vim.ui.input({ prompt = 'Go to line: ' }, function(input) if input then vim.cmd('normal! ' .. input .. 'G') end end)<cr>",
+        desc = 'Jump to line',
+      },
     },
     config = function()
-      require("flash").setup({
+      require('flash').setup {
         -- Labels to use for flash jumps
-        labels = "asdfghjklqwertyuiopzxcvbnm",
+        labels = 'asdfghjklqwertyuiopzxcvbnm',
         search = {
           -- Show search in command line
-          mode = "exact",
+          mode = 'exact',
           -- Maximum number of search results
           max_length = false,
         },
@@ -23,7 +55,7 @@ return {
           -- Save location in jumplist
           jumplist = true,
           -- Jump position
-          pos = "start",
+          pos = 'start',
           -- Clear highlight after jump
           history = false,
           register = false,
@@ -35,7 +67,7 @@ return {
           after = true,
           before = true,
           -- Label style
-          style = "overlay",
+          style = 'overlay',
         },
         highlight = {
           -- Highlight settings
@@ -53,26 +85,27 @@ return {
             jump_labels = true,
           },
           treesitter = {
-            labels = "abcdefghijklmnopqrstuvwxyz",
-            jump = { pos = "range" },
+            labels = 'abcdefghijklmnopqrstuvwxyz',
+            jump = { pos = 'range' },
             search = { incremental = false },
-            label = { before = true, after = true, style = "inline" },
+            label = { before = true, after = true, style = 'inline' },
             highlight = {
               backdrop = false,
               matches = false,
             },
           },
         },
-      })
+      }
     end,
   },
-  
+
   -- Jump to changes
   {
-    "nvim-lua/plenary.nvim",
+    'nvim-lua/plenary.nvim',
     keys = {
-      { "<leader>jc", "g;", desc = "Jump to previous change" },
-      { "<leader>jC", "g,", desc = "Jump to next change" },
+      { '<leader>jC', 'g;', desc = 'Jump to previous change' },
+      { '<leader>jc', 'g,', desc = 'Jump to next change' },
     },
   },
 }
+
