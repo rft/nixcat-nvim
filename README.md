@@ -1,6 +1,6 @@
 # Nano's Neovim Configuration
 
-A comprehensive Neovim configuration built with [nixCats](https://github.com/BirdeeHub/nixCats-nvim) and based on kickstart.nvim, featuring a fully configured development environment with modern plugins and intuitive keybinds.
+A not so finished Neovim configuration built with [nixCats](https://github.com/BirdeeHub/nixCats-nvim) and based on kickstart.nvim
 
 ## Features
 
@@ -10,16 +10,6 @@ A comprehensive Neovim configuration built with [nixCats](https://github.com/Bir
 - **Treesitter** - Enhanced syntax highlighting and code understanding
 - **Telescope** - Fuzzy finding for files, buffers, and commands
 - **Git integration** - Neogit for comprehensive Git workflow
-
-### 🔧 **Enhanced Productivity**
-- **Multiple file browsers** - Neo-tree (sidebar) and Oil (buffer-based)
-- **Smart movement** - Flash.nvim for quick navigation with treesitter support
-- **Multi-cursor editing** - vim-visual-multi for efficient text manipulation
-- **Undo tree** - Visual undo history with undotree
-- **Inline diagnostics** - Real-time error display with tiny-inline-diagnostic
-- **Movement hints** - Precognition.nvim shows available motions
-- **Centered writing** - No-neck-pain for focused editing
-
 ### 📋 **Key Categories**
 - **Files** (`SPC f`) - Save, format, tree, oil browser
 - **Buffers** (`SPC b`) - Buffer management and navigation
@@ -123,15 +113,6 @@ home.packages = [ inputs.nano-nvim.packages.${system}.default ];
 │       ├── terminal.lua   # Terminal integration
 │       └── text-manipulation.lua  # Text editing features
 ```
-
-## Customization
-
-This configuration is built with nixCats, making it highly customizable:
-
-1. **Add plugins** - Add to `flake.nix` startupPlugins section
-2. **Modify keybinds** - Edit files in `lua/plugins/` or `lua/core/keymaps.lua`
-3. **Adjust settings** - Modify `lua/core/options.lua`
-4. **Configure categories** - Enable/disable feature sets in `flake.nix`
 
 ## Dependencies
 
