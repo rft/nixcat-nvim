@@ -165,6 +165,7 @@
           rainbow-delimiters-nvim
           markview-nvim
           harpoon2
+          molokai
         ];
         kickstart-debug = [
           nvim-dap
