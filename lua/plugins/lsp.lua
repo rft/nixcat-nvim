@@ -2,6 +2,7 @@ return {
   -- LSP operations and code actions
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     keys = {
       { "<leader>;", function()
         require("Comment.api").toggle.linewise.current()
