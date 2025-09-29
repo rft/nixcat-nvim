@@ -39,3 +39,8 @@ vim.keymap.set('n', '<leader>wK', '<C-w>K', { desc = 'Move window to upper' })
 
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copying into register' })
+
+-- Recent files mapping
+vim.keymap.set('n', '<leader>fr', function()
+  require('telescope.builtin').oldfiles()
+end, { desc = '[F]ile [r]ecent' })
