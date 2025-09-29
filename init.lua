@@ -342,11 +342,11 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 
       -- Simple project picker using telescope
       vim.keymap.set('n', '<leader>pp', function()
-        builtin.find_files({
-          prompt_title = "Find Projects",
-          cwd = "~/projects",
-          find_command = { "find", ".", "-type", "d", "-name", ".git", "-exec", "dirname", "{}", ";" },
-        })
+        builtin.find_files {
+          prompt_title = 'Find Projects',
+          cwd = '~/projects',
+          find_command = { 'find', '.', '-type', 'd', '-name', '.git', '-exec', 'dirname', '{}', ';' },
+        }
       end, { desc = '[P]roject [p]icker' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
@@ -386,7 +386,9 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       -- Enhanced project search with hidden files
       vim.keymap.set('n', '<leader>sp', function()
         builtin.live_grep {
-          additional_args = function() return {"--hidden", "--glob", "!.git/*"} end
+          additional_args = function()
+            return { '--hidden', '--glob', '!.git/*' }
+          end,
         }
       end, { desc = '[S]earch [p]roject (enhanced fuzzy)' })
 
@@ -804,9 +806,8 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
           --  This will expand snippets if the LSP sent a snippet.
           ['<Tab>'] = cmp.mapping.confirm { select = true },
 
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
+          -- Accept the completion with Enter as well
+          ['<CR>'] = cmp.mapping.confirm { select = true },
           --['<C-y>'] = cmp.mapping.confirm { select = true },
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
@@ -855,9 +856,9 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Configure onedark.nvim with warmer style
-      require('onedark').setup({
-        style = 'warmer'
-      })
+      require('onedark').setup {
+        style = 'warmer',
+      }
       -- Load the colorscheme here. Some colorscheme plugins may offer multiple colorscheme choices or options.
       vim.cmd.colorscheme 'onedark'
 
