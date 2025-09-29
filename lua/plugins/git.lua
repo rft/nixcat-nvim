@@ -10,12 +10,47 @@ return {
     end,
   },
 
-  -- Git hunk operations
+  -- Gitsigns with comprehensive git operations
   {
-    "lewis6991/gitsigns.nvim",
+    'lewis6991/gitsigns.nvim',
+    enabled = require('nixCatsUtils').enableForCategory("kickstart-gitsigns"),
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
     keys = {
-      { "<leader>gr", function() require("gitsigns").reset_hunk() end, desc = "[G]it [r]evert hunk" },
-      { "<leader>gR", function() require("gitsigns").stage_hunk() end, desc = "[G]it [R]edo (stage) hunk" },
+      -- Navigation
+      { ']c', function()
+        if vim.wo.diff then
+          vim.cmd.normal { ']c', bang = true }
+        else
+          require('gitsigns').nav_hunk 'next'
+        end
+      end, desc = 'Jump to next git [c]hange' },
+      { '[c', function()
+        if vim.wo.diff then
+          vim.cmd.normal { '[c', bang = true }
+        else
+          require('gitsigns').nav_hunk 'prev'
+        end
+      end, desc = 'Jump to previous git [c]hange' },
+
+      -- Hunk operations following <leader>g pattern
+      { "<leader>gs", function() require("gitsigns").stage_hunk() end, desc = "[G]it [s]tage hunk" },
+      { "<leader>gr", function() require("gitsigns").reset_hunk() end, desc = "[G]it [r]eset hunk" },
+      { "<leader>gS", function() require("gitsigns").stage_buffer() end, desc = "[G]it [S]tage buffer" },
+      { "<leader>gu", function() require("gitsigns").undo_stage_hunk() end, desc = "[G]it [u]ndo stage hunk" },
+      { "<leader>gR", function() require("gitsigns").reset_buffer() end, desc = "[G]it [R]eset buffer" },
+      { "<leader>gp", function() require("gitsigns").preview_hunk() end, desc = "[G]it [p]review hunk" },
+      { "<leader>gb", function() require("gitsigns").blame_line() end, desc = "[G]it [b]lame line" },
+      { "<leader>gd", function() require("gitsigns").diffthis() end, desc = "[G]it [d]iff against index" },
+      { "<leader>gD", function() require("gitsigns").diffthis('@') end, desc = "[G]it [D]iff against last commit" },
+
+      -- Visual mode hunk operations
+      { "<leader>gs", function() require("gitsigns").stage_hunk { vim.fn.line '.', vim.fn.line 'v' } end, desc = "[G]it [s]tage hunk", mode = 'v' },
+      { "<leader>gr", function() require("gitsigns").reset_hunk { vim.fn.line '.', vim.fn.line 'v' } end, desc = "[G]it [r]eset hunk", mode = 'v' },
+
+      -- Toggles
+      { "<leader>gtb", function() require("gitsigns").toggle_current_line_blame() end, desc = "[G]it [t]oggle [b]lame line" },
+      { "<leader>gtd", function() require("gitsigns").toggle_deleted() end, desc = "[G]it [t]oggle [d]eleted" },
     },
   },
 }
