@@ -107,5 +107,30 @@ return {
       { '<leader>jc', 'g,', desc = 'Jump to next change' },
     },
   },
+
+  -- Enhanced f/F movement with unique indicators
+  {
+    'jinh0/eyeliner.nvim',
+    config = function()
+      require('eyeliner').setup {
+        highlight_on_key = true,
+        dim = true,
+        max_length = 9999,
+        disabled_filetypes = {
+          'neo-tree',
+          'toggleterm',
+          'help',
+          'oil',
+          'trouble',
+        },
+        disabled_buftypes = {
+          'nofile',
+          'terminal',
+          'quickfix',
+        },
+        default_keymaps = true,
+      }
+    end,
+  },
 }
 

@@ -165,6 +165,7 @@
           rainbow-delimiters-nvim
           markview-nvim
           harpoon2
+          eyeliner-nvim
         ];
         kickstart-debug = [
           nvim-dap
