@@ -340,14 +340,74 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
 
-      -- Simple project picker using telescope
+      -- Recent projects picker using telescope
       vim.keymap.set('n', '<leader>pp', function()
-        builtin.find_files {
-          prompt_title = 'Find Projects',
-          cwd = '~/projects',
-          find_command = { 'find', '.', '-type', 'd', '-name', '.git', '-exec', 'dirname', '{}', ';' },
-        }
-      end, { desc = '[P]roject [p]icker' })
+        local function get_recent_projects()
+          local recent_projects = {}
+
+          -- Get recent files and extract unique project directories
+          local oldfiles = vim.v.oldfiles or {}
+          local seen_projects = {}
+
+          for _, file in ipairs(oldfiles) do
+            if vim.fn.filereadable(file) == 1 then
+              -- Find the git root for this file
+              local dir = vim.fn.fnamemodify(file, ':h')
+              local cmd = {'git', '-C', dir, 'rev-parse', '--show-toplevel'}
+              local result = vim.fn.system(cmd)
+              local exit_code = vim.v.shell_error
+
+              if exit_code == 0 then
+                local git_root = vim.trim(result)
+                if git_root and git_root ~= '' and not seen_projects[git_root] then
+                  seen_projects[git_root] = true
+                  table.insert(recent_projects, git_root)
+
+                  -- Limit to 10 most recent projects
+                  if #recent_projects >= 10 then
+                    break
+                  end
+                end
+              end
+            end
+          end
+
+          return recent_projects
+        end
+
+        local recent_projects = get_recent_projects()
+
+        if #recent_projects == 0 then
+          vim.notify("No recent projects found", vim.log.levels.INFO)
+          return
+        end
+
+        require('telescope.pickers').new({}, {
+          prompt_title = 'Recent Projects',
+          finder = require('telescope.finders').new_table({
+            results = recent_projects,
+            entry_maker = function(entry)
+              return {
+                value = entry,
+                display = vim.fn.fnamemodify(entry, ':t') .. ' (' .. entry .. ')',
+                ordinal = entry,
+              }
+            end,
+          }),
+          sorter = require('telescope.config').values.generic_sorter({}),
+          attach_mappings = function(prompt_bufnr, map)
+            require('telescope.actions').select_default:replace(function()
+              require('telescope.actions').close(prompt_bufnr)
+              local selection = require('telescope.actions.state').get_selected_entry()
+              if selection then
+                vim.cmd('cd ' .. vim.fn.fnameescape(selection.value))
+                vim.notify("Changed to: " .. selection.value, vim.log.levels.INFO)
+              end
+            end)
+            return true
+          end,
+        }):find()
+      end, { desc = '[P]roject [p]icker (recent)' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
