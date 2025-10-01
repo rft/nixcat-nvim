@@ -191,6 +191,10 @@
           nvim-web-devicons
           plenary-nvim
         ];
+        neorg = [
+          neorg
+          neorg-telescope
+        ];
       };
 
       # not loaded automatically at startup.
@@ -286,6 +290,13 @@
           # so it doesnt have a category above.
           # but we can still send the info from nix to lua that we want it!
           kickstart-gitsigns = true;
+
+          neorg = {
+            defaultWorkspace = "notes";
+            workspaces = {
+              notes = "~/notes/neorg";
+            };
+          };
 
           # we can pass whatever we want actually.
           have_nerd_font = false;
