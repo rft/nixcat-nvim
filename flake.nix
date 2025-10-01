@@ -22,6 +22,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-2505.url = "github:nixos/nixpkgs/nixos-25.05";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
     # neovim-nightly-overlay = {
@@ -68,6 +69,25 @@
       # Once we add this overlay to our nixpkgs, we are able to
       # use `pkgs.neovimPlugins`, which is a set of our plugins.
       (utils.standardPluginOverlay inputs)
+      (final: prev: let
+        system = prev.stdenv.hostPlatform.system or prev.stdenv.buildPlatform.system;
+        stablePkgs = import inputs.nixpkgs-2505 {
+          inherit system;
+          config = extra_pkg_config;
+          overlays = [];
+        };
+        stableParsers = stablePkgs.vimPlugins.nvim-treesitter-parsers or {};
+        prevParsers = prev.vimPlugins.nvim-treesitter-parsers or {};
+        mergedParsers = prevParsers // (builtins.listToAttrs (
+          builtins.filter (attr: attr != null) [
+            (if stableParsers ? norg then { name = "norg"; value = stableParsers.norg; } else null)
+          ]
+        ));
+      in {
+        vimPlugins = prev.vimPlugins // {
+          nvim-treesitter-parsers = mergedParsers;
+        };
+      })
       # add any other flake overlays here.
 
       # when other people mess up their overlays by wrapping them with system,
@@ -141,6 +161,7 @@
           todo-comments-nvim
           mini-nvim
           nvim-treesitter.withAllGrammars
+          nvim-treesitter-parsers.norg
           # This is for if you only want some of the grammars
           # (nvim-treesitter.withPlugins (
           #   plugins: with plugins; [
