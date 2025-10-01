@@ -1068,7 +1068,12 @@ if ok then
       -- The minimum severity to show
       softwrap = 15,
       -- Use multiline messages
-      multilines = false,
+      multilines = {
+        enabled = true,
+        always_show = true,
+        trim_whitespaces = false,
+        tabstop = 4,
+      },
       -- Show all diagnostics on the line
       show_all_diags_on_cursorline = true,
       -- Enable diagnostic on insert mode
