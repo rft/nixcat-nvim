@@ -190,6 +190,7 @@
           harpoon2
           eyeliner-nvim
           snacks-nvim
+          nvim-hlslens
         ];
         kickstart-debug = [
           nvim-dap

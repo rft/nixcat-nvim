@@ -5,7 +5,13 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<Esc>', function()
+  local ok, hlslens = pcall(require, 'hlslens')
+  if ok then
+    hlslens.stop()
+  end
+  vim.cmd.nohlsearch()
+end, { desc = 'Clear search highlighting' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
