@@ -194,6 +194,7 @@
           nvim-ts-context-commentstring
           nvim-ts-autotag
           diffview-nvim
+          vim-matchup
         ];
         kickstart-debug = [
           nvim-dap
