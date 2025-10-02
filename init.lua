@@ -179,7 +179,11 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   -- Tree-sitter aware comments that keep the familiar "gc" mappings
   {
     'folke/ts-comments.nvim',
-    opts = {},
+    opts = {
+      ts_context_commentstring = {
+        enable = true,
+      },
+    },
     config = function(_, opts)
       require('ts-comments').setup(opts)
     end,

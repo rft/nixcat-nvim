@@ -191,6 +191,7 @@
           eyeliner-nvim
           snacks-nvim
           nvim-hlslens
+          nvim-ts-context-commentstring
         ];
         kickstart-debug = [
           nvim-dap
