@@ -161,6 +161,7 @@
           todo-comments-nvim
           mini-nvim
           nvim-treesitter.withAllGrammars
+          nvim-treesitter-textobjects
           nvim-treesitter-parsers.norg
           # This is for if you only want some of the grammars
           # (nvim-treesitter.withPlugins (

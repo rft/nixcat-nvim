@@ -357,7 +357,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
             if vim.fn.filereadable(file) == 1 then
               -- Find the git root for this file
               local dir = vim.fn.fnamemodify(file, ':h')
-              local cmd = {'git', '-C', dir, 'rev-parse', '--show-toplevel'}
+              local cmd = { 'git', '-C', dir, 'rev-parse', '--show-toplevel' }
               local result = vim.fn.system(cmd)
               local exit_code = vim.v.shell_error
 
@@ -382,35 +382,37 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
         local recent_projects = get_recent_projects()
 
         if #recent_projects == 0 then
-          vim.notify("No recent projects found", vim.log.levels.INFO)
+          vim.notify('No recent projects found', vim.log.levels.INFO)
           return
         end
 
-        require('telescope.pickers').new({}, {
-          prompt_title = 'Recent Projects',
-          finder = require('telescope.finders').new_table({
-            results = recent_projects,
-            entry_maker = function(entry)
-              return {
-                value = entry,
-                display = vim.fn.fnamemodify(entry, ':t') .. ' (' .. entry .. ')',
-                ordinal = entry,
-              }
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Recent Projects',
+            finder = require('telescope.finders').new_table {
+              results = recent_projects,
+              entry_maker = function(entry)
+                return {
+                  value = entry,
+                  display = vim.fn.fnamemodify(entry, ':t') .. ' (' .. entry .. ')',
+                  ordinal = entry,
+                }
+              end,
+            },
+            sorter = require('telescope.config').values.generic_sorter {},
+            attach_mappings = function(prompt_bufnr, map)
+              require('telescope.actions').select_default:replace(function()
+                require('telescope.actions').close(prompt_bufnr)
+                local selection = require('telescope.actions.state').get_selected_entry()
+                if selection then
+                  vim.cmd('cd ' .. vim.fn.fnameescape(selection.value))
+                  vim.notify('Changed to: ' .. selection.value, vim.log.levels.INFO)
+                end
+              end)
+              return true
             end,
-          }),
-          sorter = require('telescope.config').values.generic_sorter({}),
-          attach_mappings = function(prompt_bufnr, map)
-            require('telescope.actions').select_default:replace(function()
-              require('telescope.actions').close(prompt_bufnr)
-              local selection = require('telescope.actions.state').get_selected_entry()
-              if selection then
-                vim.cmd('cd ' .. vim.fn.fnameescape(selection.value))
-                vim.notify("Changed to: " .. selection.value, vim.log.levels.INFO)
-              end
-            end)
-            return true
-          end,
-        }):find()
+          })
+          :find()
       end, { desc = '[P]roject [p]icker (recent)' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
@@ -936,20 +938,53 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      -- Use Treesitter-powered textobjects with sensible fallbacks
+      local ai = require 'mini.ai'
+      ai.setup {
+        n_lines = 500,
+        custom_textobjects = {
+          o = ai.gen_spec.treesitter {
+            a = { '@block.outer', '@conditional.outer', '@loop.outer' },
+            i = { '@block.inner', '@conditional.inner', '@loop.inner' },
+          },
+          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
+          c = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' },
+          t = ai.gen_spec.treesitter { a = '@comment.outer', i = '@comment.inner' },
+        },
+      }
+
+      -- Gate autopairs behind the nixCats category so nix options still apply
+      if require('nixCatsUtils').enableForCategory 'kickstart-autopairs' then
+        local pairs = require 'mini.pairs'
+        pairs.setup {
+          modes = { insert = true, command = false, terminal = false },
+          mappings = {
+            ['"'] = { register = { cr = true } },
+            ["'"] = { register = { cr = true } },
+            ['`'] = { register = { cr = true } },
+          },
+        }
+
+        -- Disable autopairs where it tends to get in the way (prompts, tree UIs)
+        vim.api.nvim_create_autocmd('FileType', {
+          pattern = { 'TelescopePrompt', 'oil', 'neo-tree', 'spectre_panel', 'minifiles' },
+          callback = function()
+            vim.b.minipairs_disable = true
+          end,
+        })
+
+        -- Add tex-friendly dollar pairing when editing TeX buffers
+        vim.api.nvim_create_autocmd('FileType', {
+          pattern = { 'tex', 'latex', 'plaintex' },
+          callback = function()
+            require('mini.pairs').map_buf(0, 'i', '$', { action = 'closeopen', pair = '$$' })
+          end,
+        })
+      end
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
       -- Simple and easy statusline.
