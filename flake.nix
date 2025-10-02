@@ -192,6 +192,7 @@
           snacks-nvim
           nvim-hlslens
           nvim-ts-context-commentstring
+          nvim-ts-autotag
         ];
         kickstart-debug = [
           nvim-dap
