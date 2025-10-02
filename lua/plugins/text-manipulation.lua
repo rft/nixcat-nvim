@@ -27,6 +27,34 @@ return {
     },
   },
 
+  -- Word/boolean switcher
+  {
+    'AndrewRadev/switch.vim',
+    keys = {
+      { '<leader>cs', '<cmd>Switch<cr>', desc = '[C]ycle [s]witch word' },
+      { '<leader>cS', '<cmd>SwitchReverse<cr>', desc = '[C]ycle [S]witch reverse' },
+      { '<leader>cs', '<cmd>Switch<cr>', mode = 'v', desc = '[C]ycle [s]witch selection' },
+      { '<leader>cS', '<cmd>SwitchReverse<cr>', mode = 'v', desc = '[C]ycle [S]witch reverse selection' },
+    },
+    init = function()
+      vim.g.switch_custom_definitions = {
+        { 'true', 'false' },
+        { 'True', 'False' },
+        { 'TRUE', 'FALSE' },
+        { 'yes', 'no' },
+        { 'Yes', 'No' },
+        { 'on', 'off' },
+        { 'On', 'Off' },
+        { 'enable', 'disable' },
+        { 'Enable', 'Disable' },
+        { '&&', '||' },
+        { '==', '!=' },
+        { 'left', 'right' },
+        { 'up', 'down' },
+      }
+    end,
+  },
+
   -- Markdown and table alignment helpers
   {
     "dhruvasagar/vim-table-mode",
