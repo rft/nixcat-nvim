@@ -196,6 +196,7 @@
           diffview-nvim
           vim-matchup
           satellite-nvim
+          vim-slime
         ];
         kickstart-debug = [
           nvim-dap
