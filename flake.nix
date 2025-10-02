@@ -140,7 +140,7 @@
         general = [
           vim-sleuth
           lazy-nvim
-          comment-nvim
+          ts-comments-nvim
           gitsigns-nvim
           which-key-nvim
           telescope-nvim
@@ -188,6 +188,7 @@
           markview-nvim
           harpoon2
           eyeliner-nvim
+          snacks-nvim
         ];
         kickstart-debug = [
           nvim-dap

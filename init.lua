@@ -176,10 +176,14 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   --  This is equivalent to:
   --    require('Comment').setup({})
 
-  -- "gc" to comment visual regions/lines
-  -- NOTE: nixCats: nix downloads it with a different file name.
-  -- tell lazy about that.
-  { 'numToStr/Comment.nvim', name = 'comment.nvim', opts = {} },
+  -- Tree-sitter aware comments that keep the familiar "gc" mappings
+  {
+    'folke/ts-comments.nvim',
+    opts = {},
+    config = function(_, opts)
+      require('ts-comments').setup(opts)
+    end,
+  },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
