@@ -195,6 +195,7 @@
           nvim-ts-autotag
           diffview-nvim
           vim-matchup
+          satellite-nvim
         ];
         kickstart-debug = [
           nvim-dap
