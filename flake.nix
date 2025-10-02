@@ -193,6 +193,7 @@
           nvim-hlslens
           nvim-ts-context-commentstring
           nvim-ts-autotag
+          diffview-nvim
         ];
         kickstart-debug = [
           nvim-dap

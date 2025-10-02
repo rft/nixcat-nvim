@@ -6,7 +6,52 @@ return {
       { "<leader>gg", "<cmd>Neogit<cr>", desc = "Open magit/neogit" },
     },
     config = function()
-      require("neogit").setup({})
+      require("neogit").setup {
+        integrations = {
+          diffview = true,
+        },
+      }
+    end,
+  },
+
+  {
+    'sindrets/diffview.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    cmd = {
+      'DiffviewOpen',
+      'DiffviewClose',
+      'DiffviewFileHistory',
+      'DiffviewFocusFiles',
+      'DiffviewRefresh',
+      'DiffviewToggleFiles',
+    },
+    keys = {
+      { '<leader>gdo', '<cmd>DiffviewOpen<cr>', desc = '[G]it [D]iff [O]pen' },
+      { '<leader>gdc', '<cmd>DiffviewClose<cr>', desc = '[G]it [D]iff [C]lose' },
+      { '<leader>gdf', '<cmd>DiffviewFileHistory<cr>', desc = '[G]it [D]iff [F]ile history' },
+      { '<leader>gdt', '<cmd>DiffviewToggleFiles<cr>', desc = '[G]it [D]iff [T]oggle files panel' },
+    },
+    config = function()
+      require('diffview').setup {
+        enhanced_diff_hl = true,
+        view = {
+          default = {
+            layout = 'diff2_horizontal',
+          },
+        },
+        file_panel = {
+          listing_style = 'tree',
+          win_config = { width = 30 },
+        },
+        hooks = {
+          diff_buf_read = function()
+            vim.opt_local.wrap = false
+            vim.opt_local.list = false
+          end,
+        },
+      }
     end,
   },
 
