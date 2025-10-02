@@ -26,4 +26,18 @@ return {
       { "I", "<Plug>(VM-Visual-Cursors)", mode = "x", desc = "Add cursors to visual selection" },
     },
   },
+
+  -- Markdown and table alignment helpers
+  {
+    "dhruvasagar/vim-table-mode",
+    cmd = { "TableModeToggle", "TableModeEnable", "TableModeDisable", "TableModeRealign" },
+    keys = {
+      { "<leader>tt", "<cmd>TableModeToggle<cr>", desc = "[T]able [t]oggle" },
+      { "<leader>ta", "<cmd>TableModeRealign<cr>", desc = "[T]able re-[a]lign" },
+    },
+    init = function()
+      vim.g.table_mode_corner = "|"
+      vim.g.table_mode_disable_mappings = 1
+    end,
+  },
 }

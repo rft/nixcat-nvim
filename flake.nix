@@ -177,6 +177,7 @@
           no-neck-pain-nvim
           undotree
           vim-visual-multi
+          vim-table-mode
           toggleterm-nvim
           vim-move
           trouble-nvim
