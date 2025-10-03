@@ -187,7 +187,7 @@
           nvim-treesitter-context
           rainbow-delimiters-nvim
           markview-nvim
-          harpoon2
+          arrow-nvim
           eyeliner-nvim
           snacks-nvim
           nvim-hlslens
