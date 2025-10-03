@@ -198,6 +198,7 @@
           satellite-nvim
           vim-slime
           switch-vim
+          bufferline-nvim
         ];
         kickstart-debug = [
           nvim-dap

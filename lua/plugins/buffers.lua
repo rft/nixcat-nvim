@@ -29,7 +29,60 @@ return {
       { "<leader>bu", "<cmd>e #<cr>", desc = "Reopen last buffer" },
     },
   },
-  
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    version = "*",
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+    },
+    keys = {
+      { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
+      { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
+      { "<leader>bp", "<cmd>BufferLineTogglePin<cr>", desc = "Toggle buffer pin" },
+      { "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<cr>", desc = "Close unpinned buffers" },
+    },
+    opts = function()
+      local severity_labels = { error = "E:", warning = "W:", info = "I:", hint = "H:" }
+
+      return {
+        options = {
+          always_show_bufferline = false,
+          show_close_icon = false,
+          show_buffer_close_icons = false,
+          diagnostics = "nvim_lsp",
+          diagnostics_indicator = function(count, level)
+            local icon = severity_labels.hint
+            if level:match "error" then
+              icon = severity_labels.error
+            elseif level:match "warn" then
+              icon = severity_labels.warning
+            elseif level:match "info" then
+              icon = severity_labels.info
+            end
+            return icon .. count
+          end,
+          offsets = {
+            {
+              filetype = "neo-tree",
+              text = "File Explorer",
+              highlight = "Directory",
+              separator = true,
+            },
+          },
+          hover = {
+            enabled = true,
+            delay = 150,
+            reveal = { "close" },
+          },
+          separator_style = vim.g.have_nerd_font and "slant" or "thin",
+          indicator = vim.g.have_nerd_font and { style = "icon" } or { style = "underline" },
+          show_buffer_icons = vim.g.have_nerd_font,
+        },
+      }
+    end,
+  },
+
   -- Buffer movement between windows
   {
     "nvim-lua/plenary.nvim",
@@ -39,19 +92,16 @@ return {
         vim.cmd("wincmd l")
         vim.api.nvim_set_current_buf(buf)
       end, desc = "Move buffer to right window" },
-      
       { "<leader>bh", function()
         local buf = vim.api.nvim_get_current_buf()
         vim.cmd("wincmd h")
         vim.api.nvim_set_current_buf(buf)
       end, desc = "Move buffer to left window" },
-      
       { "<leader>bj", function()
         local buf = vim.api.nvim_get_current_buf()
         vim.cmd("wincmd j")
         vim.api.nvim_set_current_buf(buf)
       end, desc = "Move buffer to lower window" },
-      
       { "<leader>bk", function()
         local buf = vim.api.nvim_get_current_buf()
         vim.cmd("wincmd k")
