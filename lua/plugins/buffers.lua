@@ -56,6 +56,10 @@ return {
       { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
       { "<leader>bp", "<cmd>BufferLineTogglePin<cr>", desc = "Toggle buffer pin" },
       { "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<cr>", desc = "Close unpinned buffers" },
+      { "<leader>bn", function()
+        vim.cmd.enew()
+        vim.cmd.startinsert()
+      end, desc = "New buffer" },
     },
     opts = function()
       local severity_labels = { error = "E:", warning = "W:", info = "I:", hint = "H:" }
