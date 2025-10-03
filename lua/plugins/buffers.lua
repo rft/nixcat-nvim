@@ -8,11 +8,26 @@ return {
       { "<leader>,", "<cmd>Telescope buffers cwd_only=true<cr>", desc = "Open buffer search (workspace)" },
       { "<leader><S-,>", "<cmd>Telescope buffers<cr>", desc = "Open all buffer search" },
       { "<leader>bc", function()
-        local current = vim.api.nvim_get_current_buf()
-        local listed = vim.tbl_filter(function(buf)
-          return vim.api.nvim_buf_is_valid(buf)
-            and vim.bo[buf].buflisted
-            and vim.api.nvim_buf_is_loaded(buf)
+        local buf = vim.api.nvim_get_current_buf()
+        local force_delete = false
+
+        if vim.bo[buf].modified then
+          local choice = vim.fn.confirm('Save changes to this buffer?', '&Yes\n&No\n&Cancel', 1)
+          if choice == 1 then
+            if not pcall(vim.cmd.write) then
+              return
+            end
+          elseif choice == 2 then
+            force_delete = true
+          else
+            return
+          end
+        end
+
+        local listed = vim.tbl_filter(function(b)
+          return vim.api.nvim_buf_is_valid(b)
+            and vim.bo[b].buflisted
+            and vim.api.nvim_buf_is_loaded(b)
         end, vim.api.nvim_list_bufs())
 
         if #listed > 1 then
@@ -21,8 +36,8 @@ return {
           vim.cmd 'enew'
         end
 
-        if vim.api.nvim_buf_is_valid(current) then
-          vim.cmd('bdelete ' .. current)
+        if vim.api.nvim_buf_is_valid(buf) then
+          vim.api.nvim_buf_delete(buf, { force = force_delete })
         end
       end, desc = "Close buffer" },
       { "<leader>bs", "<cmd>enew<cr>", desc = "Scratch buffer" },
