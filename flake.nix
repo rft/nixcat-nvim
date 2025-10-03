@@ -199,6 +199,7 @@
           vim-slime
           switch-vim
           bufferline-nvim
+          grug-far-nvim
         ];
         kickstart-debug = [
           nvim-dap

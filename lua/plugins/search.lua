@@ -40,4 +40,43 @@ return {
       with_lens("g#", false, "Search partial word backward (lens)")
     end,
   },
+
+  {
+    'MagicDuck/grug-far.nvim',
+    cmd = { 'GrugFar', 'GrugFarWithSelection', 'GrugFarToggle' },
+    keys = function()
+      local function open_project()
+        require('grug-far').open()
+      end
+
+      local function open_with_word()
+        require('grug-far').open { prefills = { search = vim.fn.expand '<cword>' } }
+      end
+
+      local function open_with_selection()
+        local grug = require 'grug-far'
+        local prior = vim.fn.getreg 'v'
+        local prior_type = vim.fn.getregtype 'v'
+        vim.cmd [[noau normal! "vy]]
+        local selection = vim.fn.getreg 'v'
+        vim.fn.setreg('v', prior, prior_type)
+        selection = selection and selection:gsub('\n$', '') or ''
+        if selection == '' then
+          grug.open()
+        else
+          grug.open { prefills = { search = selection } }
+        end
+      end
+
+      return {
+        { '<leader>sR', open_project, desc = '[S]earch [R]eplace project (grug-far)' },
+        { '<leader>sW', open_with_word, desc = '[S]earch cursor [W]ord (grug-far)' },
+        { '<leader>sR', open_with_selection, mode = 'v', desc = '[S]earch visual selection (grug-far)' },
+      }
+    end,
+    opts = {},
+    config = function(_, opts)
+      require('grug-far').setup(opts)
+    end,
+  },
 }
