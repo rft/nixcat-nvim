@@ -203,6 +203,7 @@
           vim-characterize
           highlight-undo-nvim
           incline-nvim
+          lensline-nvim
         ];
         kickstart-debug = [
           nvim-dap
