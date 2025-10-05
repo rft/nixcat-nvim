@@ -74,4 +74,18 @@ return {
     'tpope/vim-characterize',
     event = 'VeryLazy',
   },
+
+  -- Highlight undo/redo regions for better context
+  {
+    'tzachar/highlight-undo.nvim',
+    event = 'VeryLazy',
+    config = function()
+      vim.api.nvim_set_hl(0, 'HighlightUndo', { link = 'DiffDelete' })
+      vim.api.nvim_set_hl(0, 'HighlightRedo', { link = 'DiffAdd' })
+
+      require('highlight-undo').setup {
+        duration = 250,
+      }
+    end,
+  },
 }

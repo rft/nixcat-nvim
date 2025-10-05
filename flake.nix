@@ -201,6 +201,7 @@
           bufferline-nvim
           grug-far-nvim
           vim-characterize
+          highlight-undo-nvim
         ];
         kickstart-debug = [
           nvim-dap
