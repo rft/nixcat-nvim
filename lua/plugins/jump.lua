@@ -229,7 +229,7 @@ return {
         max_length = 9999,
         disabled_filetypes = {
           'neo-tree',
-          'toggleterm',
+          'snacks_terminal',
           'help',
           'oil',
           'trouble',

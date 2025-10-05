@@ -29,7 +29,7 @@ return {
           filetypes = {
             'neo-tree',
             'oil',
-            'toggleterm',
+            'snacks_terminal',
             'dap-repl',
             'dapui_breakpoints',
             'dapui_scopes',

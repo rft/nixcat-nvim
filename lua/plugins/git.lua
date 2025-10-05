@@ -98,42 +98,4 @@ return {
       { "<leader>gtd", function() require("gitsigns").toggle_deleted() end, desc = "[G]it [t]oggle [d]eleted" },
     },
   },
-
-  {
-    'folke/snacks.nvim',
-    keys = {
-      {
-        '<leader>gB',
-        function()
-          require('snacks').gitbrowse()
-        end,
-        desc = '[G]it open in [B]rowser',
-        mode = { 'n', 'v' },
-      },
-      {
-        '<leader>gl',
-        function()
-          require('snacks').git.blame_line { count = vim.v.count > 0 and vim.v.count or nil }
-        end,
-        desc = '[G]it blame [L]ine history',
-      },
-    },
-    opts = {
-      gitbrowse = {
-        enabled = true,
-      },
-      git = {
-        enabled = true,
-      },
-      styles = {
-        blame_line = {
-          width = 0.7,
-          height = 0.7,
-        },
-      },
-    },
-    config = function(_, opts)
-      require('snacks').setup(opts)
-    end,
-  },
 }
