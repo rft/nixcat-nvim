@@ -1,9 +1,26 @@
+local split_term
+
+local function toggle_split_terminal()
+  local Terminal = require('toggleterm.terminal').Terminal
+  if not split_term then
+    split_term = Terminal:new {
+      id = 2,
+      direction = 'horizontal',
+      size = 15,
+      close_on_exit = true,
+      hidden = true,
+    }
+  end
+  split_term:toggle()
+end
+
 return {
   -- Terminal toggle
   {
     "akinsho/toggleterm.nvim",
     keys = {
       { "<leader>ot", "<cmd>ToggleTerm<cr>", desc = "Open terminal" },
+      { '<leader>os', toggle_split_terminal, desc = 'Open split terminal', mode = { 'n', 't' } },
     },
     config = function()
       require("toggleterm").setup({
