@@ -66,4 +66,27 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    local events = require('neo-tree.events')
+    local function to_path(path)
+      if type(path) == 'string' and path:match('^%w+://') then
+        return vim.uri_to_fname(path)
+      end
+      return path
+    end
+    local function on_move(data)
+      if not data then
+        return
+      end
+      local source = to_path(data.source or data.item and data.item.path)
+      local destination = to_path(data.destination or data.item and data.item.new_path)
+      if source and destination then
+        require('snacks').rename.on_rename_file(source, destination)
+      end
+    end
+    opts.event_handlers = opts.event_handlers or {}
+    table.insert(opts.event_handlers, { event = events.FILE_MOVED, handler = on_move })
+    table.insert(opts.event_handlers, { event = events.FILE_RENAMED, handler = on_move })
+    require('neo-tree').setup(opts)
+  end,
 }

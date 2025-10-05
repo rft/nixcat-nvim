@@ -155,6 +155,29 @@ return {
           },
         },
       })
+
+      local rename_group = vim.api.nvim_create_augroup('snacks_oil_rename', { clear = true })
+      vim.api.nvim_create_autocmd('User', {
+        group = rename_group,
+        pattern = 'OilActionsPost',
+        callback = function(event)
+          local data = event.data or {}
+          local actions = data.actions or {}
+          if actions.type == 'move' and actions.src_url and actions.dest_url then
+            local function to_path(url)
+              if type(url) == 'string' and url:match('^%w+://') then
+                return vim.uri_to_fname(url)
+              end
+              return url
+            end
+            local from = to_path(actions.src_url)
+            local dest = to_path(actions.dest_url)
+            if from and dest then
+              require('snacks').rename.on_rename_file(from, dest)
+            end
+          end
+        end,
+      })
     end,
   },
   
