@@ -200,6 +200,7 @@
           switch-vim
           bufferline-nvim
           grug-far-nvim
+          vim-characterize
         ];
         kickstart-debug = [
           nvim-dap

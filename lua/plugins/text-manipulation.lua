@@ -68,4 +68,10 @@ return {
       vim.g.table_mode_disable_mappings = 1
     end,
   },
+
+  -- Character describe (ga replacement)
+  {
+    'tpope/vim-characterize',
+    event = 'VeryLazy',
+  },
 }
