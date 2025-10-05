@@ -41,6 +41,47 @@ vim.keymap.set('n', '<leader>wL', '<C-w>L', { desc = 'Move window to right' })
 vim.keymap.set('n', '<leader>wH', '<C-w>H', { desc = 'Move window to left' })
 vim.keymap.set('n', '<leader>wJ', '<C-w>J', { desc = 'Move window to lower' })
 vim.keymap.set('n', '<leader>wK', '<C-w>K', { desc = 'Move window to upper' })
+vim.keymap.set('n', '<leader>wo', '<C-w>o', { desc = 'Keep only current window' })
+
+local zoom_state = {
+  win = nil,
+}
+
+local function zoom_equalize()
+  if zoom_state.win then
+    zoom_state.win = nil
+    if #vim.api.nvim_list_wins() > 1 then
+      pcall(vim.cmd, 'wincmd =')
+    end
+  end
+end
+
+local function toggle_window_focus()
+  local current = vim.api.nvim_get_current_win()
+  if zoom_state.win and vim.api.nvim_win_is_valid(zoom_state.win) then
+    if zoom_state.win == current then
+      zoom_equalize()
+      return
+    else
+      zoom_equalize()
+    end
+  end
+
+  zoom_state.win = current
+  vim.cmd('wincmd |')
+  vim.cmd('wincmd _')
+end
+
+vim.api.nvim_create_autocmd('WinClosed', {
+  desc = 'Equalize windows when closing a zoomed split',
+  callback = function(event)
+    if zoom_state.win and tonumber(event.match) == zoom_state.win then
+      zoom_equalize()
+    end
+  end,
+})
+
+vim.keymap.set('n', '<leader>wf', toggle_window_focus, { desc = 'Toggle focused window' })
 
 
 -- delete single character without copying into register

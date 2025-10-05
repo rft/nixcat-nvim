@@ -29,6 +29,30 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
 
+    local signs = {
+      Breakpoint = { text = '', texthl = 'DiagnosticError' },
+      BreakpointCondition = { text = '', texthl = 'DiagnosticWarn' },
+      BreakpointRejected = { text = '', texthl = 'DiagnosticError' },
+      Stopped = { text = '', texthl = 'DiagnosticOk', linehl = 'DiagnosticUnderlineInfo', numhl = 'DiagnosticOk' },
+      LogPoint = { text = '', texthl = 'DiagnosticInfo' },
+    }
+    for name, sign in pairs(signs) do
+      vim.fn.sign_define('Dap' .. name, sign)
+    end
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = { 'dap-repl', 'dapui_watches', 'dapui_console' },
+      callback = function(event)
+        vim.bo[event.buf].buflisted = false
+        vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+      end,
+    })
+
+    dap.defaults.fallback.external_terminal = {
+      command = vim.o.shell,
+      args = { '-c' },
+    }
+
     -- NOTE: nixCats: dont use mason on nix. We can already download stuff just fine.
     if not require('nixCatsUtils').isNixCats then
       require('mason-nvim-dap').setup {
@@ -58,6 +82,16 @@ return {
     vim.keymap.set('n', '<leader>dB', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = '[D]ebug: Set [B]reakpoint' })
+    vim.keymap.set('n', '<leader>dl', dap.run_last, { desc = '[D]ebug: Run Last' })
+    vim.keymap.set('n', '<leader>dr', dap.repl.toggle, { desc = '[D]ebug: Toggle REPL' })
+    vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[D]ebug: Continue' })
+    vim.keymap.set({ 'n', 'v' }, '<leader>de', function()
+      dapui.eval(nil, { enter = true })
+    end, { desc = '[D]ebug: Evaluate' })
+    vim.keymap.set('n', '<leader>dx', function()
+      dap.terminate()
+      dapui.close()
+    end, { desc = '[D]ebug: Terminate Session' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -67,6 +101,8 @@ return {
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
+        enabled = true,
+        element = 'repl',
         icons = {
           pause = '⏸',
           play = '▶',
@@ -79,10 +115,37 @@ return {
           disconnect = '⏏',
         },
       },
+      layouts = {
+        {
+          elements = {
+            { id = 'scopes', size = 0.35 },
+            { id = 'breakpoints', size = 0.2 },
+            { id = 'stacks', size = 0.2 },
+            { id = 'watches', size = 0.25 },
+          },
+          size = 40,
+          position = 'left',
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+            { id = 'console', size = 0.5 },
+          },
+          size = 0.25,
+          position = 'bottom',
+        },
+      },
+      floating = {
+        border = 'rounded',
+        mappings = {
+          close = { 'q', '<Esc>' },
+        },
+      },
     }
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = '[D]ebug: Toggle UI' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
