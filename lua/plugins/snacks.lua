@@ -29,6 +29,14 @@ local function git_blame_line_with_count()
   require('snacks').git.blame_line { count = count }
 end
 
+local function toggle_scratch()
+  require('snacks').scratch()
+end
+
+local function select_scratch()
+  require('snacks').scratch.select()
+end
+
 return {
   {
     'folke/snacks.nvim',
@@ -53,6 +61,16 @@ return {
         git_blame_line_with_count,
         desc = '[G]it blame [L]ine history',
       },
+      {
+        '<leader>ps',
+        toggle_scratch,
+        desc = '[P]ad [S]cratch toggle',
+      },
+      {
+        '<leader>pS',
+        select_scratch,
+        desc = '[P]ad pick [S]cratch',
+      },
     },
     opts = {
       gitbrowse = { enabled = true },
@@ -62,6 +80,17 @@ return {
         win = {
           style = 'terminal',
           position = 'float',
+        },
+      },
+      scratch = {
+        enabled = true,
+        filekey = {
+          cwd = true,
+          branch = true,
+          count = true,
+        },
+        win = {
+          style = 'scratch',
         },
       },
       styles = {
@@ -76,6 +105,13 @@ return {
           width = 0.9,
           border = 'rounded',
           backdrop = 40,
+        },
+        scratch = {
+          position = 'float',
+          width = 0.7,
+          height = 0.6,
+          border = 'rounded',
+          title = ' Scratch ',
         },
       },
     },
