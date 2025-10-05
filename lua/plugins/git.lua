@@ -98,4 +98,26 @@ return {
       { "<leader>gtd", function() require("gitsigns").toggle_deleted() end, desc = "[G]it [t]oggle [d]eleted" },
     },
   },
+
+  {
+    'folke/snacks.nvim',
+    keys = {
+      {
+        '<leader>gB',
+        function()
+          require('snacks').gitbrowse()
+        end,
+        desc = '[G]it open in [B]rowser',
+        mode = { 'n', 'v' },
+      },
+    },
+    opts = {
+      gitbrowse = {
+        enabled = true,
+      },
+    },
+    config = function(_, opts)
+      require('snacks').setup(opts)
+    end,
+  },
 }
