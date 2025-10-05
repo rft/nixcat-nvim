@@ -40,6 +40,7 @@ end
 return {
   {
     'folke/snacks.nvim',
+    lazy = false,
     keys = {
       { '<leader>ot', toggle_float_terminal, desc = 'Toggle terminal' },
       {
@@ -91,6 +92,18 @@ return {
         },
         win = {
           style = 'scratch',
+        },
+      },
+      scroll = {
+        enabled = true,
+        animate = {
+          duration = { step = 12, total = 200 },
+          easing = 'inOutSine',
+        },
+        animate_repeat = {
+          delay = 100,
+          duration = { step = 6, total = 60 },
+          easing = 'outSine',
         },
       },
       styles = {
