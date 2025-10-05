@@ -204,6 +204,7 @@
           highlight-undo-nvim
           incline-nvim
           lensline-nvim
+          nvim-dbee
         ];
         kickstart-debug = [
           nvim-dap
