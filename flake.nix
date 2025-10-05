@@ -202,6 +202,7 @@
           grug-far-nvim
           vim-characterize
           highlight-undo-nvim
+          incline-nvim
         ];
         kickstart-debug = [
           nvim-dap
