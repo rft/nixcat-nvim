@@ -1,3 +1,72 @@
+local function has_magic(str)
+  return str:find('[%^%$%[%]().%*%+%-%?]') ~= nil
+end
+
+local function type_matches(node_type, patterns)
+  if not node_type then
+    return false
+  end
+  node_type = node_type:lower()
+  for _, pattern in ipairs(patterns) do
+    local pat = pattern:lower()
+    if node_type == pat then
+      return true
+    end
+    if has_magic(pat) then
+      if node_type:match(pat) then
+        return true
+      end
+    elseif node_type:find(pat, 1, true) then
+      return true
+    end
+  end
+  return false
+end
+
+local function treesitter_operation(lhs, desc, patterns)
+  return {
+    lhs,
+    mode = { 'n', 'x', 'o' },
+    function()
+      require('flash').treesitter {
+        matcher = function(win, state)
+          local labels = state:labels()
+          local matches = {}
+          local ts = require('flash.plugins.treesitter')
+          local buf = vim.api.nvim_win_get_buf(win)
+          local line_count = vim.api.nvim_buf_line_count(buf)
+          for _, match in ipairs(ts.get_nodes(win, state.pos)) do
+            local start_row = match.pos and match.pos[1] or 0
+            local end_row = match.end_pos and match.end_pos[1] or 0
+            if start_row >= 1
+              and start_row <= line_count
+              and end_row >= 1
+              and end_row <= line_count
+              and type_matches(match.node and match.node:type(), patterns)
+            then
+              if labels and #labels > 0 then
+                match.label = table.remove(labels, 1)
+              else
+                match.label = nil
+              end
+              matches[#matches + 1] = match
+            end
+          end
+
+          local count = #matches
+          for index, item in ipairs(matches) do
+            item.first = index == 1
+            item.depth = count - index
+          end
+
+          return matches
+        end,
+      }
+    end,
+    desc = desc,
+  }
+end
+
 return {
   -- Jump operations
   {
@@ -19,6 +88,48 @@ return {
         end,
         desc = 'Jump to treesitter node',
       },
+      treesitter_operation(
+        '<leader>jtf',
+        'Treesitter function/method',
+        {
+          'function',
+          'method',
+          'lambda',
+          'closure',
+          'arrow_function',
+        }
+      ),
+      treesitter_operation(
+        '<leader>jtc',
+        'Treesitter class/struct',
+        {
+          'class',
+          'struct',
+          'interface',
+          'impl',
+          'trait',
+          'enum',
+          'object',
+          'namespace',
+          'module',
+        }
+      ),
+      treesitter_operation(
+        '<leader>jtb',
+        'Treesitter loop/conditional',
+        {
+          'if',
+          'switch',
+          'case',
+          'when',
+          'for',
+          'while',
+          'loop',
+          'repeat',
+          'match',
+          'conditional',
+        }
+      ),
       {
         '<leader>jr',
         mode = 'o',
@@ -133,4 +244,3 @@ return {
     end,
   },
 }
-
