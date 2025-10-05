@@ -106,6 +106,22 @@ return {
           easing = 'outSine',
         },
       },
+      words = {
+        enabled = true,
+        debounce = 100,
+        notify_jump = true,
+        filter = function(buf)
+          local bt = vim.bo[buf].buftype
+          if bt ~= '' then
+            return false
+          end
+          local ft = vim.bo[buf].filetype
+          if ft == 'help' or ft == 'snacks_terminal' then
+            return false
+          end
+          return vim.g.snacks_words ~= false and vim.b[buf].snacks_words ~= false
+        end,
+      },
       styles = {
         blame_line = {
           width = 0.7,
