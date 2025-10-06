@@ -1213,12 +1213,6 @@ if ok_hardtime then
         end,
         length = 2,
       },
-      ['j$'] = {
-        message = function()
-          return 'Use + instead of j$'
-        end,
-        length = 2,
-      },
     },
   }
 
