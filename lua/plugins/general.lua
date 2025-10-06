@@ -184,10 +184,44 @@ return {
   -- File search (primary keybinding)
   {
     "nvim-telescope/telescope.nvim",
-    keys = {
-      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "[F]ind [f]iles" },
-      { "<leader>of", "<cmd>Telescope find_files<cr>", desc = "[O]pen [f]ile" },
-    },
+    keys = function()
+      local function open_smart()
+        local ok, telescope = pcall(require, "telescope")
+        if not ok then
+          vim.notify("Telescope is not available", vim.log.levels.ERROR)
+          return
+        end
+
+        local function invoke()
+          local ext = telescope.extensions.smart_open
+          if not ext or type(ext.smart_open) ~= "function" then
+            error("smart-open extension not registered")
+          end
+          ext.smart_open()
+        end
+
+        if pcall(invoke) then
+          return
+        end
+
+        local loaded, err = pcall(telescope.load_extension, "smart_open")
+        if not loaded then
+          vim.notify("smart-open extension unavailable: " .. err, vim.log.levels.ERROR)
+          return
+        end
+
+        local ok_picker, picker_err = pcall(invoke)
+        if not ok_picker then
+          vim.notify("smart-open picker failed: " .. picker_err, vim.log.levels.ERROR)
+        end
+      end
+
+      return {
+        { "<leader>ff", open_smart, desc = "[F]ind [f]ile (smart-open)" },
+        { "<leader>of", "<cmd>Telescope find_files<cr>", desc = "[O]pen [f]ile (builtin)" },
+        { "<leader>fF", "<cmd>Telescope find_files<cr>", desc = "[F]ind [F]iles (builtin)" },
+      }
+    end,
   },
 
   -- Undotree

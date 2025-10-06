@@ -173,6 +173,7 @@
           flash-nvim
           neogit
           smart-open-nvim
+          sqlite-lua
           oil-nvim
           no-neck-pain-nvim
           undotree
@@ -205,6 +206,8 @@
           lensline-nvim
           nvim-dbee
           nvim-colorizer-lua
+          smart-open-nvim
+          sqlite-lua
         ];
         kickstart-debug = [
           nvim-dap

@@ -7,6 +7,19 @@ return {
     },
   },
 
+  {
+    'danielfalk/smart-open.nvim',
+    branch = '0.2.x',
+    dependencies = {
+      'kkharji/sqlite.lua',
+      'nvim-telescope/telescope-fzf-native.nvim',
+    },
+    opts = {},
+    config = function()
+      pcall(require('telescope').load_extension, 'smart_open')
+    end,
+  },
+
   -- Search match lens overlay
   {
     "kevinhwang91/nvim-hlslens",
