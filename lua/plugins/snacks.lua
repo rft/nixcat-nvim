@@ -247,6 +247,9 @@ return {
           border = 'rounded',
           title = ' Scratch ',
         },
+        dashboard = {
+          fixbuf = false,
+        },
       },
     },
     config = function(_, opts)
