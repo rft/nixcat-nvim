@@ -141,6 +141,93 @@ end
 vim.keymap.set('n', 'gx', open_url_under_cursor, { desc = 'Open URL under cursor' })
 
 
+local function current_file_path(kind)
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname == '' then
+    return nil, 'Current buffer has no associated file'
+  end
+
+  local modifier
+  if kind == 'relative' then
+    modifier = ':~:.'
+  else
+    modifier = ':p'
+  end
+
+  local path = vim.fn.fnamemodify(bufname, modifier)
+  return path, nil
+end
+
+local function copy_file_path(kind)
+  local path, err = current_file_path(kind)
+  if not path then
+    vim.notify(err, vim.log.levels.WARN)
+    return
+  end
+
+  local ok = pcall(vim.fn.setreg, '+', path)
+  local label = kind == 'relative' and 'Relative' or 'Absolute'
+  local message = string.format('%s path: %s', label, path)
+  if ok then
+    vim.notify('Copied ' .. message, vim.log.levels.INFO)
+  else
+    vim.notify(message .. ' (clipboard unavailable)', vim.log.levels.INFO)
+  end
+end
+
+local function open_in_file_manager()
+  local path, err = current_file_path('absolute')
+  local target
+  if not path then
+    target = vim.fn.getcwd()
+  else
+    target = path
+  end
+
+  if vim.ui and vim.ui.open then
+    local ok, ui_err = pcall(vim.ui.open, target)
+    if ok then
+      return
+    elseif ui_err then
+      vim.notify('vim.ui.open failed: ' .. ui_err, vim.log.levels.WARN)
+    end
+  end
+
+  local cmd
+  if vim.fn.has('mac') == 1 and vim.fn.executable('open') == 1 then
+    if err then
+      cmd = { 'open', target }
+    else
+      cmd = { 'open', '-R', target }
+    end
+  elseif vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+    local dir = err and target or vim.fn.fnamemodify(target, ':h')
+    cmd = { 'cmd.exe', '/c', 'start', '', dir }
+  elseif vim.fn.executable('xdg-open') == 1 then
+    local dir = err and target or vim.fn.fnamemodify(target, ':h')
+    cmd = { 'xdg-open', dir }
+  else
+    vim.notify('No system file manager command available to open ' .. target, vim.log.levels.ERROR)
+    return
+  end
+
+  local ok = vim.fn.jobstart(cmd, { detach = true })
+  if ok <= 0 then
+    vim.notify('Failed to open file manager for ' .. target, vim.log.levels.ERROR)
+  end
+end
+
+vim.keymap.set('n', '<leader>fp', function()
+  copy_file_path('absolute')
+end, { desc = '[F]ile copy absolute [p]ath' })
+
+vim.keymap.set('n', '<leader>fP', function()
+  copy_file_path('relative')
+end, { desc = '[F]ile copy relative [P]ath' })
+
+vim.keymap.set('n', '<leader>fe', open_in_file_manager, { desc = '[F]ile open in system [e]xplorer' })
+
+
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copying into register' })
 
