@@ -72,6 +72,13 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
+      {
+        '<leader>pn',
+        function()
+          require('snacks').notifier.show_history()
+        end,
+        desc = '[P]opup [N]otifications history',
+      },
     },
     opts = {
       bigfile = {
@@ -102,6 +109,21 @@ return {
       },
       gitbrowse = { enabled = true },
       git = { enabled = true },
+      notifier = {
+        enabled = true,
+        timeout = 3500,
+        level = vim.log.levels.INFO,
+        top_down = false,
+        margin = { top = 1, right = 1, bottom = 0 },
+        style = 'compact',
+        date_format = '%H:%M',
+        filter = function(notif)
+          if notif.title == 'Plugin Loader' then
+            return false
+          end
+          return true
+        end,
+      },
       terminal = {
         enabled = true,
         win = {
