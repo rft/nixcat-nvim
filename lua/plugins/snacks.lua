@@ -152,11 +152,17 @@ return {
 ⠀⠀⠀⠀⠀⠀⠠⠾⣿⣿⣿⣶⣤⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣠⣶⣦⣄⡀⠀⠀⣶⢒⠲⣄
 ⣾⣥⣤⣼⣿⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣵⣾⡿]],
           keys = {
-            { icon = ' ', key = 'f', desc = 'Find File', action = ":Telescope find_files" },
-            { icon = ' ', key = 'g', desc = 'Live Grep', action = ":Telescope live_grep" },
-            { icon = ' ', key = 'r', desc = 'Recent Files', action = ":Telescope oldfiles" },
+            { icon = ' ', key = 'f', desc = 'Find File', action = function()
+              Snacks.dashboard.pick('files')
+            end },
+            { icon = ' ', key = 'g', desc = 'Live Grep', action = function()
+              Snacks.dashboard.pick('live_grep')
+            end },
+            { icon = ' ', key = 'r', desc = 'Recent Files', action = function()
+              Snacks.dashboard.pick('oldfiles')
+            end },
             { icon = ' ', key = 'c', desc = 'Config', action = function()
-              require('telescope.builtin').find_files { cwd = vim.fn.stdpath('config') }
+              Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })
             end },
             { icon = ' ', key = 'p', desc = 'Projects', section = 'projects' },
             { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
