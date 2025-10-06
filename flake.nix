@@ -204,6 +204,7 @@
           incline-nvim
           lensline-nvim
           nvim-dbee
+          nvim-colorizer-lua
         ];
         kickstart-debug = [
           nvim-dap
