@@ -32,6 +32,7 @@ return {
         zindex = 40,
         width = 2,
         -- Avoid scratch-style neogit buffers that report inconsistent heights
+        -- Skip Neogit floating/read-only views that frequently trigger invalid extmark geometry
         excluded_filetypes = {
           'neo-tree',
           'oil',
@@ -43,6 +44,10 @@ return {
           'NeogitCommitMessage',
           'NeogitConsole',
           'NeogitNotification',
+          'NeogitCommitView',
+          'NeogitDiffView',
+          'NeogitCommitSelectView',
+          'NeogitStashView',
           'neogitstatus',
         },
         handlers = {
