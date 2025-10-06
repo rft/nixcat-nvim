@@ -74,6 +74,32 @@ return {
       },
     },
     opts = {
+      bigfile = {
+        enabled = true,
+        notify = true,
+        size = 2 * 1024 * 1024,
+        line_length = 1500,
+        setup = function(ctx)
+          if vim.fn.exists(':NoMatchParen') ~= 0 then
+            vim.cmd('NoMatchParen')
+          end
+          Snacks.util.wo(0, { foldmethod = 'manual', statuscolumn = '', conceallevel = 0 })
+          vim.b.minianimate_disable = true
+          vim.b.snacks_words = false
+          vim.b.snacks_scroll = false
+          if pcall(require, 'nvim-treesitter.configs') then
+            pcall(vim.treesitter.stop, ctx.buf)
+          end
+          pcall(function()
+            require('illuminate').pause_buf(ctx.buf)
+          end)
+          vim.schedule(function()
+            if vim.api.nvim_buf_is_valid(ctx.buf) then
+              vim.bo[ctx.buf].syntax = ctx.ft
+            end
+          end)
+        end,
+      },
       gitbrowse = { enabled = true },
       git = { enabled = true },
       terminal = {
