@@ -184,13 +184,43 @@ local function open_in_file_manager()
     target = path
   end
 
-  if vim.ui and vim.ui.open then
-    local ok, ui_err = pcall(vim.ui.open, target)
-    if ok then
-      return
-    elseif ui_err then
-      vim.notify('vim.ui.open failed: ' .. ui_err, vim.log.levels.WARN)
+  local function is_wsl()
+    if vim.fn.has('wsl') == 1 then
+      return true
     end
+    local uv = vim.uv or vim.loop
+    if not uv or not uv.os_uname then
+      return false
+    end
+    local ok, uname = pcall(uv.os_uname)
+    return ok and uname and uname.release and uname.release:lower():find('microsoft', 1, true) ~= nil
+  end
+
+  local running_wsl = is_wsl()
+
+  if vim.ui and vim.ui.open then
+    if not running_wsl then
+      local ok, ui_err = pcall(vim.ui.open, target)
+      if ok then
+        return
+      elseif ui_err then
+        vim.notify('vim.ui.open failed: ' .. ui_err, vim.log.levels.WARN)
+      end
+    end
+  end
+
+  local function to_windows_path(p)
+    if p == nil or p == '' then
+      return nil
+    end
+    if vim.fn.executable('wslpath') ~= 1 then
+      return nil
+    end
+    local win_path = vim.fn.system({ 'wslpath', '-w', p })
+    if vim.v.shell_error ~= 0 then
+      return nil
+    end
+    return vim.trim(win_path)
   end
 
   local cmd
@@ -200,13 +230,30 @@ local function open_in_file_manager()
     else
       cmd = { 'open', '-R', target }
     end
-  elseif vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1 then
+  elseif (vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1) and vim.fn.executable('cmd.exe') == 1 then
     local dir = err and target or vim.fn.fnamemodify(target, ':h')
-    cmd = { 'cmd.exe', '/c', 'start', '', dir }
+    cmd = { 'cmd.exe', '/C', 'start', '', dir }
+  elseif running_wsl then
+    local explorer = nil
+    if vim.fn.executable('explorer.exe') == 1 then
+      explorer = 'explorer.exe'
+    elseif vim.fn.executable('/mnt/c/Windows/explorer.exe') == 1 then
+      explorer = '/mnt/c/Windows/explorer.exe'
+    end
+
+    if explorer then
+      local dir = err and target or vim.fn.fnamemodify(target, ':h')
+      local win_dir = to_windows_path(dir)
+      if win_dir and win_dir ~= '' then
+        cmd = { explorer, win_dir }
+      end
+    end
   elseif vim.fn.executable('xdg-open') == 1 then
     local dir = err and target or vim.fn.fnamemodify(target, ':h')
     cmd = { 'xdg-open', dir }
-  else
+  end
+
+  if not cmd then
     vim.notify('No system file manager command available to open ' .. target, vim.log.levels.ERROR)
     return
   end
