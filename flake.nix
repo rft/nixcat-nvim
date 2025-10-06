@@ -211,9 +211,7 @@
           nvim-dap-go
           nvim-nio
         ];
-        kickstart-indent_line = [
-          indent-blankline-nvim
-        ];
+        kickstart-indent_line = [ ];
         kickstart-lint = [
           nvim-lint
         ];

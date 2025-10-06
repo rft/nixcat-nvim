@@ -1,4 +1,5 @@
 local split_terminal
+local scope_enabled = require('nixCatsUtils').enableForCategory 'kickstart-indent_line'
 
 local function toggle_float_terminal()
   -- Use configured default terminal instance (float)
@@ -152,18 +153,10 @@ return {
 ⠀⠀⠀⠀⠀⠀⠠⠾⣿⣿⣿⣶⣤⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣠⣶⣦⣄⡀⠀⠀⣶⢒⠲⣄
 ⣾⣥⣤⣼⣿⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣵⣾⡿]],
           keys = {
-            { icon = ' ', key = 'f', desc = 'Find File', action = function()
-              Snacks.dashboard.pick('files')
-            end },
-            { icon = ' ', key = 'g', desc = 'Live Grep', action = function()
-              Snacks.dashboard.pick('live_grep')
-            end },
-            { icon = ' ', key = 'r', desc = 'Recent Files', action = function()
-              Snacks.dashboard.pick('oldfiles')
-            end },
-            { icon = ' ', key = 'c', desc = 'Config', action = function()
-              Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })
-            end },
+            { icon = ' ', key = 'f', desc = 'Find File', action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = ' ', key = 'g', desc = 'Live Grep', action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = ' ', key = 'r', desc = 'Recent Files', action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = ' ', key = 'c', desc = 'Config', action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
             { icon = ' ', key = 'p', desc = 'Projects', section = 'projects' },
             { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
             { icon = '󰒲 ', key = 'L', desc = 'Lazy', action = ':Lazy', enabled = package.loaded.lazy ~= nil },
@@ -179,6 +172,58 @@ return {
             { section = 'projects', title = 'Projects', indent = 2, padding = 1, limit = 5 },
           },
           { section = 'startup' },
+        },
+      },
+      scope = {
+        enabled = scope_enabled,
+        debounce = 20,
+        siblings = true,
+        treesitter = {
+          blocks = { enabled = false },
+        },
+        keys = {
+          textobject = {
+            ii = { desc = 'inner scope', edge = false, cursor = false },
+            ai = { desc = 'around scope', cursor = false },
+          },
+          jump = {
+            ['[i'] = { desc = 'jump to upper scope edge', cursor = false, edge = true },
+            [']i'] = { desc = 'jump to lower scope edge', cursor = false, edge = true, bottom = true },
+          },
+        },
+      },
+      indent = {
+        enabled = scope_enabled,
+        indent = {
+          char = '│',
+          enabled = false,
+          only_scope = true,
+          hl = {
+            'SnacksIndent1',
+            'SnacksIndent2',
+            'SnacksIndent3',
+            'SnacksIndent4',
+            'SnacksIndent5',
+            'SnacksIndent6',
+          },
+        },
+        scope = {
+          enabled = true,
+          char = '│',
+          only_current = true,
+          hl = {
+            'SnacksIndent1',
+            'SnacksIndent2',
+            'SnacksIndent3',
+            'SnacksIndent4',
+            'SnacksIndent5',
+            'SnacksIndent6',
+          },
+        },
+        animate = {
+          enabled = vim.fn.has('nvim-0.10') == 1,
+          style = 'out',
+          duration = { step = 15, total = 300 },
         },
       },
       terminal = {
@@ -254,6 +299,34 @@ return {
     },
     config = function(_, opts)
       require('snacks').setup(opts)
+
+      local function set_snacks_highlights()
+        local function hex(name, fallback)
+          local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+          if ok and hl and hl.fg then
+            return string.format('#%06x', hl.fg)
+          end
+          return fallback
+        end
+        local palette = {
+          SnacksIndent1 = { fg = '#E06C75', nocombine = true },
+          SnacksIndent2 = { fg = '#E5C07B', nocombine = true },
+          SnacksIndent3 = { fg = '#98C379', nocombine = true },
+          SnacksIndent4 = { fg = '#56B6C2', nocombine = true },
+          SnacksIndent5 = { fg = '#61AFEF', nocombine = true },
+          SnacksIndent6 = { fg = '#C678DD', nocombine = true },
+          SnacksIndentScope = { fg = hex('Function', '#ffffff'), bold = true, nocombine = true },
+        }
+        for group, spec in pairs(palette) do
+          vim.api.nvim_set_hl(0, group, spec)
+        end
+      end
+
+      set_snacks_highlights()
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('snacks-indent-highlights', { clear = true }),
+        callback = set_snacks_highlights,
+      })
     end,
   },
 }
