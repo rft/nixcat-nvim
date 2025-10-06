@@ -104,6 +104,77 @@ local function toggle_visual_lines()
   toggle_lines(start_line, end_line)
 end
 
+local function floating_rename()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local supports = false
+  for _, client in ipairs(clients) do
+    if client.server_capabilities and client.server_capabilities.renameProvider then
+      supports = true
+      break
+    end
+  end
+
+  if not supports then
+    vim.notify('No attached LSP server supports rename', vim.log.levels.WARN)
+    return
+  end
+
+  local current_name = vim.fn.expand('<cword>')
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(buf, 'buftype', 'prompt')
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'lsp_rename_prompt')
+
+  local float_opts = {
+    relative = 'cursor',
+    row = 1,
+    col = 0,
+    width = math.max(30, #current_name + 12),
+    height = 1,
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Rename Symbol ',
+    title_pos = 'center',
+  }
+
+  local win = vim.api.nvim_open_win(buf, true, float_opts)
+  vim.fn.prompt_setprompt(buf, 'New name: ')
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, { current_name })
+  vim.api.nvim_win_set_cursor(win, { 1, #current_name })
+
+  local function close_window()
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+
+  vim.fn.prompt_setcallback(buf, function(new_name)
+    new_name = vim.trim(new_name or '')
+    close_window()
+    if new_name == '' or new_name == current_name then
+      return
+    end
+    vim.schedule(function()
+      vim.lsp.buf.rename(new_name)
+    end)
+  end)
+
+  vim.fn.prompt_setinterrupt(buf, function()
+    close_window()
+  end)
+
+  vim.keymap.set('n', '<Esc>', close_window, { buffer = buf, nowait = true })
+  vim.keymap.set('i', '<Esc>', close_window, { buffer = buf, nowait = true })
+
+  vim.api.nvim_create_autocmd('BufLeave', {
+    buffer = buf,
+    once = true,
+    callback = close_window,
+  })
+
+  vim.cmd('startinsert!')
+end
+
 return {
   -- LSP operations and code actions
   {
@@ -116,7 +187,7 @@ return {
       { "<leader>cd", vim.lsp.buf.definition, desc = "Jump to definition" },
       { "<leader>cD", vim.lsp.buf.references, desc = "See references" },
       { "<leader>ck", vim.lsp.buf.hover, desc = "Jump to documentation" },
-      { "<leader>cr", vim.lsp.buf.rename, desc = "Rename all references" },
+      { "<leader>cr", floating_rename, desc = "Rename all references" },
       { "<leader>cs", function()
         -- Send to REPL - implementation depends on REPL plugin
         vim.notify("Send to REPL not configured")

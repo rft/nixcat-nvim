@@ -78,6 +78,68 @@ vim.api.nvim_create_autocmd('WinClosed', {
 
 vim.keymap.set('n', '<leader>wf', toggle_window_focus, { desc = 'Toggle focused window' })
 
+local function open_url_under_cursor()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  local url
+  local patterns = {
+    [[https?://%S+]],
+    [[www%.[^%s]+]],
+  }
+
+  for _, pattern in ipairs(patterns) do
+    for start_idx, match in line:gmatch('()(' .. pattern .. ')') do
+      local finish = start_idx + #match - 1
+      if col >= start_idx and col <= finish then
+        url = match
+        break
+      end
+    end
+    if url then
+      break
+    end
+  end
+
+  if not url or url == '' then
+    vim.notify('No URL found under cursor', vim.log.levels.WARN)
+    return
+  end
+
+  if not url:match('^https?://') then
+    url = 'https://' .. url
+  end
+
+  if vim.ui and vim.ui.open then
+    local ok, err = pcall(vim.ui.open, url)
+    if ok then
+      return
+    elseif err then
+      vim.notify('vim.ui.open failed: ' .. err, vim.log.levels.WARN)
+    end
+  end
+
+  local command
+  if vim.fn.has('mac') == 1 and vim.fn.executable('open') == 1 then
+    command = { 'open', url }
+  elseif (vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1) then
+    command = { 'cmd.exe', '/c', 'start', '', url }
+  elseif vim.fn.executable('xdg-open') == 1 then
+    command = { 'xdg-open', url }
+  end
+
+  if not command then
+    vim.notify('No system URL opener available (need vim.ui.open, open, or xdg-open)', vim.log.levels.ERROR)
+    return
+  end
+
+  local ok = vim.fn.jobstart(command, { detach = true })
+  if ok <= 0 then
+    vim.notify('Failed to open URL: ' .. url, vim.log.levels.ERROR)
+  end
+end
+
+vim.keymap.set('n', 'gx', open_url_under_cursor, { desc = 'Open URL under cursor' })
+
 
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copying into register' })
