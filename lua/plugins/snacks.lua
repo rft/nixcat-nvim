@@ -210,6 +210,7 @@ return {
         scope = {
           enabled = true,
           char = '│',
+          underline = true,
           only_current = true,
           hl = {
             'SnacksIndent1',
