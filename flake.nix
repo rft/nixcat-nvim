@@ -53,6 +53,9 @@
     # as that will have your system values
     extra_pkg_config = {
       # allowUnfree = true;
+      allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+        "copilot.vim"
+      ];
     };
     # management of the system variable is one of the harder parts of using flakes.
 
@@ -157,6 +160,7 @@
           cmp_luasnip
           cmp-nvim-lsp
           cmp-path
+          copilot-vim
           onedark-nvim
           todo-comments-nvim
           mini-nvim

@@ -876,12 +876,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
-          -- Accept the completion with Tab
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          ['<Tab>'] = cmp.mapping.confirm { select = true },
-
-          -- Accept the completion with Enter as well
+          -- Accept the completion with Enter; Tab is reserved for Copilot
           ['<CR>'] = cmp.mapping.confirm { select = true },
           --['<C-y>'] = cmp.mapping.confirm { select = true },
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
