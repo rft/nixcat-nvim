@@ -67,6 +67,54 @@ local function treesitter_operation(lhs, desc, patterns)
   }
 end
 
+local function gather_normal_windows()
+  local wins = {}
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.api.nvim_win_is_valid(win) then
+      local cfg = vim.api.nvim_win_get_config(win)
+      if cfg.relative == '' then
+        local bufnr = vim.api.nvim_win_get_buf(win)
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if name == '' then
+          name = '[No Name]'
+        else
+          name = vim.fn.fnamemodify(name, ':t')
+        end
+        wins[#wins + 1] = {
+          win = win,
+          number = vim.api.nvim_win_get_number(win),
+          name = name,
+        }
+      end
+    end
+  end
+
+  table.sort(wins, function(a, b)
+    return a.number < b.number
+  end)
+
+  return wins
+end
+
+local function jump_to_window()
+  local wins = gather_normal_windows()
+  if #wins <= 1 then
+    vim.notify('Only one window available', vim.log.levels.INFO)
+    return
+  end
+
+  vim.ui.select(wins, {
+    prompt = 'Jump to window',
+    format_item = function(item)
+      return string.format('%d  %s', item.number, item.name)
+    end,
+  }, function(choice)
+    if choice and vim.api.nvim_win_is_valid(choice.win) then
+      vim.api.nvim_set_current_win(choice.win)
+    end
+  end)
+end
+
 return {
   -- Jump operations
   {
@@ -87,6 +135,12 @@ return {
           require('flash').treesitter()
         end,
         desc = 'Jump to treesitter node',
+      },
+      {
+        '<leader>jf',
+        mode = 'n',
+        jump_to_window,
+        desc = 'Jump (focus) window',
       },
       treesitter_operation(
         '<leader>jtf',

@@ -76,6 +76,9 @@ return {
             table.insert(segments, diag)
           end
 
+          local win_number = vim.api.nvim_win_get_number(props.win)
+          table.insert(segments, { string.format(' #%d', win_number), group = 'Number' })
+
           return segments
         end,
       }
