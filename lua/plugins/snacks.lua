@@ -1,13 +1,24 @@
+local snacks = require 'snacks'
 local split_terminal
 local scope_enabled = require('nixCatsUtils').enableForCategory 'kickstart-indent_line'
 
+snacks.config.style('terminal', {
+  keys = {
+    term_normal = {
+      '<C-]>',
+      [[<C-\><C-n>]],
+      mode = 't',
+      desc = 'Exit terminal mode',
+    },
+  },
+})
+
 local function toggle_float_terminal()
   -- Use configured default terminal instance (float)
-  require('snacks').terminal()
+  snacks.terminal()
 end
 
 local function toggle_split_terminal()
-  local snacks = require 'snacks'
   if not split_terminal or not split_terminal:buf_valid() then
     split_terminal = snacks.terminal.open(nil, {
       win = {
@@ -37,15 +48,15 @@ end
 
 local function git_blame_line_with_count()
   local count = vim.v.count > 0 and vim.v.count or nil
-  require('snacks').git.blame_line { count = count }
+  snacks.git.blame_line { count = count }
 end
 
 local function toggle_scratch()
-  require('snacks').scratch()
+  snacks.scratch()
 end
 
 local function select_scratch()
-  require('snacks').scratch.select()
+  snacks.scratch.select()
 end
 
 return {
@@ -63,7 +74,7 @@ return {
       {
         '<leader>gB',
         function()
-          require('snacks').gitbrowse()
+          snacks.gitbrowse()
         end,
         desc = '[G]it open in [B]rowser',
         mode = { 'n', 'v' },
@@ -83,8 +94,8 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
-      { '<leader>pn', function() require('snacks').notifier.show_history() end, desc = '[P]opup [N]otifications history' },
-      { '<leader>pd', function() require('snacks').dashboard.open() end, desc = '[P]opup [D]ashboard' },
+      { '<leader>pn', function() snacks.notifier.show_history() end, desc = '[P]opup [N]otifications history' },
+      { '<leader>pd', function() snacks.dashboard.open() end, desc = '[P]opup [D]ashboard' },
     },
     opts = {
       bigfile = {
@@ -309,7 +320,7 @@ return {
       },
     },
     config = function(_, opts)
-      require('snacks').setup(opts)
+      snacks.setup(opts)
 
       local function set_snacks_highlights()
         local function hex(name, fallback)
