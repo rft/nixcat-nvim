@@ -1032,6 +1032,15 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<C-e>',
+          node_incremental = '<C-e>',
+          scope_incremental = '<M-e>',
+          node_decremental = '<C-S-e>',
+        },
+      },
       matchup = {
         enable = true,
         include_match_words = true,
