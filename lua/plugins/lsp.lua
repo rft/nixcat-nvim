@@ -210,6 +210,24 @@ return {
       end, desc = "Remove trailing newlines" },
       { "<leader>ce", vim.diagnostic.goto_next, desc = "Next error" },
       { "<leader>cE", vim.diagnostic.goto_prev, desc = "Previous error" },
+      { "]e", function()
+        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+      end, desc = "Next error" },
+      { "[e", function()
+        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+      end, desc = "Previous error" },
+      { "]w", function()
+        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
+      end, desc = "Next warning/spell issue" },
+      { "[w", function()
+        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
+      end, desc = "Previous warning/spell issue" },
+      { "]h", function()
+        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.HINT })
+      end, desc = "Next hint/spell issue" },
+      { "[h", function()
+        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.HINT })
+      end, desc = "Previous hint/spell issue" },
     },
   },
 }
