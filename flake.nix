@@ -208,6 +208,7 @@
           nvim-colorizer-lua
           smart-open-nvim
           sqlite-lua
+          spellwarn-nvim
         ];
         kickstart-debug = [
           nvim-dap

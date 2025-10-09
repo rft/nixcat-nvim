@@ -56,6 +56,11 @@ vim.opt.listchars = {
   nbsp = '␣',
 }
 
+-- Enable builtin spellchecking so spellwarn can surface diagnostics
+vim.opt.spell = true
+vim.opt.spelllang = { 'en_us' }
+vim.opt.spelloptions:append('camel')
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 

@@ -1153,6 +1153,16 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 -- Tiny Inline Diagnostics (managed by nix)
 local ok, tiny_inline_diagnostic = pcall(require, 'tiny-inline-diagnostic')
 if ok then
+  local function set_spellwarn_highlight()
+    vim.api.nvim_set_hl(0, 'SpellwarnInlineWarn', { fg = '#ff9e64', bg = 'NONE', bold = true })
+  end
+
+  set_spellwarn_highlight()
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    callback = set_spellwarn_highlight,
+    desc = 'Keep custom inline spellwarn highlight',
+  })
+
   tiny_inline_diagnostic.setup {
     -- Show diagnostic text inline
     signs = {
@@ -1166,7 +1176,7 @@ if ok then
     },
     hi = {
       error = 'DiagnosticError',
-      warn = 'DiagnosticWarn',
+      warn = 'SpellwarnInlineWarn',
       info = 'DiagnosticInfo',
       hint = 'DiagnosticHint',
       arrow = 'NonText',
