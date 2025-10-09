@@ -59,6 +59,10 @@ local function select_scratch()
   snacks.scratch.select()
 end
 
+local function delete_buffer(force)
+  snacks.bufdelete.delete(vim.api.nvim_get_current_buf(), { force = force or false })
+end
+
 return {
   {
     'folke/snacks.nvim',
@@ -94,6 +98,27 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
+      {
+        '<leader>bb',
+        function()
+          snacks.picker.buffers()
+        end,
+        desc = '[B]uffer [B]rowse open buffers',
+      },
+      {
+        '<leader>bd',
+        function()
+          delete_buffer(false)
+        end,
+        desc = '[B]uffer [D]elete',
+      },
+      {
+        '<leader>bD',
+        function()
+          delete_buffer(true)
+        end,
+        desc = '[B]uffer [D]elete (force)',
+      },
       { '<leader>pn', function() snacks.notifier.show_history() end, desc = '[P]opup [N]otifications history' },
       { '<leader>pd', function() snacks.dashboard.open() end, desc = '[P]opup [D]ashboard' },
     },
@@ -126,6 +151,12 @@ return {
       },
       gitbrowse = { enabled = true },
       git = { enabled = true },
+      bufdelete = {
+        enabled = true,
+      },
+      picker = {
+        enabled = true,
+      },
       notifier = {
         enabled = true,
         timeout = 3500,
