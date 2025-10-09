@@ -21,7 +21,17 @@ local function toggle_split_terminal()
       split_terminal = nil
     end, { buf = true })
   else
-    split_terminal:toggle()
+    if not split_terminal:win_valid() then
+      split_terminal:show()
+      split_terminal:focus()
+      return
+    end
+
+    if vim.api.nvim_get_current_win() == split_terminal.win then
+      split_terminal:hide()
+    else
+      split_terminal:focus()
+    end
   end
 end
 
