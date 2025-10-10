@@ -40,14 +40,14 @@ local function build_spec(source)
     },
     keys = {
       {
-        '<leader>ms',
+        '<leader>ts',
         function()
           require('myeyeshurt').start()
         end,
         desc = 'Start eye break reminder',
       },
       {
-        '<leader>mx',
+        '<leader>tx',
         function()
           require('myeyeshurt').stop()
         end,
