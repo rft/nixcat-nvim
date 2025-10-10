@@ -55,6 +55,7 @@
       # allowUnfree = true;
       allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
         "copilot.vim"
+        "copilot-language-server"
       ];
     };
     # management of the system variable is one of the harder parts of using flakes.
@@ -213,6 +214,7 @@
           smart-open-nvim
           sqlite-lua
           spellwarn-nvim
+          sidekick-nvim
         ];
         kickstart-debug = [
           nvim-dap

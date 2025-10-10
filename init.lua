@@ -732,6 +732,9 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
         },
       }
 
+      -- GitHub Copilot LSP (required for sidekick.nvim NES)
+      servers.copilot = {}
+
       -- NOTE: nixCats: if nix, use lspconfig instead of mason
       -- You could MAKE it work, using lspsAndRuntimeDeps and sharedLibraries in nixCats
       -- but don't... its not worth it. Just add the lsp to lspsAndRuntimeDeps.

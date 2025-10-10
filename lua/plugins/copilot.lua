@@ -35,14 +35,19 @@ local function build_spec(source)
         oil = false,
       }
 
-      -- Accept suggestions with <Tab>, fall back to literal tab when none are available
+      -- Accept suggestions with <Tab>, prioritising Sidekick NES before inline ghosts
       vim.keymap.set('i', '<Tab>', function()
+        local sidekick_ok, sidekick = pcall(require, 'sidekick')
+        if sidekick_ok and sidekick.nes_jump_or_apply() then
+          return ''
+        end
+
         local fallback = vim.api.nvim_replace_termcodes('<Tab>', true, true, true)
         return vim.fn['copilot#Accept'](fallback)
       end, {
         expr = true,
         replace_keycodes = false,
-        desc = 'Copilot accept suggestion',
+        desc = 'Accept Copilot / Sidekick suggestion',
       })
 
       -- Toggle Copilot per-buffer
