@@ -248,6 +248,8 @@
         ];
         neorg = [
           neorg
+          lua-utils-nvim
+          pathlib-nvim
           neorg-telescope
         ];
       };
