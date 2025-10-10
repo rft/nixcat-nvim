@@ -95,6 +95,7 @@
       (final: prev: {
         vimPlugins = prev.vimPlugins // {
           myeyeshurt = prev.callPackage ./packages/myEyesHurt { };
+          neominimap = prev.callPackage ./packages/neoMiniMap { };
         };
       })
       # add any other flake overlays here.
@@ -221,6 +222,7 @@
           spellwarn-nvim
           sidekick-nvim
           myeyeshurt
+          neominimap
         ];
         kickstart-debug = [
           nvim-dap
