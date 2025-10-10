@@ -68,6 +68,12 @@ function M.setup(nixLazyPath, lazySpec, opts)
           reset = false,
         },
       },
+      install = {
+        missing = false,
+      },
+      checker = {
+        enabled = false,
+      },
       dev = {
         path = function(plugin)
           local path = nil

@@ -92,6 +92,11 @@
           nvim-treesitter-parsers = mergedParsers;
         };
       })
+      (final: prev: {
+        vimPlugins = prev.vimPlugins // {
+          myeyeshurt = prev.callPackage ./packages/myEyesHurt { };
+        };
+      })
       # add any other flake overlays here.
 
       # when other people mess up their overlays by wrapping them with system,
@@ -215,6 +220,7 @@
           sqlite-lua
           spellwarn-nvim
           sidekick-nvim
+          myeyeshurt
         ];
         kickstart-debug = [
           nvim-dap
