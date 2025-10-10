@@ -185,9 +185,9 @@ return {
       { "<leader>;", toggle_visual_lines, mode = "x", desc = "Comment out lines" },
       { "<leader>cc", "<cmd>make<cr>", desc = "Compile" },
       { "<leader>cd", vim.lsp.buf.definition, desc = "Jump to definition" },
-      { "<leader>cD", vim.lsp.buf.references, desc = "See references" },
+      { "<leader>cr", vim.lsp.buf.references, desc = "Find references" },
       { "<leader>ck", vim.lsp.buf.hover, desc = "Jump to documentation" },
-      { "<leader>cr", floating_rename, desc = "Rename all references" },
+      { "<leader>cR", floating_rename, desc = "Rename symbol" },
       { "<leader>cs", function()
         -- Send to REPL - implementation depends on REPL plugin
         vim.notify("Send to REPL not configured")
