@@ -56,7 +56,8 @@ local function build_spec(source)
         enabled = true,
       },
       click = {
-        enabled = false,
+        enabled = true,
+        auto_switch_focus = true,
       },
     },
     keys = {
