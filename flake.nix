@@ -223,6 +223,7 @@
           sidekick-nvim
           myeyeshurt
           neominimap
+          persistence-nvim
         ];
         kickstart-debug = [
           nvim-dap
