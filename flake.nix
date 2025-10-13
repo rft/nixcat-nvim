@@ -224,6 +224,7 @@
           myeyeshurt
           neominimap
           persistence-nvim
+          substitute-nvim
         ];
         kickstart-debug = [
           nvim-dap

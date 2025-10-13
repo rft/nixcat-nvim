@@ -55,6 +55,25 @@ return {
     end,
   },
 
+  -- Enhanced substitution motions and exchanges
+  {
+    "gbprod/substitute.nvim",
+    keys = {
+      { "s", function() require("substitute").operator() end, desc = "Substitute via motion" },
+      { "ss", function() require("substitute").line() end, desc = "Substitute line" },
+      { "S", function() require("substitute").eol() end, desc = "Substitute to end of line" },
+      { "s", function() require("substitute").visual() end, mode = "x", desc = "Substitute selection" },
+      { "sx", function() require("substitute.exchange").operator() end, desc = "Exchange via motion" },
+      { "sxx", function() require("substitute.exchange").line() end, desc = "Exchange line" },
+      { "sxc", function() require("substitute.exchange").cancel() end, desc = "Cancel pending exchange" },
+      { "X", function() require("substitute.exchange").visual() end, mode = "x", desc = "Exchange selection" },
+    },
+    config = function(_, opts)
+      require("substitute").setup(opts)
+      require("substitute.exchange").setup()
+    end,
+  },
+
   -- Markdown and table alignment helpers
   {
     "dhruvasagar/vim-table-mode",
