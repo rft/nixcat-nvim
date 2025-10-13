@@ -1140,8 +1140,8 @@ end
 local ok_precognition, precognition = pcall(require, 'precognition')
 if ok_precognition then
   precognition.setup {
-    -- Make hints visible by default
-    startVisible = true,
+    -- Keep hints hidden until explicitly toggled
+    startVisible = false,
     showBlankVirtLine = true,
     -- Show hints for these motions
     hints = {
@@ -1164,6 +1164,9 @@ if ok_precognition then
       NextParagraph = { text = '}', prio = 8 },
     },
   }
+
+  -- Ensure hints start hidden even if plugin defaults change
+  precognition.hide()
 
   -- Add keybinding to toggle precognition
   vim.keymap.set('n', '<leader>tp', function()
