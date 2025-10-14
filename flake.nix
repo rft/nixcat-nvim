@@ -96,6 +96,9 @@
         vimPlugins = prev.vimPlugins // {
           myeyeshurt = prev.callPackage ./packages/myEyesHurt { };
           neominimap = prev.callPackage ./packages/neoMiniMap { };
+          indentRainbowline = prev.callPackage ./packages/indentRainbowline {
+            indent-blankline-nvim = prev.vimPlugins.indent-blankline-nvim;
+          };
         };
       })
       # add any other flake overlays here.
@@ -204,6 +207,7 @@
           nvim-hlslens
           nvim-ts-context-commentstring
           nvim-ts-autotag
+          indent-blankline-nvim
           diffview-nvim
           vim-matchup
           satellite-nvim
@@ -223,6 +227,7 @@
           sidekick-nvim
           myeyeshurt
           neominimap
+          indentRainbowline
           persistence-nvim
           substitute-nvim
         ];
