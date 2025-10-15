@@ -207,7 +207,8 @@ return {
       },
     },
     config = function()
-      require('flash').setup {
+      local flash = require('flash')
+      local flash_config = {
         -- Labels to use for flash jumps
         labels = 'asdfghjklqwertyuiopzxcvbnm',
         search = {
@@ -261,6 +262,33 @@ return {
           },
         },
       }
+
+      flash.setup(flash_config)
+
+      local flash_group = vim.api.nvim_create_augroup('VisualMultiFlash', { clear = true })
+      local function toggle_flash_char(enabled)
+        if flash_config.modes.char.enabled == enabled then
+          return
+        end
+        flash_config.modes.char.enabled = enabled
+        flash.setup(flash_config)
+      end
+
+      vim.api.nvim_create_autocmd('User', {
+        group = flash_group,
+        pattern = 'visual_multi_start',
+        callback = function()
+          toggle_flash_char(false)
+        end,
+      })
+
+      vim.api.nvim_create_autocmd('User', {
+        group = flash_group,
+        pattern = 'visual_multi_exit',
+        callback = function()
+          toggle_flash_char(true)
+        end,
+      })
     end,
   },
 
@@ -277,7 +305,8 @@ return {
   {
     'jinh0/eyeliner.nvim',
     config = function()
-      require('eyeliner').setup {
+      local eyeliner = require('eyeliner')
+      local eyeliner_config = {
         highlight_on_key = true,
         dim = true,
         max_length = 9999,
@@ -295,6 +324,32 @@ return {
         },
         default_keymaps = true,
       }
+
+      local function set_eyeliner_keymaps(enabled)
+        if eyeliner_config.default_keymaps == enabled then
+          return
+        end
+        eyeliner_config.default_keymaps = enabled
+        eyeliner.setup(eyeliner_config)
+      end
+
+      eyeliner.setup(eyeliner_config)
+
+      local eyeliner_group = vim.api.nvim_create_augroup('VisualMultiEyeliner', { clear = true })
+      vim.api.nvim_create_autocmd('User', {
+        group = eyeliner_group,
+        pattern = 'visual_multi_start',
+        callback = function()
+          set_eyeliner_keymaps(false)
+        end,
+      })
+      vim.api.nvim_create_autocmd('User', {
+        group = eyeliner_group,
+        pattern = 'visual_multi_exit',
+        callback = function()
+          set_eyeliner_keymaps(true)
+        end,
+      })
     end,
   },
 }
