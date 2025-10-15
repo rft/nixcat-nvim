@@ -188,7 +188,7 @@ return {
       { "<leader>cr", vim.lsp.buf.references, desc = "Find references" },
       { "<leader>ck", vim.lsp.buf.hover, desc = "Jump to documentation" },
       { "<leader>cR", floating_rename, desc = "Rename symbol" },
-      { "<leader>cs", function()
+      { "<leader>cp", function()
         -- Send to REPL - implementation depends on REPL plugin
         vim.notify("Send to REPL not configured")
       end, desc = "Send to repl" },
