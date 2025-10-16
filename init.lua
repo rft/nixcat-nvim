@@ -660,6 +660,47 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       -- NOTE: nixCats: there is help in nixCats for lsps at `:h nixCats.LSPs` and also `:h nixCats.luaUtils`
+      local util = require('lspconfig.util')
+      local function rust_root_dir(fname)
+        local rust_project = util.root_pattern('rust-project.json')(fname)
+        if rust_project then
+          return rust_project
+        end
+
+        local crate_dir = util.root_pattern('Cargo.toml')(fname)
+        if not crate_dir then
+          return util.root_pattern('.git')(fname)
+        end
+
+        local function has_workspace_manifest(dir)
+          local manifest = util.path.join(dir, 'Cargo.toml')
+          if not util.path.is_file(manifest) then
+            return false
+          end
+          local ok, lines = pcall(vim.fn.readfile, manifest)
+          if not ok then
+            return false
+          end
+          for _, line in ipairs(lines) do
+            if line:match('%s*%[workspace%]') then
+              return true
+            end
+          end
+          return false
+        end
+
+        if has_workspace_manifest(crate_dir) then
+          return crate_dir
+        end
+
+        for parent in util.path.iterate_parents(crate_dir) do
+          if has_workspace_manifest(parent) then
+            return parent
+          end
+        end
+
+        return crate_dir
+      end
       local servers = {}
 
       -- Python LSP
@@ -678,6 +719,8 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
 
       -- Rust LSP
       servers.rust_analyzer = {
+        -- Detect workspace roots without shelling out to `cargo metadata`.
+        root_dir = rust_root_dir,
         settings = {
           ['rust-analyzer'] = {
             cargo = {
