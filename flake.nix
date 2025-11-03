@@ -265,6 +265,7 @@
               indentRainbowline
               persistence-nvim
               substitute-nvim
+              vim-illuminate
             ];
             kickstart-debug = [
               nvim-dap
