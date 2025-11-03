@@ -266,6 +266,7 @@
               persistence-nvim
               substitute-nvim
               vim-illuminate
+              dropbar-nvim
             ];
             kickstart-debug = [
               nvim-dap
