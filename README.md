@@ -119,87 +119,115 @@ All dependencies are managed by Nix:
 
 ## Plugins
 
+### UI / UX
 - akinsho/bufferline.nvim
-- AndrewRadev/switch.vim
-- andymass/vim-matchup
 - B0o/dropbar.nvim
 - b0o/incline.nvim
 - camgraff/lensline.nvim
-- danielfalk/smart-open.nvim
-- dhruvasagar/vim-table-mode
-- echasnovski/mini.nvim
-- folke/flash.nvim
-- folke/lazydev.nvim
-- folke/persistence.nvim
-- folke/sidekick.nvim
-- folke/snacks.nvim
-- folke/todo-comments.nvim
-- folke/trouble.nvim
-- folke/ts-comments.nvim
 - folke/which-key.nvim
-- gbprod/substitute.nvim
-- github/copilot.vim
-- HiPhish/rainbow-delimiters.nvim
+- j-hui/fidget.nvim
+- jinh0/eyeliner.nvim
+- kevinhwang91/nvim-hlslens
+- lewis6991/satellite.nvim
+- lukas-reineke/indent-blankline.nvim
+- navarasu/onedark.nvim
+- norcalli/nvim-colorizer.lua
+- nvim-tree/nvim-web-devicons
+- OXY2DEV/markview.nvim
+- shortcuts/no-neck-pain.nvim
+- TheGLander/indent-rainbowline.nvim
+- tzachar/highlight-undo.nvim
+
+### Files, Buffers, and Navigation
+- folke/flash.nvim
+- danielfalk/smart-open.nvim
+- nvim-neo-tree/neo-tree.nvim
+- otavioschwanck/arrow.nvim
+- stevearc/oil.nvim
+
+### Search / Pickers
+- MagicDuck/grug-far.nvim
+- nvim-telescope/telescope-fzf-native.nvim
+- nvim-telescope/telescope-ui-select.nvim
+- nvim-telescope/telescope.nvim
+
+### LSP, Completion, and Snippets
+- folke/lazydev.nvim
 - hrsh7th/cmp-nvim-lsp
 - hrsh7th/cmp-path
 - hrsh7th/nvim-cmp
-- j-hui/fidget.nvim
-- jay-babu/mason-nvim-dap.nvim
-- jinh0/eyeliner.nvim
-- JoosepAlviste/nvim-ts-context-commentstring
-- jpalardy/vim-slime
-- kevinhwang91/nvim-hlslens
-- kkharji/sqlite.lua
-- kndndrj/nvim-dbee
 - L3MON4D3/LuaSnip
-- leoluz/nvim-dap-go
-- lewis6991/gitsigns.nvim
-- lewis6991/satellite.nvim
-- lukas-reineke/indent-blankline.nvim
-- MagicDuck/grug-far.nvim
-- matze/vim-move
-- mbbill/undotree
-- mfussenegger/nvim-dap
-- mfussenegger/nvim-lint
-- mg979/vim-visual-multi
-- MunifTanjim/nui.nvim
-- navarasu/onedark.nvim
-- NeogitOrg/neogit
 - neovim/nvim-lspconfig
-- norcalli/nvim-colorizer.lua
-- nvim-lua/plenary.nvim
-- nvim-neo-tree/neo-tree.nvim
+- rafamadriz/friendly-snippets
+- saadparwaiz1/cmp_luasnip
+- WhoIsSethDaniel/mason-tool-installer.nvim
+- williamboman/mason-lspconfig.nvim
+- williamboman/mason.nvim
+
+### Treesitter
+- andymass/vim-matchup
+- HiPhish/rainbow-delimiters.nvim
+- JoosepAlviste/nvim-ts-context-commentstring
+- nvim-treesitter/nvim-treesitter
+- nvim-treesitter/nvim-treesitter-context
+- nvim-treesitter/nvim-treesitter-textobjects
+- windwp/nvim-ts-autotag
+
+### Git
+- lewis6991/gitsigns.nvim
+- NeogitOrg/neogit
+- sindrets/diffview.nvim
+
+### Editing / Text Manipulation
+- AndrewRadev/switch.vim
+- dhruvasagar/vim-table-mode
+- echasnovski/mini.nvim
+- folke/ts-comments.nvim
+- gbprod/substitute.nvim
+- jpalardy/vim-slime
+- matze/vim-move
+- mg979/vim-visual-multi
+- tpope/vim-characterize
+- tpope/vim-sleuth
+
+### Diagnostics and Linting
+- folke/trouble.nvim
+- mfussenegger/nvim-lint
+- ravibrock/spellwarn.nvim
+- RRethy/vim-illuminate
+
+### Formatting
+- stevearc/conform.nvim
+
+### Debugging
+- jay-babu/mason-nvim-dap.nvim
+- leoluz/nvim-dap-go
+- mfussenegger/nvim-dap
+- rcarriga/nvim-dap-ui
+
+### Sessions / Persistence
+- folke/persistence.nvim
+- mbbill/undotree
+
+### Notes / Org
 - nvim-neorg/lua-utils.nvim
 - nvim-neorg/neorg
 - nvim-neorg/neorg-telescope
 - nvim-neorg/pathlib.nvim
+
+### Database
+- kkharji/sqlite.lua
+- kndndrj/nvim-dbee
+
+### AI / Assistants
+- folke/sidekick.nvim
+- folke/snacks.nvim
+- github/copilot.vim
+
+### Utilities
+- MunifTanjim/nui.nvim
+- nvim-lua/plenary.nvim
 - nvim-neotest/nvim-nio
-- nvim-telescope/telescope-fzf-native.nvim
-- nvim-telescope/telescope-ui-select.nvim
-- nvim-telescope/telescope.nvim
-- nvim-tree/nvim-web-devicons
-- nvim-treesitter/nvim-treesitter
-- nvim-treesitter/nvim-treesitter-context
-- nvim-treesitter/nvim-treesitter-textobjects
-- otavioschwanck/arrow.nvim
-- OXY2DEV/markview.nvim
-- rafamadriz/friendly-snippets
-- ravibrock/spellwarn.nvim
-- rcarriga/nvim-dap-ui
-- RRethy/vim-illuminate
-- saadparwaiz1/cmp_luasnip
-- shortcuts/no-neck-pain.nvim
-- sindrets/diffview.nvim
-- stevearc/conform.nvim
-- stevearc/oil.nvim
-- TheGLander/indent-rainbowline.nvim
-- tpope/vim-characterize
-- tpope/vim-sleuth
-- tzachar/highlight-undo.nvim
-- WhoIsSethDaniel/mason-tool-installer.nvim
-- williamboman/mason-lspconfig.nvim
-- williamboman/mason.nvim
-- windwp/nvim-ts-autotag
 
 ## Credits
 
