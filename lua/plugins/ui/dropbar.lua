@@ -30,7 +30,7 @@ return {
         'oil',
         'snacks_dashboard',
         'toggleterm',
-        'TelescopePrompt',
+        'snacks_picker_input',
       }
 
       vim.api.nvim_create_autocmd('BufWinEnter', {

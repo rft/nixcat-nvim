@@ -280,7 +280,7 @@ vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copyin
 
 -- Recent files mapping
 vim.keymap.set('n', '<leader>fr', function()
-  require('telescope.builtin').oldfiles()
+  Snacks.picker.recent()
 end, { desc = '[F]ile [r]ecent' })-- Confirm quit all; warns about unsaved buffers
 vim.keymap.set('n', '<leader>qq', '<cmd>confirm qa<CR>', {
   desc = '[Q]uit all (confirm)',

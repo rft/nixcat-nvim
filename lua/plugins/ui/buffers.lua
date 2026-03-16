@@ -1,12 +1,8 @@
 return {
-  -- Buffer management
+  -- Buffer management: standalone keybinds (not tied to a specific plugin)
   {
-    "nvim-telescope/telescope.nvim",
+    "nvim-lua/plenary.nvim",
     keys = {
-      { "<leader>bb", "<cmd>Telescope buffers cwd_only=true<cr>", desc = "Open buffer search (workspace)" },
-      { "<leader>bB", "<cmd>Telescope buffers<cr>", desc = "Open all buffer search" },
-      { "<leader>,", "<cmd>Telescope buffers cwd_only=true<cr>", desc = "Open buffer search (workspace)" },
-      { "<leader><S-,>", "<cmd>Telescope buffers<cr>", desc = "Open all buffer search" },
       { "<leader>bc", function()
         local buf = vim.api.nvim_get_current_buf()
         local force_delete = false

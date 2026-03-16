@@ -98,6 +98,30 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
+      -- Picker keybinds (replaces Telescope)
+      { '<leader>sh', function() snacks.picker.help() end, desc = '[S]earch [H]elp' },
+      { '<leader>sk', function() snacks.picker.keymaps() end, desc = '[S]earch [K]eymaps' },
+      { '<leader>sf', function() snacks.picker.files() end, desc = '[S]earch [F]iles' },
+      { '<leader>ss', function() snacks.picker.lines() end, desc = '[S]earch in current file' },
+      { '<leader>sw', function() snacks.picker.grep_word() end, desc = '[S]earch current [W]ord' },
+      { '<leader>sg', function() snacks.picker.grep() end, desc = '[S]earch by [G]rep' },
+      { '<leader>sd', function() snacks.picker.diagnostics() end, desc = '[S]earch [D]iagnostics' },
+      { '<leader>sr', function() snacks.picker.resume() end, desc = '[S]earch [R]esume' },
+      { '<leader>s.', function() snacks.picker.recent() end, desc = '[S]earch Recent Files ("." for repeat)' },
+      { '<leader>st', function() snacks.picker.pickers() end, desc = '[S]earch all pickers' },
+      { '<leader><leader>', function() snacks.picker.commands() end, desc = '[ ] Command palette' },
+      { '<leader>/', function() snacks.picker.lines() end, desc = '[/] Fuzzily search in current buffer' },
+      { '<leader>s/', function() snacks.picker.grep_buffers() end, desc = '[S]earch [/] in Open Files' },
+      { '<leader>sn', function() snacks.picker.files({ cwd = vim.fn.stdpath('config') }) end, desc = '[S]earch [N]eovim files' },
+      { '<leader>sp', function() snacks.picker.grep({ hidden = true, ignored = true }) end, desc = '[S]earch [p]roject (enhanced fuzzy)' },
+      { '<leader>sP', function() snacks.picker.grep() end, desc = '[S]earch [P]roject (standard)' },
+      { '<leader>pp', function() snacks.picker.projects() end, desc = '[P]roject [p]icker' },
+      { '<leader>ff', function() snacks.picker.smart() end, desc = '[F]ind [f]ile (smart)' },
+      { '<leader>of', function() snacks.picker.files() end, desc = '[O]pen [f]ile' },
+      { '<leader>fF', function() snacks.picker.files() end, desc = '[F]ind [F]iles' },
+      { '<C-S-f>', function() snacks.picker.grep() end, desc = 'Search whole project' },
+      { '<leader>fr', function() snacks.picker.recent() end, desc = '[F]ile [r]ecent' },
+      -- Buffer picker keybinds
       {
         '<leader>bb',
         function()
@@ -105,6 +129,9 @@ return {
         end,
         desc = '[B]uffer [B]rowse open buffers',
       },
+      { '<leader>bB', function() snacks.picker.buffers() end, desc = '[B]uffer picker (all)' },
+      { '<leader>,', function() snacks.picker.buffers({ filter = { cwd = true } }) end, desc = 'Buffer picker (workspace)' },
+      { '<leader><S-,>', function() snacks.picker.buffers() end, desc = 'Buffer picker (all)' },
       {
         '<leader>bd',
         function()
@@ -168,6 +195,7 @@ return {
       },
       picker = {
         enabled = true,
+        ui_select = true,
       },
       notifier = {
         enabled = true,

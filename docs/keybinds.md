@@ -80,13 +80,13 @@ Sources: `lua/core/keymaps.lua`, `lua/plugins/general.lua`
 | n | `SPC fp` | Copy path | Copy absolute file path to clipboard |
 | n | `SPC fP` | Copy path | Copy relative file path to clipboard |
 | n | `SPC fe` | Open explorer | Open current file in system file manager |
-| n | `SPC fr` | Telescope oldfiles | Open recent files |
+| n | `SPC fr` | Snacks picker recent | Open recent files |
 | n | `SPC fs` | `:w` | Save file |
 | n | `SPC ft` | `:Neotree toggle` | Toggle Neo-tree file tree |
 | n | `SPC fo` | Oil toggle | Toggle Oil file browser |
-| n | `SPC ff` | smart-open | Find file (smart-open, learns from usage) |
-| n | `SPC fF` | Telescope find_files | Find files (built-in) |
-| n | `SPC of` | Telescope find_files | Open file (built-in) |
+| n | `SPC ff` | Snacks picker smart | Find file (smart) |
+| n | `SPC fF` | Snacks picker files | Find files |
+| n | `SPC of` | Snacks picker files | Open file |
 | n | `SPC ou` | `:UndotreeToggle` | Toggle undo tree |
 
 ### Oil Buffer Keymaps (inside Oil)
@@ -128,30 +128,30 @@ Sources: `lua/core/keymaps.lua`, `lua/plugins/general.lua`
 
 ---
 
-## Search / Telescope
+## Search / Picker
 
-Sources: `init.lua`, `lua/plugins/general.lua`, `lua/plugins/search.lua`
+Source: `lua/plugins/tools/snacks.lua`
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `SPC sh` | Telescope help_tags | Search help tags |
-| n | `SPC sk` | Telescope keymaps | Search keymaps |
-| n | `SPC sf` | Telescope find_files | Search files |
-| n | `SPC ss` | Telescope current_buffer_fuzzy_find | Search in current file |
-| n | `SPC sw` | Telescope grep_string | Search current word |
-| n | `SPC sg` | Telescope live_grep | Live grep |
-| n | `SPC sd` | Telescope diagnostics | Search diagnostics |
-| n | `SPC sr` | Telescope resume | Resume last picker |
-| n | `SPC s.` | Telescope oldfiles | Search recent files |
-| n | `SPC st` | Telescope builtin | List Telescope builtins |
-| n | `SPC SPC` | Telescope commands | Command palette |
-| n | `SPC /` | Fuzzy find (dropdown) | Fuzzy search current buffer (no preview) |
-| n | `SPC s/` | Telescope live_grep | Live grep in open files only |
-| n | `SPC sn` | Telescope find_files | Search Neovim config files |
-| n | `SPC sp` | Telescope live_grep | Project grep including hidden files |
-| n | `SPC sP` | Telescope live_grep | Project grep (standard) |
-| n | `SPC pp` | Custom picker | Recent projects picker |
-| n | `<C-S-f>` | Telescope live_grep | Search whole project |
+| n | `SPC sh` | Snacks picker help | Search help tags |
+| n | `SPC sk` | Snacks picker keymaps | Search keymaps |
+| n | `SPC sf` | Snacks picker files | Search files |
+| n | `SPC ss` | Snacks picker lines | Search in current file |
+| n | `SPC sw` | Snacks picker grep_word | Search current word |
+| n | `SPC sg` | Snacks picker grep | Live grep |
+| n | `SPC sd` | Snacks picker diagnostics | Search diagnostics |
+| n | `SPC sr` | Snacks picker resume | Resume last picker |
+| n | `SPC s.` | Snacks picker recent | Search recent files |
+| n | `SPC st` | Snacks picker pickers | List all pickers |
+| n | `SPC SPC` | Snacks picker commands | Command palette |
+| n | `SPC /` | Snacks picker lines | Fuzzy search current buffer |
+| n | `SPC s/` | Snacks picker grep_buffers | Grep in open files only |
+| n | `SPC sn` | Snacks picker files | Search Neovim config files |
+| n | `SPC sp` | Snacks picker grep | Project grep including hidden files |
+| n | `SPC sP` | Snacks picker grep | Project grep (standard) |
+| n | `SPC pp` | Snacks picker projects | Projects picker |
+| n | `<C-S-f>` | Snacks picker grep | Search whole project |
 
 ### Search & Replace (grug-far)
 
@@ -176,14 +176,14 @@ Sources: `init.lua`, `lua/plugins/general.lua`, `lua/plugins/search.lua`
 
 ## Buffers
 
-Sources: `lua/plugins/buffers.lua`, `lua/plugins/snacks.lua`
+Sources: `lua/plugins/tools/snacks.lua`, `lua/plugins/ui/buffers.lua`
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `SPC bb` | Snacks picker | Browse open buffers |
-| n | `SPC bB` | Telescope buffers | Buffer picker (all) |
-| n | `SPC ,` | Telescope buffers | Buffer picker (workspace) |
-| n | `SPC <S-,>` | Telescope buffers | Buffer picker (all) |
+| n | `SPC bb` | Snacks picker buffers | Browse open buffers |
+| n | `SPC bB` | Snacks picker buffers | Buffer picker (all) |
+| n | `SPC ,` | Snacks picker buffers | Buffer picker (workspace) |
+| n | `SPC <S-,>` | Snacks picker buffers | Buffer picker (all) |
 | n | `SPC bc` | Custom function | Close buffer (prompts to save if modified) |
 | n | `SPC bs` | `:enew` | New scratch buffer |
 | n | `SPC bu` | `:e #` | Reopen last buffer |
@@ -220,14 +220,14 @@ Source: `init.lua` (LspAttach autocmd)
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `gd` | Telescope lsp_definitions | Go to definition |
-| n | `gr` | Telescope lsp_references | Go to references |
-| n | `gI` | Telescope lsp_implementations | Go to implementation |
+| n | `gd` | Snacks picker lsp_definitions | Go to definition |
+| n | `gr` | Snacks picker lsp_references | Go to references |
+| n | `gI` | Snacks picker lsp_implementations | Go to implementation |
 | n | `gD` | lsp.buf.declaration | Go to declaration |
 | n | `K` | lsp.buf.hover | Hover documentation |
-| n | `SPC D` | Telescope lsp_type_definitions | Type definition |
-| n | `SPC ds` | Telescope lsp_document_symbols | Document symbols |
-| n | `SPC ws` | Telescope lsp_dynamic_workspace_symbols | Workspace symbols |
+| n | `SPC D` | Snacks picker lsp_type_definitions | Type definition |
+| n | `SPC ds` | Snacks picker lsp_symbols | Document symbols |
+| n | `SPC ws` | Snacks picker lsp_workspace_symbols | Workspace symbols |
 | n | `SPC lr` | lsp.buf.rename | LSP rename |
 | n | `SPC la` | lsp.buf.code_action | LSP code action |
 | n | `SPC ti` | Toggle inlay hints | Toggle LSP inlay hints |
@@ -475,7 +475,7 @@ Source: `lua/plugins/neorg/init.lua`
 | n | `SPC mw` | Neorg workspace | Open default Neorg workspace |
 | n | `SPC mi` | Neorg index | Open Neorg workspace index |
 | n | `SPC mj` | Neorg journal today | Open today's journal entry |
-| n | `SPC ms` | Telescope neorg | Search Neorg notes |
+| n | `SPC ms` | Snacks picker (norg files) | Search Neorg notes |
 
 ---
 
@@ -611,7 +611,6 @@ Some keybinds are used by multiple plugins. In practice, the last one to set the
 | `SPC tc` | Treesitter context vs No-Neck-Pain | Both set globally; last loaded wins |
 | `SPC wp` | Dropbar pick vs Arrow previous mark | Both set globally; last loaded wins |
 | `SPC wm` | Dropbar pick (current) vs Arrow menu | Both set globally; last loaded wins |
-| `SPC bb` | Telescope buffers vs Snacks buffers | Snacks version likely takes precedence |
 | `SPC de` | Diagnostics float vs DAP eval | DAP version is buffer-local in debug mode |
 | `SPC cc` | `:make` (lsp.lua) vs Slime config | Both set globally; last loaded wins |
 | `SPC cr` | LSP references (lsp.lua) vs Slime send (visual) | Different modes (normal vs visual) |

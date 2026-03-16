@@ -180,7 +180,7 @@ primary plugin list since this config uses lazy.nvim for loading control.
 ```nix
 startupPlugins = with pkgs.vimPlugins; {
   general = [
-    vim-sleuth lazy-nvim telescope-nvim nvim-lspconfig
+    vim-sleuth lazy-nvim snacks-nvim nvim-lspconfig
     nvim-treesitter.withAllGrammars
     # ... 60+ plugins
   ];
@@ -188,7 +188,7 @@ startupPlugins = with pkgs.vimPlugins; {
   kickstart-lint     = [ nvim-lint ];
   kickstart-autopairs = [ nvim-autopairs ];
   kickstart-neo-tree = [ neo-tree-nvim nui-nvim nvim-web-devicons plenary-nvim ];
-  neorg = [ neorg lua-utils-nvim pathlib-nvim neorg-telescope ];
+  neorg = [ neorg lua-utils-nvim pathlib-nvim ];
 };
 ```
 
@@ -768,7 +768,7 @@ available at runtime in Neovim.
    ```
 
 2. **Available at runtime**: Wrapped onto `PATH`, available to both
-   Neovim's built-in terminal (`:terminal`) and plugins like Telescope
+   Neovim's built-in terminal (`:terminal`) and plugins like Snacks picker
    (which shells out to `rg` and `fd`).
 
 ### Runtime flow summary

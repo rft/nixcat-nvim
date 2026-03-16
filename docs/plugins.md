@@ -47,10 +47,10 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ### snacks.nvim
 - **Plugin**: `folke/snacks.nvim`
-- **Purpose**: Collection of small utilities - terminal, dashboard, buffer delete, git browse, scratch pads, notifications, smooth scroll, word highlighting, scope/indent, and big file handling.
+- **Purpose**: Collection of small utilities - fuzzy picker (files, grep, LSP, buffers, etc.), terminal, dashboard, buffer delete, git browse, scratch pads, notifications, smooth scroll, word highlighting, scope/indent, big file handling, and `vim.ui.select` replacement.
 - **Config**: `lua/plugins/tools/snacks.lua`
-- **Key features**: Floating/split terminal, dashboard on startup, buffer delete, scratch buffers, notification history, git browse/blame, smooth scrolling, scope textobjects.
-- **Keybinds**: `<leader>ot` (terminal), `<leader>os` (split terminal), `<leader>gB` (git browse), `<leader>gl` (git blame line), `<leader>ps` (scratch), `<leader>pS` (pick scratch), `<leader>bb` (buffers), `<leader>bd`/`bD` (delete buffer), `<leader>pn` (notifications), `<leader>pd` (dashboard).
+- **Key features**: Fuzzy picker (replaces Telescope), floating/split terminal, dashboard on startup, buffer delete, scratch buffers, notification history, git browse/blame, smooth scrolling, scope textobjects.
+- **Keybinds**: `<leader>sh` (help), `<leader>sk` (keymaps), `<leader>sf` (files), `<leader>sg` (grep), `<leader>sd` (diagnostics), `<leader>sr` (resume), `<leader>s.` (recent), `<leader>st` (all pickers), `<leader><leader>` (command palette), `<leader>/` (buffer search), `<leader>ff` (smart find), `<leader>pp` (projects), `<leader>bb` (buffers), `<leader>ot` (terminal), `<leader>os` (split terminal), `<leader>gB` (git browse), `<leader>gl` (git blame line), `<leader>ps` (scratch), `<leader>pS` (pick scratch), `<leader>bd`/`bD` (delete buffer), `<leader>pn` (notifications), `<leader>pd` (dashboard).
 
 ### plenary.nvim
 - **Plugin**: `nvim-lua/plenary.nvim`
@@ -154,26 +154,10 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ## Search and Navigation
 
-### telescope.nvim
-- **Plugin**: `nvim-telescope/telescope.nvim`
-- **Purpose**: Fuzzy finder for files, LSP symbols, help, keymaps, buffers, diagnostics, and more.
-- **Config**: `init.lua:286` and `lua/plugins/general.lua`, `lua/plugins/ui/buffers.lua`, `lua/plugins/navigation/search.lua`
-- **Extensions**: `fzf`, `ui-select`, `smart_open`, `neorg`.
-- **Keybinds**: `<leader>sh` (help), `<leader>sk` (keymaps), `<leader>sf` (files), `<leader>ss` (current buffer), `<leader>sw` (grep word), `<leader>sg` (live grep), `<leader>sd` (diagnostics), `<leader>sr` (resume), `<leader>s.` (recent files), `<leader>st` (telescope builtins), `<leader><leader>` (command palette), `<leader>/` (fuzzy find in buffer), `<leader>s/` (grep open files), `<leader>sn` (neovim config files), `<leader>sp` (project grep with hidden), `<leader>sP` (standard project grep), `<leader>pp` (recent projects), `<leader>ff` (smart-open), `<leader>of` (open file), `<leader>fF` (find files), `<C-S-f>` (live grep).
-
-### telescope-fzf-native.nvim
-- **Plugin**: `nvim-telescope/telescope-fzf-native.nvim`
-- **Purpose**: FZF sorter for Telescope (faster native sorting).
-
-### telescope-ui-select.nvim
-- **Plugin**: `nvim-telescope/telescope-ui-select.nvim`
-- **Purpose**: Replaces `vim.ui.select` with Telescope picker.
-
-### smart-open.nvim
-- **Plugin**: `danielfalk/smart-open.nvim`
-- **Purpose**: Intelligent file opener that learns from usage patterns (uses SQLite).
-- **Config**: `lua/plugins/navigation/search.lua`
-- **Dependencies**: `sqlite.lua`.
+### Snacks picker (part of snacks.nvim)
+- **Purpose**: Fuzzy finder for files, LSP symbols, help, keymaps, buffers, diagnostics, and more. Also provides `vim.ui.select` replacement.
+- **Config**: `lua/plugins/tools/snacks.lua`
+- **Keybinds**: `<leader>sh` (help), `<leader>sk` (keymaps), `<leader>sf` (files), `<leader>ss` (current buffer), `<leader>sw` (grep word), `<leader>sg` (grep), `<leader>sd` (diagnostics), `<leader>sr` (resume), `<leader>s.` (recent files), `<leader>st` (all pickers), `<leader><leader>` (command palette), `<leader>/` (fuzzy find in buffer), `<leader>s/` (grep open files), `<leader>sn` (neovim config files), `<leader>sp` (project grep with hidden), `<leader>sP` (standard project grep), `<leader>pp` (projects), `<leader>ff` (smart find), `<leader>of` (open file), `<leader>fF` (find files), `<C-S-f>` (grep).
 
 ### flash.nvim
 - **Plugin**: `folke/flash.nvim`
@@ -249,8 +233,8 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Config**: `lua/plugins/ui/buffers.lua`
 - **Keybinds**: `[b` (prev buffer), `]b` (next buffer), `<leader>bp` (toggle pin), `<leader>bP` (close unpinned), `<leader>bn` (new buffer).
 
-### Buffer operations (via Telescope and plenary)
-- **Config**: `lua/plugins/ui/buffers.lua`
+### Buffer operations (via Snacks and plenary)
+- **Config**: `lua/plugins/tools/snacks.lua`, `lua/plugins/ui/buffers.lua`
 - **Keybinds**: `<leader>bb`/`<leader>,` (buffer picker workspace), `<leader>bB`/`<leader><S-,>` (buffer picker all), `<leader>bc` (close buffer), `<leader>bs` (scratch buffer), `<leader>bu` (reopen last), `<leader>bl`/`bh`/`bj`/`bk` (move buffer to adjacent window).
 
 ---
@@ -540,7 +524,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Config**: `lua/plugins/neorg/init.lua`
 - **Keybinds**: `<leader>mw` (open workspace), `<leader>mi` (open index), `<leader>mj` (journal today), `<leader>ms` (search notes).
 - **Category**: Requires `neorg`.
-- **Modules**: `core.defaults`, `core.concealer`, `core.summary`, `core.export`, `core.qol.todo_items`, `core.completion`, `core.integrations.nvim-cmp`, `core.integrations.telescope`, `core.journal`, `core.dirman`.
+- **Modules**: `core.defaults`, `core.concealer`, `core.summary`, `core.export`, `core.qol.todo_items`, `core.completion`, `core.integrations.nvim-cmp`, `core.journal`, `core.dirman`.
 
 ---
 

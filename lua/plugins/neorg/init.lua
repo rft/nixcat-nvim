@@ -46,7 +46,6 @@ local function plugin_path(name)
 end
 
 local neorg_path = plugin_path 'neorg'
-local neorg_telescope_path = plugin_path 'neorg-telescope'
 local lua_utils_path = plugin_path 'lua-utils-nvim'
 local pathlib_path = plugin_path 'pathlib-nvim'
 
@@ -80,11 +79,6 @@ return {
         name = 'pathlib.nvim',
         dir = pathlib_path,
       },
-      {
-        'nvim-neorg/neorg-telescope',
-        name = 'neorg-telescope',
-        dir = neorg_telescope_path,
-      },
     },
     keys = {
       {
@@ -111,11 +105,11 @@ return {
       {
         '<leader>ms',
         function()
-          local ok, telescope = pcall(require, 'telescope')
-          if ok and telescope.extensions and telescope.extensions.neorg and telescope.extensions.neorg.find_norg_files then
-            telescope.extensions.neorg.find_norg_files()
+          local ws_path = normalized_workspaces[default_workspace]
+          if ws_path then
+            Snacks.picker.files({ cwd = ws_path, glob = '*.norg' })
           else
-            vim.notify('Neorg telescope integration not available', vim.log.levels.WARN)
+            vim.notify('No neorg workspace configured', vim.log.levels.WARN)
           end
         end,
         desc = '[M]notes [S]earch notes',
@@ -135,7 +129,6 @@ return {
             },
           },
           ['core.integrations.nvim-cmp'] = {},
-          ['core.integrations.telescope'] = {},
           ['core.journal'] = {
             config = {
               workspace = default_workspace,
@@ -153,7 +146,6 @@ return {
     config = function(_, opts)
       ensure_workspace_dirs()
       require('neorg').setup(opts)
-      pcall(require('telescope').load_extension, 'neorg')
     end,
   },
 }

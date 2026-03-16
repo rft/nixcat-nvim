@@ -29,7 +29,7 @@ local function build_spec(source)
 
       -- Disable Copilot for transient buffers that should never get AI completion
       vim.g.copilot_filetypes = {
-        TelescopePrompt = false,
+        snacks_picker_input = false,
         ['neo-tree'] = false,
         lazy = false,
         oil = false,

@@ -28,7 +28,7 @@ return {
         'mason',
         'oil',
         'Outline',
-        'TelescopePrompt',
+        'snacks_picker_input',
         'snacks_dashboard',
       },
       min_count_to_highlight = 2,

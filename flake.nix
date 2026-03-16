@@ -191,9 +191,6 @@
               ts-comments-nvim
               gitsigns-nvim
               which-key-nvim
-              telescope-nvim
-              telescope-fzf-native-nvim
-              telescope-ui-select-nvim
               nvim-web-devicons
               plenary-nvim
               nvim-lspconfig
@@ -221,8 +218,6 @@
               # ))
               flash-nvim
               neogit
-              smart-open-nvim
-              sqlite-lua
               oil-nvim
               no-neck-pain-nvim
               undotree
@@ -256,8 +251,6 @@
               lensline-nvim
               nvim-dbee
               nvim-colorizer-lua
-              smart-open-nvim
-              sqlite-lua
               spellwarn-nvim
               sidekick-nvim
               myeyeshurt
@@ -294,7 +287,6 @@
               neorg
               lua-utils-nvim
               pathlib-nvim
-              neorg-telescope
             ];
           };
 
