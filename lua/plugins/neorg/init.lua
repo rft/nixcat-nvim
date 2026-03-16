@@ -46,8 +46,6 @@ local function plugin_path(name)
 end
 
 local neorg_path = plugin_path 'neorg'
-local lua_utils_path = plugin_path 'lua-utils-nvim'
-local pathlib_path = plugin_path 'pathlib-nvim'
 
 local function ensure_workspace_dirs()
   for _, location in pairs(normalized_workspaces) do
@@ -69,16 +67,6 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-treesitter/nvim-treesitter',
-      {
-        'nvim-neorg/lua-utils.nvim',
-        name = 'lua-utils.nvim',
-        dir = lua_utils_path,
-      },
-      {
-        'nvim-neorg/pathlib.nvim',
-        name = 'pathlib.nvim',
-        dir = pathlib_path,
-      },
     },
     keys = {
       {

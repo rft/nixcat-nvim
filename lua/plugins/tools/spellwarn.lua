@@ -10,7 +10,7 @@ return {
         "CursorHold",
         "InsertLeave",
       },
-      enable = true,
+      enable = false,
       ft_config = {
         alpha = false,
         help = false,

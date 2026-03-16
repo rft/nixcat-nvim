@@ -946,7 +946,12 @@ if ok then
       show_source = false,
       -- Throttle the update of the diagnostic
       throttle = 20,
-      -- The minimum severity to show
+      -- Only show ERROR, WARN, INFO (excludes HINT/spelling)
+      severity = {
+        vim.diagnostic.severity.ERROR,
+        vim.diagnostic.severity.WARN,
+        vim.diagnostic.severity.INFO,
+      },
       softwrap = 15,
       -- Use multiline messages
       multilines = {
@@ -966,6 +971,10 @@ end
 -- Precognition (managed by nix) - Show vim motions hints
 local ok_precognition, precognition = pcall(require, 'precognition')
 if ok_precognition then
+  -- Pre-load submodules so deferred calls can find them
+  -- after lazy.nvim has reconfigured the runtimepath
+  pcall(require, 'precognition.utils')
+  pcall(require, 'precognition.motions')
   precognition.setup {
     -- Keep hints hidden until explicitly toggled
     startVisible = false,

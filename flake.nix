@@ -285,8 +285,6 @@
             ];
             neorg = [
               neorg
-              lua-utils-nvim
-              pathlib-nvim
             ];
           };
 
@@ -385,6 +383,7 @@
               kickstart-gitsigns = true;
 
               neorg = {
+                enabled = true;
                 defaultWorkspace = "notes";
                 workspaces = {
                   notes = "~/notes/neorg";
