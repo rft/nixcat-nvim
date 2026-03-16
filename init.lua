@@ -1224,6 +1224,10 @@ end
 -- Hardtime (managed by nix) - Help break bad vim habits
 local ok_hardtime, hardtime = pcall(require, 'hardtime')
 if ok_hardtime then
+  -- Pre-load submodules so the deferred 500ms timer can find them
+  -- after lazy.nvim has reconfigured the runtimepath
+  pcall(require, 'hardtime.command')
+  pcall(require, 'hardtime.report')
   hardtime.setup {
     -- Enable by default
     enabled = true,
