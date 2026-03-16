@@ -65,6 +65,16 @@ home.packages = [ inputs.nano-nvim.packages.${system}.default ];
 }
 ```
 
+### Shell Alias
+If you'd like to use `nvim` to launch this configuration via `nix run`:
+
+```bash
+# Add to your .bashrc, .zshrc, etc.
+alias nvim='nix run github:rft/nixcat-nvim --'
+```
+
+The `--` ensures any arguments (filenames, flags) are passed through to Neovim.
+
 ## Documentation
 
 - **[Plugin Reference](docs/plugins.md)** - Every plugin with purpose, keybinds, and config locations
