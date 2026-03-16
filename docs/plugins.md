@@ -526,6 +526,14 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Category**: Requires `neorg`.
 - **Modules**: `core.defaults`, `core.concealer`, `core.summary`, `core.export`, `core.qol.todo_items`, `core.completion`, `core.integrations.nvim-cmp`, `core.journal`, `core.dirman`.
 
+### obsidian.nvim
+- **Plugin**: `epwalsh/obsidian.nvim`
+- **Purpose**: Work with Obsidian vaults inside Neovim — wiki links, daily notes, backlinks, tags, and search.
+- **Config**: `lua/plugins/obsidian/init.lua`
+- **Keybinds**: `<leader>mon` (new note), `<leader>moo` (open in Obsidian app), `<leader>mos` (search), `<leader>moq` (quick switch), `<leader>mob` (backlinks), `<leader>mot` (tags), `<leader>mod` (daily note), `<leader>moy` (yesterday's note), `<leader>mol` (link selection, visual), `<leader>moL` (link to new note, visual).
+- **Category**: Requires `obsidian`.
+- **Features**: Multiple vault support via Nix config, daily notes, wiki-link completion via nvim-cmp, vault directory auto-creation.
+
 ---
 
 ## Database

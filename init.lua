@@ -250,6 +250,8 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
         { '<leader>l_', hidden = true },
         { '<leader>m', group = '[M]notes' },
         { '<leader>m_', hidden = true },
+        { '<leader>mo', group = '[M]notes [O]bsidian' },
+        { '<leader>mo_', hidden = true },
         { '<leader>o', group = '[O]pen' },
         { '<leader>o_', hidden = true },
         { '<leader>n', group = '[N]eominimap' },
@@ -921,6 +923,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   { import = 'plugins.git' },
   { import = 'plugins.tools' },
   { import = 'plugins.neorg' },
+  { import = 'plugins.obsidian' },
 }, lazyOptions)
 
 -- Configure nix-managed plugins that are not handled by lazy

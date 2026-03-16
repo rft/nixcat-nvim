@@ -286,6 +286,9 @@
             neorg = [
               neorg
             ];
+            obsidian = [
+              obsidian-nvim
+            ];
           };
 
           # not loaded automatically at startup.
@@ -387,6 +390,14 @@
                 defaultWorkspace = "notes";
                 workspaces = {
                   notes = "~/notes/neorg";
+                };
+              };
+
+              obsidian = {
+                enabled = true;
+                defaultVault = "personal";
+                vaults = {
+                  personal = "~/notes/obsidian";
                 };
               };
 
