@@ -123,6 +123,7 @@
               indentRainbowline = prev.callPackage ./packages/indentRainbowline {
                 indent-blankline-nvim = prev.vimPlugins.indent-blankline-nvim;
               };
+              reactive-nvim = prev.callPackage ./packages/reactive { };
             };
           })
           # add any other flake overlays here.
@@ -260,6 +261,7 @@
               substitute-nvim
               vim-illuminate
               dropbar-nvim
+              reactive-nvim
             ];
             kickstart-debug = [
               nvim-dap

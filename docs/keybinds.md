@@ -601,6 +601,16 @@ Source: `init.lua` (nvim-cmp)
 
 ---
 
+## Reactive Highlights
+
+Source: `lua/plugins/ui/reactive.lua`
+
+reactive.nvim provides automatic mode-based highlight changes (cursorline, cursor, mode message). No keybinds needed — it reacts to mode changes automatically.
+
+**Commands**: `:ReactiveToggle`, `:ReactiveStop`, `:ReactiveStart`.
+
+---
+
 ## Known Conflicts / Overlaps
 
 Some keybinds are used by multiple plugins. In practice, the last one to set the keymap wins, or buffer-local mappings take precedence:

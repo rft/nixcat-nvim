@@ -442,6 +442,13 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Purpose**: Highlights TODO, FIXME, NOTE, HACK, WARN, etc. in comments.
 - **Config**: `init.lua:991`
 
+### reactive.nvim (Nix-packaged)
+- **Plugin**: `rasulomaroff/reactive.nvim`
+- **Purpose**: Dynamic mode-based highlights — changes cursorline, cursor, and mode message colors reactively based on the current Vim mode (normal, insert, visual, etc.).
+- **Config**: `lua/plugins/ui/reactive.lua`
+- **Commands**: `:ReactiveToggle`, `:ReactiveStop`, `:ReactiveStart`.
+- **Notes**: Custom Nix-packaged plugin. Enables the built-in `cursorline`, `cursor`, and `modemsg` presets.
+
 ### no-neck-pain.nvim
 - **Plugin**: `shortcuts/no-neck-pain.nvim`
 - **Purpose**: Centers the active buffer for focused writing/coding.
@@ -591,13 +598,14 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 
 ## Custom Nix-Packaged Plugins Summary
 
-These three plugins are packaged via Nix rather than fetched by lazy.nvim:
+These plugins are packaged via Nix rather than fetched by lazy.nvim:
 
 | Plugin | Purpose | Config File |
 |--------|---------|-------------|
 | **myeyeshurt** | Eye strain break reminders | `lua/plugins/tools/myeyeshurt.lua` |
 | **neominimap.nvim** | Code minimap overlay | `lua/plugins/ui/neoMiniMap.lua` |
 | **indent-rainbowline.nvim** | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
+| **reactive.nvim** | Dynamic mode-based highlights | `lua/plugins/ui/reactive.lua` |
 
 Additional Nix-managed plugins (loaded outside lazy.nvim):
 - **tiny-inline-diagnostic** - Inline diagnostic display
