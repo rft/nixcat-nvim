@@ -61,6 +61,13 @@ vim.opt.spell = true
 vim.opt.spelllang = { 'en_us' }
 vim.opt.spelloptions:append('camel')
 
+-- Writable spellfile (nix store is read-only)
+local spell_dir = vim.fn.stdpath('data') .. '/spell'
+if vim.fn.isdirectory(spell_dir) == 0 then
+  vim.fn.mkdir(spell_dir, 'p')
+end
+vim.opt.spellfile = spell_dir .. '/en.utf-8.add'
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
