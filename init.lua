@@ -1101,20 +1101,20 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   -- NOTE: nixCats: instead of uncommenting them, you can enable them
   -- from the categories set in your packageDefinitions in your flake or other template!
   -- This is because within them, we used nixCats to check if it should be loaded!
-  -- NOTE: These plugins are now loaded automatically from lua/plugins/ directory
-  -- require 'plugins.debug',
-  -- require 'plugins.indent_line',
-  -- require 'plugins.lint',
-  -- require 'plugins.autopairs',
-  -- require 'plugins.neo-tree',
-  -- require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
+  -- NOTE: These plugins are now loaded automatically from lua/plugins/ subdirectories
+  -- (ui/, navigation/, editing/, lsp/, git/, tools/, neorg/)
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  -- Plugin specs organized by category under lua/plugins/
+  -- Top-level: general.lua (mixed utilities)
+  -- Subdirectories must be imported explicitly (lazy.nvim does not recurse)
   { import = 'plugins' },
+  { import = 'plugins.ui' },
+  { import = 'plugins.navigation' },
+  { import = 'plugins.editing' },
+  { import = 'plugins.lsp' },
+  { import = 'plugins.git' },
+  { import = 'plugins.tools' },
+  { import = 'plugins.neorg' },
 }, lazyOptions)
 
 -- Configure nix-managed plugins that are not handled by lazy
