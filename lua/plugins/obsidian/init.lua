@@ -77,48 +77,48 @@ return {
       {
         '<leader>mon',
         '<cmd>Obsidian new<cr>',
-        desc = '[M]notes [O]bsidian [N]ew note',
+        desc = '[M]notes [O]bsidian [n]ew note',
       },
       {
         '<leader>moo',
         '<cmd>Obsidian open<cr>',
-        desc = '[M]notes [O]bsidian [O]pen in app',
+        desc = '[M]notes [O]bsidian [o]pen in app',
       },
       {
         '<leader>mos',
         '<cmd>Obsidian search<cr>',
-        desc = '[M]notes [O]bsidian [S]earch',
+        desc = '[M]notes [O]bsidian [s]earch',
       },
       {
         '<leader>moq',
         '<cmd>Obsidian quick-switch<cr>',
-        desc = '[M]notes [O]bsidian [Q]uick switch',
+        desc = '[M]notes [O]bsidian [q]uick switch',
       },
       {
         '<leader>mob',
         '<cmd>Obsidian backlinks<cr>',
-        desc = '[M]notes [O]bsidian [B]acklinks',
+        desc = '[M]notes [O]bsidian [b]acklinks',
       },
       {
         '<leader>mot',
         '<cmd>Obsidian tags<cr>',
-        desc = '[M]notes [O]bsidian [T]ags',
+        desc = '[M]notes [O]bsidian [t]ags',
       },
       {
         '<leader>mod',
         '<cmd>Obsidian today<cr>',
-        desc = '[M]notes [O]bsidian [D]aily note',
+        desc = '[M]notes [O]bsidian [d]aily note',
       },
       {
         '<leader>moy',
         '<cmd>Obsidian yesterday<cr>',
-        desc = '[M]notes [O]bsidian [Y]esterday',
+        desc = '[M]notes [O]bsidian [y]esterday',
       },
       {
         '<leader>mol',
         '<cmd>Obsidian link<cr>',
         mode = 'v',
-        desc = '[M]notes [O]bsidian [L]ink selection',
+        desc = '[M]notes [O]bsidian [l]ink selection',
       },
       {
         '<leader>moL',

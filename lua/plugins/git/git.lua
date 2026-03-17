@@ -28,10 +28,10 @@ return {
       'DiffviewToggleFiles',
     },
     keys = {
-      { '<leader>gdo', '<cmd>DiffviewOpen<cr>', desc = '[G]it [D]iff [O]pen' },
-      { '<leader>gdc', '<cmd>DiffviewClose<cr>', desc = '[G]it [D]iff [C]lose' },
-      { '<leader>gdf', '<cmd>DiffviewFileHistory<cr>', desc = '[G]it [D]iff [F]ile history' },
-      { '<leader>gdt', '<cmd>DiffviewToggleFiles<cr>', desc = '[G]it [D]iff [T]oggle files panel' },
+      { '<leader>gdo', '<cmd>DiffviewOpen<cr>', desc = '[G]it [D]iff [o]pen' },
+      { '<leader>gdc', '<cmd>DiffviewClose<cr>', desc = '[G]it [D]iff [c]lose' },
+      { '<leader>gdf', '<cmd>DiffviewFileHistory<cr>', desc = '[G]it [D]iff [f]ile history' },
+      { '<leader>gdt', '<cmd>DiffviewToggleFiles<cr>', desc = '[G]it [D]iff [t]oggle files panel' },
     },
     config = function()
       require('diffview').setup {

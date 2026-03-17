@@ -74,21 +74,21 @@ return {
         function()
           vim.cmd('Neorg workspace ' .. default_workspace)
         end,
-        desc = '[M]notes open default [W]orkspace',
+        desc = '[M]notes open default [w]orkspace',
       },
       {
         '<leader>mi',
         function()
           vim.cmd('Neorg index')
         end,
-        desc = '[M]notes workspace [I]ndex',
+        desc = '[M]notes workspace [i]ndex',
       },
       {
         '<leader>mj',
         function()
           vim.cmd('Neorg journal today')
         end,
-        desc = '[M]notes [J]ournal today',
+        desc = '[M]notes [j]ournal today',
       },
       {
         '<leader>ms',
@@ -100,7 +100,7 @@ return {
             vim.notify('No neorg workspace configured', vim.log.levels.WARN)
           end
         end,
-        desc = '[M]notes [S]earch notes',
+        desc = '[M]notes [s]earch notes',
       },
     },
     opts = function()
