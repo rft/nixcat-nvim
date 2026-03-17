@@ -178,6 +178,7 @@
             ];
             kickstart-debug = [
               delve
+              lldb # provides lldb-dap for C/C++/Rust
             ];
             kickstart-lint = [
               markdownlint-cli
@@ -268,6 +269,9 @@
               nvim-dap-ui
               nvim-dap-go
               nvim-nio
+              nvim-dap-python
+              nvim-dap-vscode-js
+              one-small-step-for-vimkind
             ];
             kickstart-indent_line = [ ];
             kickstart-lint = [
@@ -378,7 +382,11 @@
 
               kickstart-autopairs = true;
               kickstart-neo-tree = true;
-              kickstart-debug = true;
+              kickstart-debug = {
+                enabled = true;
+                debugpy_python = "${pkgs.python3.withPackages (ps: [ ps.debugpy ])}/bin/python3";
+                js_debug_cmd = "${pkgs.vscode-js-debug}/bin/js-debug";
+              };
               kickstart-lint = true;
               kickstart-indent_line = true;
 

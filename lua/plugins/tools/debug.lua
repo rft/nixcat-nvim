@@ -24,6 +24,9 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
+    'mxsdev/nvim-dap-vscode-js',
+    'jbyuki/one-small-step-for-vimkind',
   },
   config = function()
     local dap = require 'dap'
@@ -92,6 +95,9 @@ return {
       dap.terminate()
       dapui.close()
     end, { desc = '[D]ebug: Terminate Session' })
+    vim.keymap.set('n', '<leader>dL', function()
+      require('osv').launch({ port = 8086 })
+    end, { desc = '[D]ebug: Launch Neovim [L]ua debugger' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -157,6 +163,112 @@ return {
         -- On Windows delve must be run attached or it crashes.
         -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
         detached = vim.fn.has 'win32' == 0,
+      },
+    }
+
+    -- Python (debugpy)
+    local debugpy_python = require('nixCatsUtils').getCatOrDefault(
+      { 'kickstart-debug', 'debugpy_python' }, 'python3')
+    require('dap-python').setup(debugpy_python, {
+      console = 'internalConsole',
+    })
+
+    -- C/C++/Rust (lldb-dap)
+    dap.adapters.lldb = {
+      type = 'executable',
+      command = 'lldb-dap',
+      name = 'lldb',
+    }
+    local lldb_configs = {
+      {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+      },
+      {
+        name = 'Launch with arguments',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        args = function()
+          local args_str = vim.fn.input('Arguments: ')
+          return vim.split(args_str, ' +')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+      },
+      {
+        name = 'Attach to process',
+        type = 'lldb',
+        request = 'attach',
+        pid = require('dap.utils').pick_process,
+      },
+    }
+    dap.configurations.c = lldb_configs
+    dap.configurations.cpp = lldb_configs
+    dap.configurations.rust = lldb_configs
+
+    -- JavaScript/TypeScript (vscode-js-debug)
+    local js_debug_cmd = require('nixCatsUtils').getCatOrDefault(
+      { 'kickstart-debug', 'js_debug_cmd' }, 'js-debug')
+    require('dap-vscode-js').setup({
+      debugger_cmd = { js_debug_cmd },
+      adapters = { 'pwa-node', 'pwa-chrome', 'node-terminal' },
+    })
+    local js_configs = {
+      {
+        type = 'pwa-node',
+        request = 'launch',
+        name = 'Launch file',
+        program = '${file}',
+        cwd = '${workspaceFolder}',
+      },
+      {
+        type = 'pwa-node',
+        request = 'attach',
+        name = 'Attach',
+        processId = require('dap.utils').pick_process,
+        cwd = '${workspaceFolder}',
+      },
+      {
+        type = 'pwa-node',
+        request = 'launch',
+        name = 'Debug Jest tests',
+        runtimeExecutable = 'node',
+        runtimeArgs = { './node_modules/jest/bin/jest.js', '--runInBand' },
+        rootPath = '${workspaceFolder}',
+        cwd = '${workspaceFolder}',
+        console = 'integratedTerminal',
+        internalConsoleOptions = 'neverOpen',
+      },
+      {
+        type = 'pwa-chrome',
+        request = 'launch',
+        name = 'Launch Chrome against localhost',
+        url = 'http://localhost:3000',
+        webRoot = '${workspaceFolder}',
+      },
+    }
+    for _, lang in ipairs({ 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }) do
+      dap.configurations[lang] = js_configs
+    end
+
+    -- Neovim Lua (one-small-step-for-vimkind)
+    dap.adapters.nlua = function(callback, config)
+      callback({ type = 'server', host = config.host or '127.0.0.1', port = config.port or 8086 })
+    end
+    dap.configurations.lua = {
+      {
+        type = 'nlua',
+        request = 'attach',
+        name = 'Attach to running Neovim instance',
       },
     }
   end,
