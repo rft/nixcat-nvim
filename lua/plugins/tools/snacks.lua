@@ -209,6 +209,13 @@ return {
           if notif.title == 'Plugin Loader' then
             return false
           end
+          -- Only show the Copilot sign-in nag once per session
+          if notif.msg and notif.msg:find('not signed into GitHub') then
+            if vim.g._copilot_signin_shown then
+              return false
+            end
+            vim.g._copilot_signin_shown = true
+          end
           return true
         end,
       },
