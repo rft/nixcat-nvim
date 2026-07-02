@@ -110,12 +110,12 @@ vim.g.have_nerd_font = nixCats 'have_nerd_font'
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 
@@ -371,27 +371,39 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('gd', function() Snacks.picker.lsp_definitions() end, '[G]oto [D]efinition')
+          map('gd', function()
+            Snacks.picker.lsp_definitions()
+          end, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', function() Snacks.picker.lsp_references() end, '[G]oto [R]eferences')
+          map('gr', function()
+            Snacks.picker.lsp_references()
+          end, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', function() Snacks.picker.lsp_implementations() end, '[G]oto [I]mplementation')
+          map('gI', function()
+            Snacks.picker.lsp_implementations()
+          end, '[G]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
-          map('<leader>D', function() Snacks.picker.lsp_type_definitions() end, 'Type [D]efinition')
+          map('<leader>D', function()
+            Snacks.picker.lsp_type_definitions()
+          end, 'Type [D]efinition')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', function() Snacks.picker.lsp_symbols() end, '[D]ocument [S]ymbols')
+          map('<leader>ds', function()
+            Snacks.picker.lsp_symbols()
+          end, '[D]ocument [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', function() Snacks.picker.lsp_workspace_symbols() end, '[W]orkspace [S]ymbols')
+          map('<leader>ws', function()
+            Snacks.picker.lsp_workspace_symbols()
+          end, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -415,7 +427,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.server_capabilities.documentHighlightProvider then
+          if client and client:supports_method 'textDocument/documentHighlight' then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -442,7 +454,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+          if client and client:supports_method 'textDocument/inlayHint' and vim.lsp.inlay_hint then
             map('<leader>ti', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end, '[T]oggle [I]nlay hints')
@@ -468,29 +480,33 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       -- NOTE: nixCats: there is help in nixCats for lsps at `:h nixCats.LSPs` and also `:h nixCats.luaUtils`
-      local util = require('lspconfig.util')
-      local function rust_root_dir(fname)
-        local rust_project = util.root_pattern('rust-project.json')(fname)
+      -- Detect Rust workspace roots without shelling out to `cargo metadata`.
+      -- Uses the vim.lsp.config root_dir signature: (bufnr, on_dir).
+      local function rust_root_dir(bufnr, on_dir)
+        local fname = vim.api.nvim_buf_get_name(bufnr)
+
+        local rust_project = vim.fs.root(fname, 'rust-project.json')
         if rust_project then
-          return rust_project
+          return on_dir(rust_project)
         end
 
-        local crate_dir = util.root_pattern('Cargo.toml')(fname)
+        local crate_dir = vim.fs.root(fname, 'Cargo.toml')
         if not crate_dir then
-          return util.root_pattern('.git')(fname)
+          local git_dir = vim.fs.root(fname, '.git')
+          if git_dir then
+            on_dir(git_dir)
+          end
+          return
         end
 
         local function has_workspace_manifest(dir)
-          local manifest = util.path.join(dir, 'Cargo.toml')
-          if not util.path.is_file(manifest) then
-            return false
-          end
+          local manifest = dir .. '/Cargo.toml'
           local ok, lines = pcall(vim.fn.readfile, manifest)
           if not ok then
             return false
           end
           for _, line in ipairs(lines) do
-            if line:match('%s*%[workspace%]') then
+            if line:match '%s*%[workspace%]' then
               return true
             end
           end
@@ -498,16 +514,16 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
         end
 
         if has_workspace_manifest(crate_dir) then
-          return crate_dir
+          return on_dir(crate_dir)
         end
 
-        for parent in util.path.iterate_parents(crate_dir) do
+        for parent in vim.fs.parents(crate_dir) do
           if has_workspace_manifest(parent) then
-            return parent
+            return on_dir(parent)
           end
         end
 
-        return crate_dir
+        on_dir(crate_dir)
       end
       local servers = {}
 

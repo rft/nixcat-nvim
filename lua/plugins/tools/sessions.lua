@@ -1,51 +1,51 @@
 return {
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
+    'folke/persistence.nvim',
+    event = 'BufReadPre',
     opts = {
-      dir = vim.fn.stdpath("state") .. "/sessions/",
-      options = { "buffers", "curdir", "tabpages", "winsize" },
+      dir = vim.fn.stdpath 'state' .. '/sessions/',
+      options = { 'buffers', 'curdir', 'tabpages', 'winsize' },
       pre_save = function()
         -- Skip saving sessions for special buffers and while in git commit messages
         local ignore_ft = {
-          ["alpha"] = true,
-          ["gitcommit"] = true,
-          ["lazy"] = true,
+          ['alpha'] = true,
+          ['gitcommit'] = true,
+          ['lazy'] = true,
         }
         return not ignore_ft[vim.bo.filetype]
       end,
     },
     config = function(_, opts)
-      require("persistence").setup(opts)
+      require('persistence').setup(opts)
     end,
     keys = {
       {
-        "<leader>qs",
+        '<leader>qs',
         function()
-          require("persistence").load()
+          require('persistence').load()
         end,
-        desc = "[Q]uick [s]ession restore",
+        desc = '[Q]uick [s]ession restore',
       },
       {
-        "<leader>qS",
+        '<leader>qS',
         function()
-          require("persistence").select()
+          require('persistence').select()
         end,
-        desc = "[Q]uick session [S]elect",
+        desc = '[Q]uick session [S]elect',
       },
       {
-        "<leader>ql",
+        '<leader>ql',
         function()
-          require("persistence").load { last = true }
+          require('persistence').load { last = true }
         end,
-        desc = "[Q]uick session restore [l]ast",
+        desc = '[Q]uick session restore [l]ast',
       },
       {
-        "<leader>qd",
+        '<leader>qd',
         function()
-          require("persistence").stop()
+          require('persistence').stop()
         end,
-        desc = "[Q]uick session [d]isable",
+        desc = '[Q]uick session [d]isable',
       },
     },
   },

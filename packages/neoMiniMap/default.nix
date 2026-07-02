@@ -2,13 +2,16 @@
 
 vimUtils.buildVimPlugin {
   pname = "neominimap";
-  version = "v3.15.3";
+  version = "v3.16.0";
   src = fetchFromGitHub {
     owner = "Isrothy";
     repo = "neominimap.nvim";
-    rev = "9a40d417374eeb6e2907d0782ecc4d4aeb5006b1";
-    sha256 = "0kqq6clgr7xy26j8njc86dr79vx6zpvkq09x1l8zgiaa5mj1q5ni";
+    rev = "0676085d898019f06044923934e38663f5efa290";
+    sha256 = "076l8knm2dp73vhvkxjvwkcgz1z9cmlgvvczn188mjjyv6cpzi8i";
   };
+  # The nixpkgs require-check loads every module in isolation, which fails for
+  # neominimap's internal modules (they expect plugin runtime state).
+  doCheck = false;
   meta = with lib; {
     description = "Fast, feature-rich minimap plugin for Neovim";
     homepage = "https://github.com/Isrothy/neominimap.nvim";

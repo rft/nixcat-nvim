@@ -1,4 +1,4 @@
-local nixCatsUtils = require('nixCatsUtils')
+local nixCatsUtils = require 'nixCatsUtils'
 local nixCats = _G.nixCats
 
 local fs = vim.uv or vim.loop
@@ -57,7 +57,7 @@ if not colorizer_path then
           vim.notify('nvim-colorizer.lua is not available', vim.log.levels.WARN)
           return
         end
-        colorizer.setup({
+        colorizer.setup {
           filetypes = { '*', '!lazy' },
           user_default_options = {
             RGB = true,
@@ -72,7 +72,7 @@ if not colorizer_path then
             tailwind = true,
             mode = 'background',
           },
-        })
+        }
       end,
     },
   }
@@ -89,7 +89,7 @@ return {
         vim.notify('Failed to load nvim-colorizer.lua from nix path: ' .. colorizer_path, vim.log.levels.WARN)
         return
       end
-      colorizer.setup({
+      colorizer.setup {
         filetypes = { '*', '!lazy' },
         user_default_options = {
           RGB = true,
@@ -104,7 +104,7 @@ return {
           tailwind = true,
           mode = 'background',
         },
-      })
+      }
     end,
   },
 }

@@ -1,4 +1,4 @@
-local nixCatsUtils = require('nixCatsUtils')
+local nixCatsUtils = require 'nixCatsUtils'
 local nixCats = _G.nixCats
 
 local function resolve_sidekick_path()

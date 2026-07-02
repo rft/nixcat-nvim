@@ -3,7 +3,7 @@ return {
   { -- Linting
     'mfussenegger/nvim-lint',
     -- NOTE: nixCats: return true only if category is enabled, else false
-    enabled = require('nixCatsUtils').enableForCategory("kickstart-lint"),
+    enabled = require('nixCatsUtils').enableForCategory 'kickstart-lint',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
@@ -11,7 +11,9 @@ return {
         markdown = { 'markdownlint' },
       }
       lint.linters.markdownlint.args = {
-        '--disable', 'MD013', '--',
+        '--disable',
+        'MD013',
+        '--',
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

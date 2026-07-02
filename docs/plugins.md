@@ -442,12 +442,12 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Purpose**: Highlights TODO, FIXME, NOTE, HACK, WARN, etc. in comments.
 - **Config**: `init.lua:991`
 
-### reactive.nvim (Nix-packaged)
+### reactive.nvim
 - **Plugin**: `rasulomaroff/reactive.nvim`
 - **Purpose**: Dynamic mode-based highlights — changes cursorline, cursor, and mode message colors reactively based on the current Vim mode (normal, insert, visual, etc.).
 - **Config**: `lua/plugins/ui/reactive.lua`
 - **Commands**: `:ReactiveToggle`, `:ReactiveStop`, `:ReactiveStart`.
-- **Notes**: Custom Nix-packaged plugin. Enables the built-in `cursorline`, `cursor`, and `modemsg` presets.
+- **Notes**: Packaged upstream in nixpkgs. Enables the built-in `cursorline`, `cursor`, and `modemsg` presets.
 
 ### no-neck-pain.nvim
 - **Plugin**: `shortcuts/no-neck-pain.nvim`

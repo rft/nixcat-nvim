@@ -1,5 +1,5 @@
 -- NOTE: nixCats: this plugin is loaded if you have the general category enabled
-if not nixCats('general') then
+if not nixCats 'general' then
   return {}
 end
 

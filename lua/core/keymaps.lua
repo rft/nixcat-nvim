@@ -4,7 +4,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-
 vim.keymap.set('n', '<Esc>', function()
   local ok, hlslens = pcall(require, 'hlslens')
   if ok then
@@ -14,8 +13,12 @@ vim.keymap.set('n', '<Esc>', function()
 end, { desc = 'Clear search highlighting' })
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump { count = -1, float = true }
+end, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump { count = 1, float = true }
+end, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, { desc = 'Show [d]iagnostic [e]rror messages' })
 vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = '[D]iagnostics to [q]uickfix list' })
 
@@ -63,8 +66,8 @@ local function toggle_window_focus()
   end
 
   zoom_state.win = current
-  vim.cmd('wincmd |')
-  vim.cmd('wincmd _')
+  vim.cmd 'wincmd |'
+  vim.cmd 'wincmd _'
 end
 
 vim.api.nvim_create_autocmd('WinClosed', {
@@ -105,7 +108,7 @@ local function open_url_under_cursor()
     return
   end
 
-  if not url:match('^https?://') then
+  if not url:match '^https?://' then
     url = 'https://' .. url
   end
 
@@ -119,11 +122,11 @@ local function open_url_under_cursor()
   end
 
   local command
-  if vim.fn.has('mac') == 1 and vim.fn.executable('open') == 1 then
+  if vim.fn.has 'mac' == 1 and vim.fn.executable 'open' == 1 then
     command = { 'open', url }
-  elseif (vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1) then
+  elseif vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
     command = { 'cmd.exe', '/c', 'start', '', url }
-  elseif vim.fn.executable('xdg-open') == 1 then
+  elseif vim.fn.executable 'xdg-open' == 1 then
     command = { 'xdg-open', url }
   end
 
@@ -139,7 +142,6 @@ local function open_url_under_cursor()
 end
 
 vim.keymap.set('n', 'gx', open_url_under_cursor, { desc = 'Open URL under cursor' })
-
 
 local function current_file_path(kind)
   local bufname = vim.api.nvim_buf_get_name(0)
@@ -176,7 +178,7 @@ local function copy_file_path(kind)
 end
 
 local function open_in_file_manager()
-  local path, err = current_file_path('absolute')
+  local path, err = current_file_path 'absolute'
   local target
   if not path then
     target = vim.fn.getcwd()
@@ -185,7 +187,7 @@ local function open_in_file_manager()
   end
 
   local function is_wsl()
-    if vim.fn.has('wsl') == 1 then
+    if vim.fn.has 'wsl' == 1 then
       return true
     end
     local uv = vim.uv or vim.loop
@@ -213,10 +215,10 @@ local function open_in_file_manager()
     if p == nil or p == '' then
       return nil
     end
-    if vim.fn.executable('wslpath') ~= 1 then
+    if vim.fn.executable 'wslpath' ~= 1 then
       return nil
     end
-    local win_path = vim.fn.system({ 'wslpath', '-w', p })
+    local win_path = vim.fn.system { 'wslpath', '-w', p }
     if vim.v.shell_error ~= 0 then
       return nil
     end
@@ -224,20 +226,20 @@ local function open_in_file_manager()
   end
 
   local cmd
-  if vim.fn.has('mac') == 1 and vim.fn.executable('open') == 1 then
+  if vim.fn.has 'mac' == 1 and vim.fn.executable 'open' == 1 then
     if err then
       cmd = { 'open', target }
     else
       cmd = { 'open', '-R', target }
     end
-  elseif (vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1) and vim.fn.executable('cmd.exe') == 1 then
+  elseif (vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1) and vim.fn.executable 'cmd.exe' == 1 then
     local dir = err and target or vim.fn.fnamemodify(target, ':h')
     cmd = { 'cmd.exe', '/C', 'start', '', dir }
   elseif running_wsl then
     local explorer = nil
-    if vim.fn.executable('explorer.exe') == 1 then
+    if vim.fn.executable 'explorer.exe' == 1 then
       explorer = 'explorer.exe'
-    elseif vim.fn.executable('/mnt/c/Windows/explorer.exe') == 1 then
+    elseif vim.fn.executable '/mnt/c/Windows/explorer.exe' == 1 then
       explorer = '/mnt/c/Windows/explorer.exe'
     end
 
@@ -248,7 +250,7 @@ local function open_in_file_manager()
         cmd = { explorer, win_dir }
       end
     end
-  elseif vim.fn.executable('xdg-open') == 1 then
+  elseif vim.fn.executable 'xdg-open' == 1 then
     local dir = err and target or vim.fn.fnamemodify(target, ':h')
     cmd = { 'xdg-open', dir }
   end
@@ -265,15 +267,14 @@ local function open_in_file_manager()
 end
 
 vim.keymap.set('n', '<leader>fp', function()
-  copy_file_path('absolute')
+  copy_file_path 'absolute'
 end, { desc = '[F]ile copy absolute [p]ath' })
 
 vim.keymap.set('n', '<leader>fP', function()
-  copy_file_path('relative')
+  copy_file_path 'relative'
 end, { desc = '[F]ile copy relative [P]ath' })
 
 vim.keymap.set('n', '<leader>fe', open_in_file_manager, { desc = '[F]ile open in system [e]xplorer' })
-
 
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copying into register' })
@@ -281,7 +282,7 @@ vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copyin
 -- Recent files mapping
 vim.keymap.set('n', '<leader>fr', function()
   Snacks.picker.recent()
-end, { desc = '[F]ile [r]ecent' })-- Confirm quit all; warns about unsaved buffers
+end, { desc = '[F]ile [r]ecent' }) -- Confirm quit all; warns about unsaved buffers
 vim.keymap.set('n', '<leader>qq', '<cmd>confirm qa<CR>', {
   desc = '[Q]uit all (confirm)',
 })

@@ -1,19 +1,19 @@
 local function get_comment_spec()
-  local ok, ts_comments = pcall(require, "ts-comments.comments")
+  local ok, ts_comments = pcall(require, 'ts-comments.comments')
   if not ok then
-    vim.notify("ts-comments.nvim is required for commenting", vim.log.levels.WARN)
+    vim.notify('ts-comments.nvim is required for commenting', vim.log.levels.WARN)
     return
   end
 
   local cs = ts_comments.get(vim.bo.filetype)
-  if not cs or cs == "" then
-    vim.notify("ts-comments.nvim: no commentstring available", vim.log.levels.WARN)
+  if not cs or cs == '' then
+    vim.notify('ts-comments.nvim: no commentstring available', vim.log.levels.WARN)
     return
   end
 
-  local left, right = cs:match("^(.*)%%s(.*)$")
+  local left, right = cs:match '^(.*)%%s(.*)$'
   if not left then
-    vim.notify("ts-comments.nvim: invalid commentstring " .. cs, vim.log.levels.WARN)
+    vim.notify('ts-comments.nvim: invalid commentstring ' .. cs, vim.log.levels.WARN)
     return
   end
 
@@ -21,28 +21,28 @@ local function get_comment_spec()
 end
 
 local function is_commented(line, left, right)
-  local _, rest = line:match("^(%s*)(.*)$")
-  rest = rest or ""
-  if rest == "" then
+  local _, rest = line:match '^(%s*)(.*)$'
+  rest = rest or ''
+  if rest == '' then
     return false
   end
-  if right ~= "" and rest:sub(-#right) ~= right then
+  if right ~= '' and rest:sub(-#right) ~= right then
     return false
   end
   return rest:sub(1, #left) == left
 end
 
 local function apply_comment(line, cs, left, right, uncomment)
-  local indent, rest = line:match("^(%s*)(.*)$")
-  indent = indent or ""
-  rest = rest or ""
+  local indent, rest = line:match '^(%s*)(.*)$'
+  indent = indent or ''
+  rest = rest or ''
 
   if uncomment then
     if not is_commented(line, left, right) then
       return line
     end
     local new_rest = rest
-    if right ~= "" then
+    if right ~= '' then
       new_rest = new_rest:sub(1, #new_rest - #right)
     end
     new_rest = new_rest:sub(#left + 1)
@@ -53,7 +53,7 @@ local function apply_comment(line, cs, left, right, uncomment)
     return line
   end
 
-  return indent .. cs:gsub("%%s", rest)
+  return indent .. cs:gsub('%%s', rest)
 end
 
 local function toggle_lines(start_line, end_line)
@@ -105,10 +105,10 @@ local function toggle_visual_lines()
 end
 
 local function floating_rename()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local clients = vim.lsp.get_clients { bufnr = 0 }
   local supports = false
   for _, client in ipairs(clients) do
-    if client.server_capabilities and client.server_capabilities.renameProvider then
+    if client:supports_method 'textDocument/rename' then
       supports = true
       break
     end
@@ -119,11 +119,11 @@ local function floating_rename()
     return
   end
 
-  local current_name = vim.fn.expand('<cword>')
+  local current_name = vim.fn.expand '<cword>'
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(buf, 'buftype', 'prompt')
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'lsp_rename_prompt')
+  vim.bo[buf].buftype = 'prompt'
+  vim.bo[buf].bufhidden = 'wipe'
+  vim.bo[buf].filetype = 'lsp_rename_prompt'
 
   local float_opts = {
     relative = 'cursor',
@@ -172,62 +172,114 @@ local function floating_rename()
     callback = close_window,
   })
 
-  vim.cmd('startinsert!')
+  vim.cmd 'startinsert!'
 end
 
 return {
   -- LSP operations and code actions
   {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    'neovim/nvim-lspconfig',
+    event = { 'BufReadPre', 'BufNewFile' },
     keys = {
-      { "<leader>;", toggle_current_line, desc = "Comment out line" },
-      { "<leader>;", toggle_visual_lines, mode = "x", desc = "Comment out lines" },
-      { "<leader>cc", "<cmd>make<cr>", desc = "Compile" },
-      { "<leader>cd", vim.lsp.buf.definition, desc = "Jump to definition" },
-      { "<leader>cr", vim.lsp.buf.references, desc = "Find references" },
-      { "<leader>ck", vim.lsp.buf.hover, desc = "Jump to documentation" },
-      { "<leader>cR", floating_rename, desc = "Rename symbol" },
-      { "<leader>cp", function()
-        -- Send to REPL - implementation depends on REPL plugin
-        vim.notify("Send to REPL not configured")
-      end, desc = "Send to repl" },
-      { "<leader>cx", vim.diagnostic.open_float, desc = "LSP diagnostics" },
-      { "<leader>ct", vim.lsp.buf.type_definition, desc = "Find type definition" },
-      { "<leader>co", function()
-        vim.lsp.buf.code_action({
-          filter = function(action)
-            return action.kind and action.kind:match("source.organizeImports")
-          end,
-          apply = true,
-        })
-      end, desc = "Organize imports" },
-      { "<leader>cw", function()
-        vim.cmd([[%s/\s\+$//e]])
-      end, desc = "Remove trailing whitespace" },
-      { "<leader>cW", function()
-        vim.cmd([[%s/\n\+\%$//e]])
-      end, desc = "Remove trailing newlines" },
-      { "<leader>ce", vim.diagnostic.goto_next, desc = "Next error" },
-      { "<leader>cE", vim.diagnostic.goto_prev, desc = "Previous error" },
-      { "]e", function()
-        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-      end, desc = "Next error" },
-      { "[e", function()
-        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-      end, desc = "Previous error" },
-      { "]w", function()
-        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
-      end, desc = "Next warning/spell issue" },
-      { "[w", function()
-        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
-      end, desc = "Previous warning/spell issue" },
-      { "]h", function()
-        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.HINT })
-      end, desc = "Next hint/spell issue" },
-      { "[h", function()
-        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.HINT })
-      end, desc = "Previous hint/spell issue" },
+      { '<leader>;', toggle_current_line, desc = 'Comment out line' },
+      { '<leader>;', toggle_visual_lines, mode = 'x', desc = 'Comment out lines' },
+      { '<leader>cc', '<cmd>make<cr>', desc = 'Compile' },
+      { '<leader>cd', vim.lsp.buf.definition, desc = 'Jump to definition' },
+      { '<leader>cr', vim.lsp.buf.references, desc = 'Find references' },
+      { '<leader>ck', vim.lsp.buf.hover, desc = 'Jump to documentation' },
+      { '<leader>cR', floating_rename, desc = 'Rename symbol' },
+      {
+        '<leader>cp',
+        function()
+          -- Send to REPL - implementation depends on REPL plugin
+          vim.notify 'Send to REPL not configured'
+        end,
+        desc = 'Send to repl',
+      },
+      { '<leader>cx', vim.diagnostic.open_float, desc = 'LSP diagnostics' },
+      { '<leader>ct', vim.lsp.buf.type_definition, desc = 'Find type definition' },
+      {
+        '<leader>co',
+        function()
+          vim.lsp.buf.code_action {
+            filter = function(action)
+              return action.kind and action.kind:match 'source.organizeImports'
+            end,
+            apply = true,
+          }
+        end,
+        desc = 'Organize imports',
+      },
+      {
+        '<leader>cw',
+        function()
+          vim.cmd [[%s/\s\+$//e]]
+        end,
+        desc = 'Remove trailing whitespace',
+      },
+      {
+        '<leader>cW',
+        function()
+          vim.cmd [[%s/\n\+\%$//e]]
+        end,
+        desc = 'Remove trailing newlines',
+      },
+      {
+        '<leader>ce',
+        function()
+          vim.diagnostic.jump { count = 1, float = true }
+        end,
+        desc = 'Next diagnostic',
+      },
+      {
+        '<leader>cE',
+        function()
+          vim.diagnostic.jump { count = -1, float = true }
+        end,
+        desc = 'Previous diagnostic',
+      },
+      {
+        ']e',
+        function()
+          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.ERROR }
+        end,
+        desc = 'Next error',
+      },
+      {
+        '[e',
+        function()
+          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.ERROR }
+        end,
+        desc = 'Previous error',
+      },
+      {
+        ']w',
+        function()
+          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.WARN }
+        end,
+        desc = 'Next warning/spell issue',
+      },
+      {
+        '[w',
+        function()
+          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.WARN }
+        end,
+        desc = 'Previous warning/spell issue',
+      },
+      {
+        ']h',
+        function()
+          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.HINT }
+        end,
+        desc = 'Next hint/spell issue',
+      },
+      {
+        '[h',
+        function()
+          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.HINT }
+        end,
+        desc = 'Previous hint/spell issue',
+      },
     },
   },
 }

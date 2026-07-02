@@ -1,32 +1,36 @@
 return {
   -- File operations keybinds
   {
-    "nvim-neo-tree/neo-tree.nvim",
+    'nvim-neo-tree/neo-tree.nvim',
     keys = {
-      { "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "[F]ile [t]ree" },
+      { '<leader>ft', '<cmd>Neotree toggle<cr>', desc = '[F]ile [t]ree' },
     },
   },
-  
+
   -- Oil file browser
   {
-    "stevearc/oil.nvim",
+    'stevearc/oil.nvim',
     keys = {
-      { "<leader>fo", function()
-        local oil = require("oil")
-        if vim.bo.filetype == "oil" then
-          oil.close()
-        else
-          oil.open()
-        end
-      end, desc = "[F]ile [o]il browser (toggle)" },
+      {
+        '<leader>fo',
+        function()
+          local oil = require 'oil'
+          if vim.bo.filetype == 'oil' then
+            oil.close()
+          else
+            oil.open()
+          end
+        end,
+        desc = '[F]ile [o]il browser (toggle)',
+      },
     },
     config = function()
-      require("oil").setup({
+      require('oil').setup {
         -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
         default_file_explorer = true,
         -- Id is automatically added at the beginning, and name at the end
         columns = {
-          "icon",
+          'icon',
           -- "permissions",
           -- "size",
           -- "mtime",
@@ -34,18 +38,18 @@ return {
         -- Buffer-local options to use for oil buffers
         buf_options = {
           buflisted = false,
-          bufhidden = "hide",
+          bufhidden = 'hide',
         },
         -- Window-local options to use for oil buffers
         win_options = {
           wrap = false,
-          signcolumn = "no",
+          signcolumn = 'no',
           cursorcolumn = false,
-          foldcolumn = "0",
+          foldcolumn = '0',
           spell = false,
           list = false,
           conceallevel = 3,
-          concealcursor = "nvic",
+          concealcursor = 'nvic',
         },
         -- Send deleted files to the trash instead of permanently deleting them (:help oil-trash)
         delete_to_trash = true,
@@ -62,27 +66,27 @@ return {
           autosave_changes = false,
         },
         -- Constrain the cursor to the editable parts of the oil buffer
-        constrain_cursor = "editable",
+        constrain_cursor = 'editable',
         -- Set to true to watch the filesystem for changes and reload oil
         watch_for_changes = false,
         -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
         keymaps = {
-          ["g?"] = "actions.show_help",
-          ["<CR>"] = "actions.select",
-          ["<C-s>"] = "actions.select_vsplit",
-          ["<C-h>"] = "actions.select_split",
-          ["<C-t>"] = "actions.select_tab",
-          ["<C-p>"] = "actions.preview",
-          ["<C-c>"] = "actions.close",
-          ["<C-l>"] = "actions.refresh",
-          ["-"] = "actions.parent",
-          ["_"] = "actions.open_cwd",
-          ["`"] = "actions.cd",
-          ["~"] = "actions.tcd",
-          ["gs"] = "actions.change_sort",
-          ["gx"] = "actions.open_external",
-          ["g."] = "actions.toggle_hidden",
-          ["g\\"] = "actions.toggle_trash",
+          ['g?'] = 'actions.show_help',
+          ['<CR>'] = 'actions.select',
+          ['<C-s>'] = 'actions.select_vsplit',
+          ['<C-h>'] = 'actions.select_split',
+          ['<C-t>'] = 'actions.select_tab',
+          ['<C-p>'] = 'actions.preview',
+          ['<C-c>'] = 'actions.close',
+          ['<C-l>'] = 'actions.refresh',
+          ['-'] = 'actions.parent',
+          ['_'] = 'actions.open_cwd',
+          ['`'] = 'actions.cd',
+          ['~'] = 'actions.tcd',
+          ['gs'] = 'actions.change_sort',
+          ['gx'] = 'actions.open_external',
+          ['g.'] = 'actions.toggle_hidden',
+          ['g\\'] = 'actions.toggle_trash',
         },
         -- Set to false to disable all of the above keymaps
         use_default_keymaps = true,
@@ -91,7 +95,7 @@ return {
           show_hidden = false,
           -- This function defines what is considered a "hidden" file
           is_hidden_file = function(name, bufnr)
-            return vim.startswith(name, ".")
+            return vim.startswith(name, '.')
           end,
           -- This function defines what will never be shown, even when `show_hidden` is set
           is_always_hidden = function(name, bufnr)
@@ -100,8 +104,8 @@ return {
           sort = {
             -- sort order can be "asc" or "desc"
             -- see :help oil-columns to see which columns are sortable
-            { "type", "asc" },
-            { "name", "asc" },
+            { 'type', 'asc' },
+            { 'name', 'asc' },
           },
         },
         -- Configuration for the floating window in oil.open_float
@@ -110,7 +114,7 @@ return {
           padding = 2,
           max_width = 0,
           max_height = 0,
-          border = "rounded",
+          border = 'rounded',
           win_options = {
             winblend = 0,
           },
@@ -126,16 +130,16 @@ return {
           -- min_width and max_width can be a single value or a list of mixed integer/float types.
           max_width = 0.9,
           -- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
-          min_width = {40, 0.4},
+          min_width = { 40, 0.4 },
           -- optionally define an integer/float for the exact width of the preview window
           width = nil,
           -- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
           -- min_height and max_height can be a single value or a list of mixed integer/float types.
           max_height = 0.9,
-          min_height = {5, 0.1},
+          min_height = { 5, 0.1 },
           -- optionally define an integer/float for the exact height of the preview window
           height = nil,
-          border = "rounded",
+          border = 'rounded',
           win_options = {
             winblend = 0,
           },
@@ -143,18 +147,18 @@ return {
         -- Configuration for the floating progress window
         progress = {
           max_width = 0.9,
-          min_width = {40, 0.4},
+          min_width = { 40, 0.4 },
           width = nil,
-          max_height = {10, 0.9},
-          min_height = {5, 0.1},
+          max_height = { 10, 0.9 },
+          min_height = { 5, 0.1 },
           height = nil,
-          border = "rounded",
-          minimized_border = "none",
+          border = 'rounded',
+          minimized_border = 'none',
           win_options = {
             winblend = 0,
           },
         },
-      })
+      }
 
       local rename_group = vim.api.nvim_create_augroup('snacks_oil_rename', { clear = true })
       vim.api.nvim_create_autocmd('User', {
@@ -165,7 +169,7 @@ return {
           local actions = data.actions or {}
           if actions.type == 'move' and actions.src_url and actions.dest_url then
             local function to_path(url)
-              if type(url) == 'string' and url:match('^%w+://') then
+              if type(url) == 'string' and url:match '^%w+://' then
                 return vim.uri_to_fname(url)
               end
               return url
@@ -180,12 +184,12 @@ return {
       })
     end,
   },
-  
+
   -- Undotree
   {
-    "mbbill/undotree",
+    'mbbill/undotree',
     keys = {
-      { "<leader>ou", "<cmd>UndotreeToggle<cr>", desc = "[O]pen [u]ndo tree" },
+      { '<leader>ou', '<cmd>UndotreeToggle<cr>', desc = '[O]pen [u]ndo tree' },
     },
     config = function()
       -- Configure undotree
@@ -193,7 +197,7 @@ return {
       vim.g.undotree_SplitWidth = 40
       vim.g.undotree_SetFocusWhenToggle = 1
       vim.g.undotree_ShortIndicators = 1
-      vim.g.undotree_DiffCommand = "diff"
+      vim.g.undotree_DiffCommand = 'diff'
       vim.g.undotree_DiffpanelHeight = 10
       vim.g.undotree_HelpLine = 0
     end,
@@ -201,28 +205,49 @@ return {
 
   -- Format commands
   {
-    "neovim/nvim-lspconfig",
+    'neovim/nvim-lspconfig',
     keys = {
-      { "<leader>fm", function() vim.lsp.buf.format() end, desc = "[F]ormat [m]arkup/code" },
-      { "<leader>fm", function() vim.lsp.buf.format() end, mode = "v", desc = "[F]ormat region" },
+      {
+        '<leader>fm',
+        function()
+          vim.lsp.buf.format()
+        end,
+        desc = '[F]ormat [m]arkup/code',
+      },
+      {
+        '<leader>fm',
+        function()
+          vim.lsp.buf.format()
+        end,
+        mode = 'v',
+        desc = '[F]ormat region',
+      },
     },
   },
-  
+
   -- No Neck Pain - Center buffer for focused writing
   {
-    "shortcuts/no-neck-pain.nvim",
+    'shortcuts/no-neck-pain.nvim',
     keys = {
-      { "<leader>tn", "<cmd>NoNeckPain<cr>", desc = "[T]oggle [n]eck saver (center mode)" },
-      { "<leader>tc", "<cmd>NoNeckPain<cr>", desc = "[T]oggle [c]enter mode" },
-      { "<leader>t+", function() 
-        require("no-neck-pain").resize(vim.api.nvim_win_get_width(0) + 5) 
-      end, desc = "[T]oggle width [+] (increase)" },
-      { "<leader>t-", function() 
-        require("no-neck-pain").resize(vim.api.nvim_win_get_width(0) - 5) 
-      end, desc = "[T]oggle width [-] (decrease)" },
+      { '<leader>tn', '<cmd>NoNeckPain<cr>', desc = '[T]oggle [n]eck saver (center mode)' },
+      { '<leader>tc', '<cmd>NoNeckPain<cr>', desc = '[T]oggle [c]enter mode' },
+      {
+        '<leader>t+',
+        function()
+          require('no-neck-pain').resize(vim.api.nvim_win_get_width(0) + 5)
+        end,
+        desc = '[T]oggle width [+] (increase)',
+      },
+      {
+        '<leader>t-',
+        function()
+          require('no-neck-pain').resize(vim.api.nvim_win_get_width(0) - 5)
+        end,
+        desc = '[T]oggle width [-] (decrease)',
+      },
     },
     config = function()
-      require("no-neck-pain").setup({
+      require('no-neck-pain').setup {
         -- Width of the centered buffer
         width = 100,
         -- Buffer options
@@ -231,20 +256,20 @@ return {
           left = { enabled = true },
           right = { enabled = true },
           colors = {
-            background = "#1a1b26", -- Dark background color
+            background = '#1a1b26', -- Dark background color
             blend = -0.2,
           },
           bo = {
-            filetype = "no-neck-pain",
-            buftype = "nofile",
-            bufhidden = "hide",
+            filetype = 'no-neck-pain',
+            buftype = 'nofile',
+            bufhidden = 'hide',
             buflisted = false,
             swapfile = false,
           },
           wo = {
             cursorline = false,
             cursorcolumn = false,
-            colorcolumn = "0",
+            colorcolumn = '0',
             number = false,
             relativenumber = false,
             foldenable = false,
@@ -256,23 +281,23 @@ return {
         -- Integration with other plugins
         integrations = {
           NeoTree = {
-            position = "left",
+            position = 'left',
             reopen = true,
           },
           NvimDAPUI = {
-            position = "none",
+            position = 'none',
             reopen = true,
           },
         },
-      })
+      }
     end,
   },
 
   -- Save file keybind
   {
-    "nvim-lua/plenary.nvim",
+    'nvim-lua/plenary.nvim',
     keys = {
-      { "<leader>fs", "<cmd>w<cr>", desc = "[F]ile [s]ave" },
+      { '<leader>fs', '<cmd>w<cr>', desc = '[F]ile [s]ave' },
     },
   },
 }

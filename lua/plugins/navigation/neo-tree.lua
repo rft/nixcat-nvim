@@ -67,9 +67,9 @@ return {
     },
   },
   config = function(_, opts)
-    local events = require('neo-tree.events')
+    local events = require 'neo-tree.events'
     local function to_path(path)
-      if type(path) == 'string' and path:match('^%w+://') then
+      if type(path) == 'string' and path:match '^%w+://' then
         return vim.uri_to_fname(path)
       end
       return path

@@ -1,5 +1,5 @@
 local function has_magic(str)
-  return str:find('[%^%$%[%]().%*%+%-%?]') ~= nil
+  return str:find '[%^%$%[%]().%*%+%-%?]' ~= nil
 end
 
 local function type_matches(node_type, patterns)
@@ -32,13 +32,14 @@ local function treesitter_operation(lhs, desc, patterns)
         matcher = function(win, state)
           local labels = state:labels()
           local matches = {}
-          local ts = require('flash.plugins.treesitter')
+          local ts = require 'flash.plugins.treesitter'
           local buf = vim.api.nvim_win_get_buf(win)
           local line_count = vim.api.nvim_buf_line_count(buf)
           for _, match in ipairs(ts.get_nodes(win, state.pos)) do
             local start_row = match.pos and match.pos[1] or 0
             local end_row = match.end_pos and match.end_pos[1] or 0
-            if start_row >= 1
+            if
+              start_row >= 1
               and start_row <= line_count
               and end_row >= 1
               and end_row <= line_count
@@ -142,48 +143,36 @@ return {
         jump_to_window,
         desc = 'Jump (focus) window',
       },
-      treesitter_operation(
-        '<leader>jtf',
-        'Treesitter function/method',
-        {
-          'function',
-          'method',
-          'lambda',
-          'closure',
-          'arrow_function',
-        }
-      ),
-      treesitter_operation(
-        '<leader>jtc',
-        'Treesitter class/struct',
-        {
-          'class',
-          'struct',
-          'interface',
-          'impl',
-          'trait',
-          'enum',
-          'object',
-          'namespace',
-          'module',
-        }
-      ),
-      treesitter_operation(
-        '<leader>jtb',
-        'Treesitter loop/conditional',
-        {
-          'if',
-          'switch',
-          'case',
-          'when',
-          'for',
-          'while',
-          'loop',
-          'repeat',
-          'match',
-          'conditional',
-        }
-      ),
+      treesitter_operation('<leader>jtf', 'Treesitter function/method', {
+        'function',
+        'method',
+        'lambda',
+        'closure',
+        'arrow_function',
+      }),
+      treesitter_operation('<leader>jtc', 'Treesitter class/struct', {
+        'class',
+        'struct',
+        'interface',
+        'impl',
+        'trait',
+        'enum',
+        'object',
+        'namespace',
+        'module',
+      }),
+      treesitter_operation('<leader>jtb', 'Treesitter loop/conditional', {
+        'if',
+        'switch',
+        'case',
+        'when',
+        'for',
+        'while',
+        'loop',
+        'repeat',
+        'match',
+        'conditional',
+      }),
       {
         '<leader>jr',
         mode = 'o',
@@ -207,7 +196,7 @@ return {
       },
     },
     config = function()
-      local flash = require('flash')
+      local flash = require 'flash'
       local flash_config = {
         -- Labels to use for flash jumps
         labels = 'asdfghjklqwertyuiopzxcvbnm',
@@ -305,7 +294,7 @@ return {
   {
     'jinh0/eyeliner.nvim',
     config = function()
-      local eyeliner = require('eyeliner')
+      local eyeliner = require 'eyeliner'
       local eyeliner_config = {
         highlight_on_key = true,
         dim = true,

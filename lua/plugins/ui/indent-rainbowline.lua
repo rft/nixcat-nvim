@@ -31,50 +31,50 @@ local rainbowline_path = resolve_rainbowline_path()
 
 return {
   {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    event = { "BufReadPost", "BufNewFile" },
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
-      rainbowline_path and { dir = rainbowline_path, name = "indent-rainbowline.nvim" } or "TheGLander/indent-rainbowline.nvim",
+      rainbowline_path and { dir = rainbowline_path, name = 'indent-rainbowline.nvim' } or 'TheGLander/indent-rainbowline.nvim',
     },
     opts = function(_, opts)
       local defaults = {
         indent = {
-          char = "│",
-          tab_char = "│",
+          char = '│',
+          tab_char = '│',
         },
         scope = { enabled = false },
         exclude = {
           filetypes = {
-            "help",
-            "lazy",
-            "mason",
-            "neo-tree",
-            "oil",
-            "Trouble",
-            "alpha",
-            "dashboard",
-            "noice",
-            "prompt",
-            "spectre_panel",
+            'help',
+            'lazy',
+            'mason',
+            'neo-tree',
+            'oil',
+            'Trouble',
+            'alpha',
+            'dashboard',
+            'noice',
+            'prompt',
+            'spectre_panel',
           },
-          buftypes = { "terminal", "nofile", "quickfix", "prompt" },
+          buftypes = { 'terminal', 'nofile', 'quickfix', 'prompt' },
         },
       }
 
-      opts = vim.tbl_deep_extend("force", defaults, opts or {})
+      opts = vim.tbl_deep_extend('force', defaults, opts or {})
 
-      return require("indent-rainbowline").make_opts(opts, {
+      return require('indent-rainbowline').make_opts(opts, {
         color_transparency = 0.04,
       })
     end,
     keys = {
       {
-        "<leader>ti",
+        '<leader>ti',
         function()
-          require("ibl").toggle()
+          require('ibl').toggle()
         end,
-        desc = "[T]oggle [i]ndent guides",
+        desc = '[T]oggle [i]ndent guides',
       },
     },
   },

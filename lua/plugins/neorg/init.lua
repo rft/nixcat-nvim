@@ -1,7 +1,7 @@
-local nixcats_utils = require('nixCatsUtils')
+local nixcats_utils = require 'nixCatsUtils'
 local nixCats = _G.nixCats
 
-if not nixcats_utils.enableForCategory('neorg') then
+if not nixcats_utils.enableForCategory 'neorg' then
   return {}
 end
 
@@ -79,14 +79,14 @@ return {
       {
         '<leader>mi',
         function()
-          vim.cmd('Neorg index')
+          vim.cmd 'Neorg index'
         end,
         desc = '[M]notes workspace [i]ndex',
       },
       {
         '<leader>mj',
         function()
-          vim.cmd('Neorg journal today')
+          vim.cmd 'Neorg journal today'
         end,
         desc = '[M]notes [j]ournal today',
       },
@@ -95,7 +95,7 @@ return {
         function()
           local ws_path = normalized_workspaces[default_workspace]
           if ws_path then
-            Snacks.picker.files({ cwd = ws_path, glob = '*.norg' })
+            Snacks.picker.files { cwd = ws_path, glob = '*.norg' }
           else
             vim.notify('No neorg workspace configured', vim.log.levels.WARN)
           end

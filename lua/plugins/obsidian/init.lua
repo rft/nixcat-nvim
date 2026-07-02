@@ -1,7 +1,7 @@
-local nixcats_utils = require('nixCatsUtils')
+local nixcats_utils = require 'nixCatsUtils'
 local nixCats = _G.nixCats
 
-if not nixcats_utils.enableForCategory('obsidian') then
+if not nixcats_utils.enableForCategory 'obsidian' then
   return {}
 end
 

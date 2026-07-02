@@ -1,29 +1,29 @@
 return {
   -- Text manipulation - line movement and multicursor
   {
-    "matze/vim-move",
+    'matze/vim-move',
     keys = {
-      { "<M-k>", "<Plug>MoveLineUp", desc = "Move line up" },
-      { "<M-j>", "<Plug>MoveLineDown", desc = "Move line down" },
-      { "<M-Up>", "<Plug>MoveLineUp", desc = "Move line up" },
-      { "<M-Down>", "<Plug>MoveLineDown", desc = "Move line down" },
-      { "<M-k>", "<Plug>MoveBlockUp", mode = "v", desc = "Move selection up" },
-      { "<M-j>", "<Plug>MoveBlockDown", mode = "v", desc = "Move selection down" },
-      { "<M-Up>", "<Plug>MoveBlockUp", mode = "v", desc = "Move selection up" },
-      { "<M-Down>", "<Plug>MoveBlockDown", mode = "v", desc = "Move selection down" },
+      { '<M-k>', '<Plug>MoveLineUp', desc = 'Move line up' },
+      { '<M-j>', '<Plug>MoveLineDown', desc = 'Move line down' },
+      { '<M-Up>', '<Plug>MoveLineUp', desc = 'Move line up' },
+      { '<M-Down>', '<Plug>MoveLineDown', desc = 'Move line down' },
+      { '<M-k>', '<Plug>MoveBlockUp', mode = 'v', desc = 'Move selection up' },
+      { '<M-j>', '<Plug>MoveBlockDown', mode = 'v', desc = 'Move selection down' },
+      { '<M-Up>', '<Plug>MoveBlockUp', mode = 'v', desc = 'Move selection up' },
+      { '<M-Down>', '<Plug>MoveBlockDown', mode = 'v', desc = 'Move selection down' },
     },
   },
-  
+
   -- Multi-cursor support
   {
-    "mg979/vim-visual-multi",
+    'mg979/vim-visual-multi',
     keys = {
-      { "<C-M-k>", "<Plug>(VM-Add-Cursor-Up)", desc = "Multicursor add line up" },
-      { "<C-M-j>", "<Plug>(VM-Add-Cursor-Down)", desc = "Multicursor add line down" },
-      { "<C-M-Up>", "<Plug>(VM-Add-Cursor-Up)", desc = "Multicursor add line up" },
-      { "<C-M-Down>", "<Plug>(VM-Add-Cursor-Down)", desc = "Multicursor add line down" },
-      { "i", "<Plug>(VM-Visual-Cursors)", mode = "x", desc = "Add cursors to visual selection" },
-      { "I", "<Plug>(VM-Visual-Cursors)", mode = "x", desc = "Add cursors to visual selection" },
+      { '<C-M-k>', '<Plug>(VM-Add-Cursor-Up)', desc = 'Multicursor add line up' },
+      { '<C-M-j>', '<Plug>(VM-Add-Cursor-Down)', desc = 'Multicursor add line down' },
+      { '<C-M-Up>', '<Plug>(VM-Add-Cursor-Up)', desc = 'Multicursor add line up' },
+      { '<C-M-Down>', '<Plug>(VM-Add-Cursor-Down)', desc = 'Multicursor add line down' },
+      { 'i', '<Plug>(VM-Visual-Cursors)', mode = 'x', desc = 'Add cursors to visual selection' },
+      { 'I', '<Plug>(VM-Visual-Cursors)', mode = 'x', desc = 'Add cursors to visual selection' },
     },
   },
 
@@ -57,33 +57,83 @@ return {
 
   -- Enhanced substitution motions and exchanges
   {
-    "gbprod/substitute.nvim",
+    'gbprod/substitute.nvim',
     keys = {
-      { "s", function() require("substitute").operator() end, desc = "Substitute via motion" },
-      { "ss", function() require("substitute").line() end, desc = "Substitute line" },
-      { "S", function() require("substitute").eol() end, desc = "Substitute to end of line" },
-      { "s", function() require("substitute").visual() end, mode = "x", desc = "Substitute selection" },
-      { "sx", function() require("substitute.exchange").operator() end, desc = "Exchange via motion" },
-      { "sxx", function() require("substitute.exchange").line() end, desc = "Exchange line" },
-      { "sxc", function() require("substitute.exchange").cancel() end, desc = "Cancel pending exchange" },
-      { "X", function() require("substitute.exchange").visual() end, mode = "x", desc = "Exchange selection" },
+      {
+        's',
+        function()
+          require('substitute').operator()
+        end,
+        desc = 'Substitute via motion',
+      },
+      {
+        'ss',
+        function()
+          require('substitute').line()
+        end,
+        desc = 'Substitute line',
+      },
+      {
+        'S',
+        function()
+          require('substitute').eol()
+        end,
+        desc = 'Substitute to end of line',
+      },
+      {
+        's',
+        function()
+          require('substitute').visual()
+        end,
+        mode = 'x',
+        desc = 'Substitute selection',
+      },
+      {
+        'sx',
+        function()
+          require('substitute.exchange').operator()
+        end,
+        desc = 'Exchange via motion',
+      },
+      {
+        'sxx',
+        function()
+          require('substitute.exchange').line()
+        end,
+        desc = 'Exchange line',
+      },
+      {
+        'sxc',
+        function()
+          require('substitute.exchange').cancel()
+        end,
+        desc = 'Cancel pending exchange',
+      },
+      {
+        'X',
+        function()
+          require('substitute.exchange').visual()
+        end,
+        mode = 'x',
+        desc = 'Exchange selection',
+      },
     },
     config = function(_, opts)
-      require("substitute").setup(opts)
-      require("substitute.exchange").setup()
+      require('substitute').setup(opts)
+      require('substitute.exchange').setup()
     end,
   },
 
   -- Markdown and table alignment helpers
   {
-    "dhruvasagar/vim-table-mode",
-    cmd = { "TableModeToggle", "TableModeEnable", "TableModeDisable", "TableModeRealign" },
+    'dhruvasagar/vim-table-mode',
+    cmd = { 'TableModeToggle', 'TableModeEnable', 'TableModeDisable', 'TableModeRealign' },
     keys = {
-      { "<leader>tt", "<cmd>TableModeToggle<cr>", desc = "[T]able [t]oggle" },
-      { "<leader>ta", "<cmd>TableModeRealign<cr>", desc = "[T]able re-[a]lign" },
+      { '<leader>tt', '<cmd>TableModeToggle<cr>', desc = '[T]able [t]oggle' },
+      { '<leader>ta', '<cmd>TableModeRealign<cr>', desc = '[T]able re-[a]lign' },
     },
     init = function()
-      vim.g.table_mode_corner = "|"
+      vim.g.table_mode_corner = '|'
       vim.g.table_mode_disable_mappings = 1
     end,
   },

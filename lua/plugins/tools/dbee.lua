@@ -23,7 +23,9 @@ return {
       end
 
       return {
-        { '<leader>od', with_dbee(function(dbee) dbee.toggle() end), desc = 'Toggle database explorer' },
+        { '<leader>od', with_dbee(function(dbee)
+          dbee.toggle()
+        end), desc = 'Toggle database explorer' },
         {
           '<leader>oD',
           with_dbee(function(dbee)

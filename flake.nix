@@ -65,6 +65,9 @@
           builtins.elem (nixpkgs.lib.getName pkg) [
             "copilot.vim"
             "copilot-language-server"
+            "eyeliner.nvim"
+            "nvim-dap-vscode-js"
+            "vscode-js-debug"
           ];
       };
       # management of the system variable is one of the harder parts of using flakes.
@@ -123,7 +126,7 @@
               indentRainbowline = prev.callPackage ./packages/indentRainbowline {
                 indent-blankline-nvim = prev.vimPlugins.indent-blankline-nvim;
               };
-              reactive-nvim = prev.callPackage ./packages/reactive { };
+              # reactive-nvim is now packaged upstream in nixpkgs
             };
           })
           # add any other flake overlays here.

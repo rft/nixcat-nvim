@@ -2,3 +2,5 @@ tags
 .luarc.json
 /result
 .nvimlog
+/.state/
+lazy-lock.json

@@ -9,7 +9,7 @@
 return {
   'mfussenegger/nvim-dap',
   -- NOTE: nixCats: return true only if category is enabled, else false
-  enabled = require('nixCatsUtils').enableForCategory("kickstart-debug"),
+  enabled = require('nixCatsUtils').enableForCategory 'kickstart-debug',
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
@@ -96,7 +96,7 @@ return {
       dapui.close()
     end, { desc = '[D]ebug: Terminate Session' })
     vim.keymap.set('n', '<leader>dL', function()
-      require('osv').launch({ port = 8086 })
+      require('osv').launch { port = 8086 }
     end, { desc = '[D]ebug: Launch Neovim [L]ua debugger' })
 
     -- Dap UI setup
@@ -167,8 +167,7 @@ return {
     }
 
     -- Python (debugpy)
-    local debugpy_python = require('nixCatsUtils').getCatOrDefault(
-      { 'kickstart-debug', 'debugpy_python' }, 'python3')
+    local debugpy_python = require('nixCatsUtils').getCatOrDefault({ 'kickstart-debug', 'debugpy_python' }, 'python3')
     require('dap-python').setup(debugpy_python, {
       console = 'internalConsole',
     })
@@ -198,7 +197,7 @@ return {
           return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
         end,
         args = function()
-          local args_str = vim.fn.input('Arguments: ')
+          local args_str = vim.fn.input 'Arguments: '
           return vim.split(args_str, ' +')
         end,
         cwd = '${workspaceFolder}',
@@ -216,12 +215,11 @@ return {
     dap.configurations.rust = lldb_configs
 
     -- JavaScript/TypeScript (vscode-js-debug)
-    local js_debug_cmd = require('nixCatsUtils').getCatOrDefault(
-      { 'kickstart-debug', 'js_debug_cmd' }, 'js-debug')
-    require('dap-vscode-js').setup({
+    local js_debug_cmd = require('nixCatsUtils').getCatOrDefault({ 'kickstart-debug', 'js_debug_cmd' }, 'js-debug')
+    require('dap-vscode-js').setup {
       debugger_cmd = { js_debug_cmd },
       adapters = { 'pwa-node', 'pwa-chrome', 'node-terminal' },
-    })
+    }
     local js_configs = {
       {
         type = 'pwa-node',
@@ -256,13 +254,13 @@ return {
         webRoot = '${workspaceFolder}',
       },
     }
-    for _, lang in ipairs({ 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }) do
+    for _, lang in ipairs { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' } do
       dap.configurations[lang] = js_configs
     end
 
     -- Neovim Lua (one-small-step-for-vimkind)
     dap.adapters.nlua = function(callback, config)
-      callback({ type = 'server', host = config.host or '127.0.0.1', port = config.port or 8086 })
+      callback { type = 'server', host = config.host or '127.0.0.1', port = config.port or 8086 }
     end
     dap.configurations.lua = {
       {
