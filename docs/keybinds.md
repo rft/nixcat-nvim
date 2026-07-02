@@ -22,7 +22,7 @@ Comprehensive keybind reference for nixcat-nvim. This documents every explicitly
 | `SPC g` | **[G]it** | Git operations |
 | `SPC j` | **[J]ump** | Jump/navigation |
 | `SPC l` | **[L]SP** | LSP-specific actions |
-| `SPC m` | **[M]notes** | Neorg notes |
+| `SPC m` | **[M]notes** | Notes (Obsidian) |
 | `SPC n` | **[N]eominimap** | Code minimap |
 | `SPC o` | **[O]pen** | Open tools/panels |
 | `SPC p` | **[P]roject** | Project operations |
@@ -462,19 +462,6 @@ Sources: `lua/plugins/copilot.lua`, `lua/plugins/sidekick.lua`
 | n,v | `SPC ap` | sidekick.cli.prompt | Prompt Sidekick CLI |
 | v | `SPC as` | sidekick.cli.send | Send visual selection to Sidekick CLI |
 | n,x,i,t | `SPC af` | sidekick.cli.focus | Focus Sidekick CLI window |
-
----
-
-## Notes / Writing (Neorg)
-
-Source: `lua/plugins/neorg/init.lua`
-
-| Mode | Key | Action | Description |
-|------|-----|--------|-------------|
-| n | `SPC mw` | Neorg workspace | Open default Neorg workspace |
-| n | `SPC mi` | Neorg index | Open Neorg workspace index |
-| n | `SPC mj` | Neorg journal today | Open today's journal entry |
-| n | `SPC ms` | Snacks picker (norg files) | Search Neorg notes |
 
 ---
 

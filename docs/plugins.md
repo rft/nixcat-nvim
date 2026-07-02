@@ -524,14 +524,6 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ## Notes / Writing
 
-### neorg
-- **Plugin**: `nvim-neorg/neorg`
-- **Purpose**: Org-mode-like note taking and organization system with `.norg` file format.
-- **Config**: `lua/plugins/neorg/init.lua`
-- **Keybinds**: `<leader>mw` (open workspace), `<leader>mi` (open index), `<leader>mj` (journal today), `<leader>ms` (search notes).
-- **Category**: Requires `neorg`.
-- **Modules**: `core.defaults`, `core.concealer`, `core.summary`, `core.export`, `core.qol.todo_items`, `core.completion`, `core.integrations.nvim-cmp`, `core.journal`, `core.dirman`.
-
 ### obsidian.nvim
 - **Plugin**: `epwalsh/obsidian.nvim`
 - **Purpose**: Work with Obsidian vaults inside Neovim — wiki links, daily notes, backlinks, tags, and search.

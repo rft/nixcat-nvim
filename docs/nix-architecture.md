@@ -71,12 +71,11 @@ dependencies, and settings, then produces a derivation that:
 
 ### Inputs
 
-The flake declares three inputs:
+The flake declares two inputs:
 
 ```nix
 inputs = {
   nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  nixpkgs-2505.url = "github:nixos/nixpkgs/nixos-25.05";
   nixCats.url = "github:BirdeeHub/nixCats-nvim";
 };
 ```
@@ -84,7 +83,6 @@ inputs = {
 | Input | Purpose |
 |---|---|
 | `nixpkgs` (unstable) | Primary package set for plugins, LSPs, and tools. Provides the latest versions. |
-| `nixpkgs-2505` (25.05) | Stable channel used selectively. Currently used to pull treesitter parsers (like `norg`) that may be broken on unstable. |
 | `nixCats` | The framework itself. Provides the builder, utilities, module generators, and the `nixCats` Lua plugin. |
 
 Flake inputs named with the prefix `plugins-` (e.g. `plugins-someplugin`)
@@ -188,7 +186,7 @@ startupPlugins = with pkgs.vimPlugins; {
   kickstart-lint     = [ nvim-lint ];
   kickstart-autopairs = [ nvim-autopairs ];
   kickstart-neo-tree = [ neo-tree-nvim nui-nvim nvim-web-devicons plenary-nvim ];
-  neorg = [ neorg lua-utils-nvim pathlib-nvim ];
+  obsidian = [ obsidian-nvim ];
 };
 ```
 
@@ -254,7 +252,7 @@ The category names serve as feature flags. The current categories are:
 | `kickstart-neo-tree` | Neo-tree file explorer and its dependencies |
 | `kickstart-indent_line` | Indent line plugins (empty list, used as a flag) |
 | `kickstart-gitsigns` | Pure Lua-side flag (no extra Nix packages needed) |
-| `neorg` | Neorg note-taking plugins |
+| `obsidian` | Obsidian note-taking plugin |
 | `test` | Test environment variables and wrapper args |
 
 Categories with empty lists (like `kickstart-indent_line`) still serve a
@@ -308,10 +306,11 @@ categories = {
   kickstart-indent_line = true;
   kickstart-gitsigns = true;
 
-  neorg = {
-    defaultWorkspace = "notes";
-    workspaces = {
-      notes = "~/notes/neorg";
+  obsidian = {
+    enabled = true;
+    defaultVault = "personal";
+    vaults = {
+      personal = "~/notes/obsidian/personal";
     };
   };
 
@@ -320,22 +319,22 @@ categories = {
 ```
 
 Categories are not limited to booleans. Any Nix value assigned to a
-category name is passed through to Lua. The `neorg` category above is a
-table with workspace paths that Lua code reads at runtime via
-`nixCats('neorg.defaultWorkspace')`.
+category name is passed through to Lua. The `obsidian` category above is a
+table with vault paths that Lua code reads at runtime via
+`nixCats('obsidian.defaultVault')`.
 
 ### Multiple Packages
 
 You can define multiple packages in `packageDefinitions` with different
 category selections. For example, you could add a `nvim-minimal` package
-with only `general = true` and no debug/lint/neorg categories. The
+with only `general = true` and no debug/lint categories. The
 `defaultPackageName` variable controls which one is the default output.
 
 ---
 
 ## Overlay System
 
-The `dependencyOverlays` list contains three overlays applied to nixpkgs
+The `dependencyOverlays` list contains two overlays applied to nixpkgs
 before building:
 
 ### 1. Standard Plugin Overlay
@@ -349,36 +348,7 @@ Scans flake inputs for names matching `plugins-<name>` and adds them to
 plugins not yet in nixpkgs. Currently unused in this config but available
 for future use.
 
-### 2. Stable Treesitter Parser Overlay
-
-```nix
-(final: prev:
-  let
-    stablePkgs = import inputs.nixpkgs-2505 { ... };
-    stableParsers = stablePkgs.vimPlugins.nvim-treesitter-parsers or {};
-    prevParsers = prev.vimPlugins.nvim-treesitter-parsers or {};
-    mergedParsers = prevParsers // (builtins.listToAttrs (
-      builtins.filter (attr: attr != null) [
-        (if stableParsers ? norg then {
-          name = "norg"; value = stableParsers.norg;
-        } else null)
-      ]
-    ));
-  in {
-    vimPlugins = prev.vimPlugins // {
-      nvim-treesitter-parsers = mergedParsers;
-    };
-  }
-)
-```
-
-This overlay merges specific treesitter parsers from the stable nixpkgs
-channel (25.05) into the unstable parser set. The `norg` parser is
-sometimes broken on unstable, so it is pulled from stable as a fallback.
-The pattern is extensible -- add more entries to the list to pin other
-parsers to stable.
-
-### 3. Custom Plugin Overlay
+### 2. Custom Plugin Overlay
 
 ```nix
 (final: prev: {
@@ -515,8 +485,8 @@ queries `nixCats(category)`. Without Nix, it returns the `default` argument
 #### `getCatOrDefault(category, default)`
 
 ```lua
-local workspace = require('nixCatsUtils').getCatOrDefault(
-  'neorg.defaultWorkspace', 'notes'
+local vault = require('nixCatsUtils').getCatOrDefault(
+  'obsidian.defaultVault', 'personal'
 )
 ```
 
@@ -591,7 +561,7 @@ After `nixCatsUtils.setup()` runs (or when loaded via Nix), a global
 if nixCats('general') then ... end
 
 -- Query a nested value
-local workspace = nixCats('neorg.defaultWorkspace')  --> "notes"
+local vault = nixCats('obsidian.defaultVault')  --> "personal"
 
 -- Access settings
 local configDir = nixCats.settings.nixCats_config_location
@@ -719,16 +689,12 @@ available at runtime in Neovim.
 1. **All grammars included**: `nvim-treesitter.withAllGrammars` in
    `startupPlugins.general` bundles every available grammar.
 
-2. **Stable parser fallback**: The treesitter overlay merges specific
-   parsers from nixpkgs-25.05 (currently `norg`) to avoid breakage on
-   unstable.
-
-3. **Auto-install disabled under Nix**:
+2. **Auto-install disabled under Nix**:
    ```lua
    auto_install = require('nixCatsUtils').lazyAdd(true, false),
    ```
 
-4. **`:TSUpdate` skipped under Nix**:
+3. **`:TSUpdate` skipped under Nix**:
    ```lua
    build = require('nixCatsUtils').lazyAdd(':TSUpdate'),
    ```

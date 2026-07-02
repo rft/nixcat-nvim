@@ -78,7 +78,6 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   { import = 'plugins.lsp' },
   { import = 'plugins.git' },
   { import = 'plugins.tools' },
-  { import = 'plugins.neorg' },
   { import = 'plugins.obsidian' },
 }, lazyOptions)
 

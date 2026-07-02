@@ -22,7 +22,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-2505.url = "github:nixos/nixpkgs/nixos-25.05";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
     # neovim-nightly-overlay = {
@@ -86,39 +85,6 @@
           # Once we add this overlay to our nixpkgs, we are able to
           # use `pkgs.neovimPlugins`, which is a set of our plugins.
           (utils.standardPluginOverlay inputs)
-          (
-            final: prev:
-            let
-              system = prev.stdenv.hostPlatform.system or prev.stdenv.buildPlatform.system;
-              stablePkgs = import inputs.nixpkgs-2505 {
-                inherit system;
-                config = extra_pkg_config;
-                overlays = [ ];
-              };
-              stableParsers = stablePkgs.vimPlugins.nvim-treesitter-parsers or { };
-              prevParsers = prev.vimPlugins.nvim-treesitter-parsers or { };
-              mergedParsers =
-                prevParsers
-                // (builtins.listToAttrs (
-                  builtins.filter (attr: attr != null) [
-                    (
-                      if stableParsers ? norg then
-                        {
-                          name = "norg";
-                          value = stableParsers.norg;
-                        }
-                      else
-                        null
-                    )
-                  ]
-                ));
-            in
-            {
-              vimPlugins = prev.vimPlugins // {
-                nvim-treesitter-parsers = mergedParsers;
-              };
-            }
-          )
           (final: prev: {
             vimPlugins = prev.vimPlugins // {
               myeyeshurt = prev.callPackage ./packages/myEyesHurt { };
@@ -213,7 +179,6 @@
               mini-nvim
               nvim-treesitter.withAllGrammars
               nvim-treesitter-textobjects
-              nvim-treesitter-parsers.norg
               # This is for if you only want some of the grammars
               # (nvim-treesitter.withPlugins (
               #   plugins: with plugins; [
@@ -291,9 +256,6 @@
               # also somewhere else
               nvim-web-devicons
               plenary-nvim
-            ];
-            neorg = [
-              neorg
             ];
             obsidian = [
               obsidian-nvim
@@ -382,14 +344,6 @@
               # so it doesnt have a category above.
               # but we can still send the info from nix to lua that we want it!
               kickstart-gitsigns = true;
-
-              neorg = {
-                enabled = true;
-                defaultWorkspace = "notes";
-                workspaces = {
-                  notes = "~/notes/neorg";
-                };
-              };
 
               obsidian = {
                 enabled = true;
