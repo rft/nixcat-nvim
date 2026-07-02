@@ -247,7 +247,6 @@ Source: `lua/plugins/lsp.lua`
 | n | `SPC cr` | lsp.buf.references | Find references |
 | n | `SPC ck` | lsp.buf.hover | Hover documentation |
 | n | `SPC cR` | Floating rename | Rename symbol (custom floating prompt) |
-| n | `SPC cp` | (notice) | Send to REPL (unconfigured) |
 | n | `SPC cx` | diagnostic.open_float | Open diagnostics float |
 | n | `SPC ct` | lsp.buf.type_definition | Type definition |
 | n | `SPC co` | Code action (filter) | Organize imports |
@@ -266,11 +265,11 @@ Source: `lua/plugins/lsp.lua`
 
 ## Formatting
 
-Sources: `init.lua`, `lua/plugins/general.lua`
+Sources: `lua/plugins/editing/format.lua`, `lua/plugins/general.lua`
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| any | `SPC f` | conform.format | Format buffer (conform.nvim) |
+| any | `SPC cf` | conform.format | Format buffer (conform.nvim) |
 | n | `SPC fm` | lsp.buf.format | Format buffer (LSP) |
 | v | `SPC fm` | lsp.buf.format | Format selection (LSP) |
 

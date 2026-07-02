@@ -1,4 +1,11 @@
 return {
+  -- Tree-sitter aware comments that enhance the builtin "gc" mappings
+  {
+    'folke/ts-comments.nvim',
+    event = 'VeryLazy',
+    opts = {},
+  },
+
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
     event = { 'BufReadPre', 'BufNewFile' },

@@ -60,7 +60,15 @@ return {
     'lewis6991/gitsigns.nvim',
     enabled = require('nixCatsUtils').enableForCategory 'kickstart-gitsigns',
     event = { 'BufReadPre', 'BufNewFile' },
-    opts = {},
+    opts = {
+      signs = {
+        add = { text = '+' },
+        change = { text = '~' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+      },
+    },
     keys = {
       -- Navigation
       {

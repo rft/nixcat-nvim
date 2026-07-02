@@ -13,14 +13,38 @@ vim.keymap.set('n', '<Esc>', function()
 end, { desc = 'Clear search highlighting' })
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', function()
-  vim.diagnostic.jump { count = -1, float = true }
-end, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', function()
-  vim.diagnostic.jump { count = 1, float = true }
-end, { desc = 'Go to next [D]iagnostic message' })
+local function diag_jump(count, severity)
+  return function()
+    vim.diagnostic.jump { count = count, float = true, severity = severity }
+  end
+end
+
+vim.keymap.set('n', '[d', diag_jump(-1), { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', diag_jump(1), { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>ce', diag_jump(1), { desc = 'Next diagnostic' })
+vim.keymap.set('n', '<leader>cE', diag_jump(-1), { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']e', diag_jump(1, vim.diagnostic.severity.ERROR), { desc = 'Next error' })
+vim.keymap.set('n', '[e', diag_jump(-1, vim.diagnostic.severity.ERROR), { desc = 'Previous error' })
+vim.keymap.set('n', ']w', diag_jump(1, vim.diagnostic.severity.WARN), { desc = 'Next warning/spell issue' })
+vim.keymap.set('n', '[w', diag_jump(-1, vim.diagnostic.severity.WARN), { desc = 'Previous warning/spell issue' })
+vim.keymap.set('n', ']h', diag_jump(1, vim.diagnostic.severity.HINT), { desc = 'Next hint/spell issue' })
+vim.keymap.set('n', '[h', diag_jump(-1, vim.diagnostic.severity.HINT), { desc = 'Previous hint/spell issue' })
 vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, { desc = 'Show [d]iagnostic [e]rror messages' })
+vim.keymap.set('n', '<leader>cx', vim.diagnostic.open_float, { desc = 'LSP diagnostics' })
 vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = '[D]iagnostics to [q]uickfix list' })
+
+-- Comment toggling via the builtin gc operator (ts-comments.nvim enhances it)
+vim.keymap.set('n', '<leader>;', 'gcc', { remap = true, desc = 'Comment out line' })
+vim.keymap.set('x', '<leader>;', 'gc', { remap = true, desc = 'Comment out lines' })
+
+-- Code utility keymaps
+vim.keymap.set('n', '<leader>cc', '<cmd>make<cr>', { desc = 'Compile' })
+vim.keymap.set('n', '<leader>cw', function()
+  vim.cmd [[%s/\s\+$//e]]
+end, { desc = 'Remove trailing whitespace' })
+vim.keymap.set('n', '<leader>cW', function()
+  vim.cmd [[%s/\n\+\%$//e]]
+end, { desc = 'Remove trailing newlines' })
 
 -- Exit terminal mode in the builtin terminal with a single <Esc> (instead of <C-\><C-n>)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })

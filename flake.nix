@@ -318,20 +318,12 @@
           # environmentVariables:
           # this section is for environmentVariables that should be available
           # at RUN TIME for plugins. Will be available to path within neovim terminal
-          environmentVariables = {
-            test = {
-              CATTESTVAR = "It worked!";
-            };
-          };
+          environmentVariables = { };
 
           # If you know what these are, you can provide custom ones by category here.
           # If you dont, check this link out:
           # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/setup-hooks/make-wrapper.sh
-          extraWrapperArgs = {
-            test = [
-              ''--set CATTESTVAR2 "It worked again!"''
-            ];
-          };
+          extraWrapperArgs = { };
 
           # lists of the functions you would have passed to
           # python.withPackages or lua.withPackages
@@ -341,13 +333,9 @@
           # in your lua config via
           # vim.g.python3_host_prog
           # or run from nvim terminal via :!<packagename>-python3
-          python3.libraries = {
-            test = (_: [ ]);
-          };
+          python3.libraries = { };
           # populates $LUA_PATH and $LUA_CPATH
-          extraLuaPackages = {
-            test = [ (_: [ ]) ];
-          };
+          extraLuaPackages = { };
         };
 
       # And then build a package with specific categories from above here:
@@ -379,9 +367,6 @@
             # (and other information to pass to lua)
             categories = {
               general = true;
-              gitPlugins = true;
-              customPlugins = true;
-              test = true;
 
               kickstart-autopairs = true;
               kickstart-neo-tree = true;
@@ -416,17 +401,6 @@
 
               # we can pass whatever we want actually.
               have_nerd_font = false;
-
-              example = {
-                youCan = "add more than just booleans";
-                toThisSet = [
-                  "and the contents of this categories set"
-                  "will be accessible to your lua with"
-                  "nixCats('path.to.value')"
-                  "see :help nixCats"
-                  "and type :NixCats to see the categories set in nvim"
-                ];
-              };
             };
           };
       };

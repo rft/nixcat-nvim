@@ -360,7 +360,7 @@ return {
             return false
           end
           -- Only show the Copilot sign-in nag once per session
-          if notif.msg and notif.msg:find('not signed into GitHub') then
+          if notif.msg and notif.msg:find 'not signed into GitHub' then
             if vim.g._copilot_signin_shown then
               return false
             end

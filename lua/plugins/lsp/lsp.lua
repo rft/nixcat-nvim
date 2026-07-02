@@ -1,109 +1,4 @@
-local function get_comment_spec()
-  local ok, ts_comments = pcall(require, 'ts-comments.comments')
-  if not ok then
-    vim.notify('ts-comments.nvim is required for commenting', vim.log.levels.WARN)
-    return
-  end
-
-  local cs = ts_comments.get(vim.bo.filetype)
-  if not cs or cs == '' then
-    vim.notify('ts-comments.nvim: no commentstring available', vim.log.levels.WARN)
-    return
-  end
-
-  local left, right = cs:match '^(.*)%%s(.*)$'
-  if not left then
-    vim.notify('ts-comments.nvim: invalid commentstring ' .. cs, vim.log.levels.WARN)
-    return
-  end
-
-  return cs, left, right
-end
-
-local function is_commented(line, left, right)
-  local _, rest = line:match '^(%s*)(.*)$'
-  rest = rest or ''
-  if rest == '' then
-    return false
-  end
-  if right ~= '' and rest:sub(-#right) ~= right then
-    return false
-  end
-  return rest:sub(1, #left) == left
-end
-
-local function apply_comment(line, cs, left, right, uncomment)
-  local indent, rest = line:match '^(%s*)(.*)$'
-  indent = indent or ''
-  rest = rest or ''
-
-  if uncomment then
-    if not is_commented(line, left, right) then
-      return line
-    end
-    local new_rest = rest
-    if right ~= '' then
-      new_rest = new_rest:sub(1, #new_rest - #right)
-    end
-    new_rest = new_rest:sub(#left + 1)
-    return indent .. new_rest
-  end
-
-  if is_commented(line, left, right) then
-    return line
-  end
-
-  return indent .. cs:gsub('%%s', rest)
-end
-
-local function toggle_lines(start_line, end_line)
-  local cs, left, right = get_comment_spec()
-  if not cs then
-    return
-  end
-
-  local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
-  if #lines == 0 then
-    return
-  end
-
-  local should_uncomment = true
-  for _, line in ipairs(lines) do
-    if not is_commented(line, left, right) then
-      should_uncomment = false
-      break
-    end
-  end
-
-  for idx, line in ipairs(lines) do
-    lines[idx] = apply_comment(line, cs, left, right, should_uncomment)
-  end
-
-  vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
-end
-
-local function toggle_current_line()
-  local row = vim.api.nvim_win_get_cursor(0)[1] - 1
-  toggle_lines(row, row + 1)
-end
-
-local function toggle_visual_lines()
-  local start_mark = vim.api.nvim_buf_get_mark(0, '<')
-  local end_mark = vim.api.nvim_buf_get_mark(0, '>')
-
-  if start_mark[1] == 0 or end_mark[1] == 0 then
-    return
-  end
-
-  local start_line = math.min(start_mark[1], end_mark[1]) - 1
-  local end_line = math.max(start_mark[1], end_mark[1])
-
-  local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
-  vim.api.nvim_feedkeys(esc, 'nx', false)
-
-  toggle_lines(start_line, end_line)
-end
-
+-- Rename the symbol under the cursor via a small floating prompt window.
 local function floating_rename()
   local clients = vim.lsp.get_clients { bufnr = 0 }
   local supports = false
@@ -175,111 +70,325 @@ local function floating_rename()
   vim.cmd 'startinsert!'
 end
 
+-- Detect Rust workspace roots without shelling out to `cargo metadata`.
+-- Uses the vim.lsp.config root_dir signature: (bufnr, on_dir).
+local function rust_root_dir(bufnr, on_dir)
+  local fname = vim.api.nvim_buf_get_name(bufnr)
+
+  local rust_project = vim.fs.root(fname, 'rust-project.json')
+  if rust_project then
+    return on_dir(rust_project)
+  end
+
+  local crate_dir = vim.fs.root(fname, 'Cargo.toml')
+  if not crate_dir then
+    local git_dir = vim.fs.root(fname, '.git')
+    if git_dir then
+      on_dir(git_dir)
+    end
+    return
+  end
+
+  local function has_workspace_manifest(dir)
+    local manifest = dir .. '/Cargo.toml'
+    local ok, lines = pcall(vim.fn.readfile, manifest)
+    if not ok then
+      return false
+    end
+    for _, line in ipairs(lines) do
+      if line:match '%s*%[workspace%]' then
+        return true
+      end
+    end
+    return false
+  end
+
+  if has_workspace_manifest(crate_dir) then
+    return on_dir(crate_dir)
+  end
+
+  for parent in vim.fs.parents(crate_dir) do
+    if has_workspace_manifest(parent) then
+      return on_dir(parent)
+    end
+  end
+
+  on_dir(crate_dir)
+end
+
 return {
-  -- LSP operations and code actions
-  {
+  { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
-    keys = {
-      { '<leader>;', toggle_current_line, desc = 'Comment out line' },
-      { '<leader>;', toggle_visual_lines, mode = 'x', desc = 'Comment out lines' },
-      { '<leader>cc', '<cmd>make<cr>', desc = 'Compile' },
-      { '<leader>cd', vim.lsp.buf.definition, desc = 'Jump to definition' },
-      { '<leader>cr', vim.lsp.buf.references, desc = 'Find references' },
-      { '<leader>ck', vim.lsp.buf.hover, desc = 'Jump to documentation' },
-      { '<leader>cR', floating_rename, desc = 'Rename symbol' },
+    dependencies = {
+      -- Automatically install LSPs and related tools to stdpath for Neovim
       {
-        '<leader>cp',
-        function()
-          -- Send to REPL - implementation depends on REPL plugin
-          vim.notify 'Send to REPL not configured'
-        end,
-        desc = 'Send to repl',
-      },
-      { '<leader>cx', vim.diagnostic.open_float, desc = 'LSP diagnostics' },
-      { '<leader>ct', vim.lsp.buf.type_definition, desc = 'Find type definition' },
+        'williamboman/mason.nvim',
+        -- NOTE: nixCats: use lazyAdd to only enable mason if nix wasnt involved.
+        -- because we will be using nix to download things instead.
+        enabled = require('nixCatsUtils').lazyAdd(true, false),
+        config = true,
+      }, -- NOTE: Must be loaded before dependants
       {
-        '<leader>co',
-        function()
-          vim.lsp.buf.code_action {
-            filter = function(action)
-              return action.kind and action.kind:match 'source.organizeImports'
-            end,
-            apply = true,
-          }
-        end,
-        desc = 'Organize imports',
+        'williamboman/mason-lspconfig.nvim',
+        enabled = require('nixCatsUtils').lazyAdd(true, false),
       },
       {
-        '<leader>cw',
-        function()
-          vim.cmd [[%s/\s\+$//e]]
-        end,
-        desc = 'Remove trailing whitespace',
+        'WhoIsSethDaniel/mason-tool-installer.nvim',
+        enabled = require('nixCatsUtils').lazyAdd(true, false),
       },
+
+      -- Useful status updates for LSP.
+      { 'j-hui/fidget.nvim', opts = {} },
+
+      -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+      -- used for completion, annotations and signatures of Neovim apis
       {
-        '<leader>cW',
-        function()
-          vim.cmd [[%s/\n\+\%$//e]]
-        end,
-        desc = 'Remove trailing newlines',
-      },
-      {
-        '<leader>ce',
-        function()
-          vim.diagnostic.jump { count = 1, float = true }
-        end,
-        desc = 'Next diagnostic',
-      },
-      {
-        '<leader>cE',
-        function()
-          vim.diagnostic.jump { count = -1, float = true }
-        end,
-        desc = 'Previous diagnostic',
-      },
-      {
-        ']e',
-        function()
-          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.ERROR }
-        end,
-        desc = 'Next error',
-      },
-      {
-        '[e',
-        function()
-          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.ERROR }
-        end,
-        desc = 'Previous error',
-      },
-      {
-        ']w',
-        function()
-          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.WARN }
-        end,
-        desc = 'Next warning/spell issue',
-      },
-      {
-        '[w',
-        function()
-          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.WARN }
-        end,
-        desc = 'Previous warning/spell issue',
-      },
-      {
-        ']h',
-        function()
-          vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.HINT }
-        end,
-        desc = 'Next hint/spell issue',
-      },
-      {
-        '[h',
-        function()
-          vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.HINT }
-        end,
-        desc = 'Previous hint/spell issue',
+        'folke/lazydev.nvim',
+        ft = 'lua',
+        opts = {
+          library = {
+            -- adds type hints for nixCats global
+            { path = (nixCats.nixCatsPath or '') .. '/lua', words = { 'nixCats' } },
+          },
+        },
       },
     },
+    config = function()
+      -- This function gets run when an LSP attaches to a particular buffer:
+      -- every time a new file associated with an lsp is opened, this
+      -- configures the current buffer. All LSP keymaps live here so they are
+      -- buffer-local and only active when a server is actually attached.
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        callback = function(event)
+          local map = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
+
+          -- Jump to the definition of the word under your cursor.
+          --  To jump back, press <C-t>.
+          local goto_definition = function()
+            Snacks.picker.lsp_definitions()
+          end
+          -- Find references for the word under your cursor.
+          local goto_references = function()
+            Snacks.picker.lsp_references()
+          end
+          -- Jump to the type of the word under your cursor.
+          local goto_type_definition = function()
+            Snacks.picker.lsp_type_definitions()
+          end
+
+          map('gd', goto_definition, '[G]oto [D]efinition')
+          map('gr', goto_references, '[G]oto [R]eferences')
+
+          -- Jump to the implementation of the word under your cursor.
+          --  Useful when your language has ways of declaring types without an actual implementation.
+          map('gI', function()
+            Snacks.picker.lsp_implementations()
+          end, '[G]oto [I]mplementation')
+
+          map('<leader>D', goto_type_definition, 'Type [D]efinition')
+
+          -- Fuzzy find all the symbols in your current document.
+          map('<leader>ds', function()
+            Snacks.picker.lsp_symbols()
+          end, '[D]ocument [S]ymbols')
+
+          -- Fuzzy find all the symbols in your current workspace.
+          map('<leader>ws', function()
+            Snacks.picker.lsp_workspace_symbols()
+          end, '[W]orkspace [S]ymbols')
+
+          -- Rename the variable under your cursor.
+          map('<leader>lr', vim.lsp.buf.rename, '[L]SP [r]ename')
+
+          -- Execute a code action; usually your cursor needs to be on top of
+          -- an error or a suggestion from your LSP for this to activate.
+          map('<leader>la', vim.lsp.buf.code_action, '[L]SP code [A]ction')
+
+          -- Opens a popup that displays documentation about the word under your cursor
+          --  See `:help K` for why this keymap.
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+
+          -- WARN: This is not Goto Definition, this is Goto Declaration.
+          --  For example, in C this would take you to the header.
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+          -- <leader>c aliases for the same operations
+          map('<leader>cd', goto_definition, 'Jump to definition')
+          map('<leader>cr', goto_references, 'Find references')
+          map('<leader>ck', vim.lsp.buf.hover, 'Jump to documentation')
+          map('<leader>ct', goto_type_definition, 'Find type definition')
+          map('<leader>cR', floating_rename, 'Rename symbol')
+          map('<leader>co', function()
+            vim.lsp.buf.code_action {
+              filter = function(action)
+                return action.kind and action.kind:match 'source.organizeImports'
+              end,
+              apply = true,
+            }
+          end, 'Organize imports')
+
+          -- Highlight references of the word under your cursor when your
+          -- cursor rests there for a little while; clear on move.
+          --    See `:help CursorHold` for information about when this is executed
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+          if client and client:supports_method 'textDocument/documentHighlight' then
+            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+              buffer = event.buf,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.document_highlight,
+            })
+
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+              buffer = event.buf,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.clear_references,
+            })
+
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              callback = function(event2)
+                vim.lsp.buf.clear_references()
+                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+              end,
+            })
+          end
+
+          -- Toggle inlay hints, if the language server supports them.
+          -- This may be unwanted, since they displace some of your code.
+          if client and client:supports_method 'textDocument/inlayHint' and vim.lsp.inlay_hint then
+            map('<leader>ti', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            end, '[T]oggle [I]nlay hints')
+          end
+        end,
+      })
+
+      -- LSP servers and clients are able to communicate to each other what features they support.
+      --  By default, Neovim doesn't support everything that is in the LSP specification.
+      --  With nvim-cmp, Neovim has *more* capabilities, so we broadcast that to the servers.
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      vim.lsp.config('*', { capabilities = capabilities })
+
+      -- Enable the following language servers
+      --  Add any additional override configuration in the following tables. Available keys are:
+      --  - cmd (table): Override the default command used to start the server
+      --  - filetypes (table): Override the default list of associated filetypes for the server
+      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
+      --  - settings (table): Override the default settings passed when initializing the server.
+      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      -- NOTE: nixCats: there is help in nixCats for lsps at `:h nixCats.LSPs` and also `:h nixCats.luaUtils`
+      local servers = {}
+
+      -- Python LSP
+      servers.pylsp = {
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = { enabled = true },
+              pyflakes = { enabled = true },
+              autopep8 = { enabled = true },
+              yapf = { enabled = false },
+            },
+          },
+        },
+      }
+
+      -- Rust LSP
+      servers.rust_analyzer = {
+        root_dir = rust_root_dir,
+        settings = {
+          ['rust-analyzer'] = {
+            cargo = {
+              allFeatures = true,
+            },
+            procMacro = {
+              enable = true,
+            },
+          },
+        },
+      }
+
+      -- C/C++ LSP
+      servers.clangd = {
+        cmd = { 'clangd', '--background-index', '--clang-tidy', '--header-insertion=iwyu' },
+        filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+      }
+
+      -- Haskell LSP
+      servers.hls = {
+        filetypes = { 'haskell', 'lhaskell' },
+        settings = {
+          haskell = {
+            formattingProvider = 'ormolu',
+          },
+        },
+      }
+
+      -- Gleam LSP
+      servers.gleam = {}
+
+      -- NOTE: nixCats: nixd is not available on mason.
+      -- Feel free to check the nixd docs for more configuration options:
+      -- https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
+      if require('nixCatsUtils').isNixCats then
+        servers.nixd = {}
+      else
+        servers.rnix = {}
+        servers.nil_ls = {}
+      end
+
+      servers.lua_ls = {
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = 'Replace',
+            },
+            -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+            diagnostics = {
+              globals = { 'nixCats' },
+              disable = { 'missing-fields' },
+            },
+          },
+        },
+      }
+
+      -- GitHub Copilot LSP (required for sidekick.nvim NES)
+      servers.copilot = {}
+
+      -- NOTE: nixCats: if nix, use lspconfig instead of mason.
+      -- Just add the lsp to lspsAndRuntimeDeps in the flake.
+      if require('nixCatsUtils').isNixCats then
+        for server_name, cfg in pairs(servers) do
+          vim.lsp.config(server_name, cfg)
+          vim.lsp.enable(server_name)
+        end
+      else
+        -- NOTE: nixCats: and if no nix, use mason
+        require('mason').setup()
+
+        -- You can add other tools here that you want Mason to install
+        -- for you, so that they are available from within Neovim.
+        local ensure_installed = vim.tbl_keys(servers or {})
+        vim.list_extend(ensure_installed, {
+          'stylua', -- Used to format Lua code
+        })
+        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+        require('mason-lspconfig').setup {
+          handlers = {
+            function(server_name)
+              vim.lsp.config(server_name, servers[server_name] or {})
+              vim.lsp.enable(server_name)
+            end,
+          },
+        }
+      end
+    end,
   },
 }

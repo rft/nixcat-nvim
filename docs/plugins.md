@@ -36,13 +36,13 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ### lazy.nvim
 - **Purpose**: Plugin manager. Handles lazy-loading, dependencies, and plugin lifecycle.
-- **Config**: `init.lua:166`
+- **Config**: `init.lua`
 - **Notes**: Wrapped via `nixCatsUtils.lazyCat` to support both Nix and non-Nix installations.
 
 ### which-key.nvim
 - **Plugin**: `folke/which-key.nvim`
 - **Purpose**: Shows pending keybinds in a popup when a prefix key is pressed.
-- **Config**: `init.lua:226`
+- **Config**: `lua/plugins/ui/which-key.lua`
 - **Notes**: Defines all `<leader>` prefix group labels (Buffer, Code, Debug, Error, File, Git, AI, Jump, LSP, etc.).
 
 ### snacks.nvim
@@ -68,7 +68,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### onedark.nvim
 - **Plugin**: `navarasu/onedark.nvim`
 - **Purpose**: One Dark colorscheme with the "warmer" style variant.
-- **Config**: `init.lua:975`
+- **Config**: `lua/plugins/ui/colorscheme.lua`
 - **Notes**: Loaded with high priority (1000) to ensure it applies before other plugins.
 
 ---
@@ -78,7 +78,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### nvim-lspconfig
 - **Plugin**: `neovim/nvim-lspconfig`
 - **Purpose**: Configuration for built-in Neovim LSP client.
-- **Config**: `init.lua:479`
+- **Config**: `lua/plugins/lsp/lsp.lua`
 - **Configured servers**: `lua_ls`, `pylsp`, `rust_analyzer`, `clangd`, `hls`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
 - **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>ti` (toggle inlay hints).
 - **Code action keybinds** (`lua/plugins/lsp/lsp.lua`): `<leader>;` (toggle comment), `<leader>cc` (make), `<leader>cd` (definition), `<leader>cr` (references), `<leader>ck` (hover), `<leader>cR` (floating rename), `<leader>cx` (diagnostics float), `<leader>ct` (type definition), `<leader>co` (organize imports), `<leader>cw` (remove trailing whitespace), `<leader>cW` (remove trailing newlines), `<leader>ce`/`cE` (next/prev diagnostic), `]e`/`[e` (next/prev error), `]w`/`[w` (next/prev warning), `]h`/`[h` (next/prev hint).
@@ -86,17 +86,17 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### mason.nvim / mason-lspconfig.nvim / mason-tool-installer.nvim
 - **Plugins**: `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `WhoIsSethDaniel/mason-tool-installer.nvim`
 - **Purpose**: Automatic LSP server installation (only enabled when NOT using Nix).
-- **Config**: `init.lua:484-498`
+- **Config**: `lua/plugins/lsp/lsp.lua` (disabled under nix)
 
 ### fidget.nvim
 - **Plugin**: `j-hui/fidget.nvim`
 - **Purpose**: Shows LSP progress notifications in the bottom-right corner.
-- **Config**: `init.lua:505`
+- **Config**: `lua/plugins/lsp/lsp.lua`
 
 ### lazydev.nvim
 - **Plugin**: `folke/lazydev.nvim`
 - **Purpose**: Configures Lua LSP for Neovim config development (completion, annotations, signatures).
-- **Config**: `init.lua:510`
+- **Config**: `lua/plugins/lsp/lsp.lua`
 - **Notes**: Adds type hints for the `nixCats` global.
 
 ---
@@ -106,14 +106,14 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### nvim-cmp
 - **Plugin**: `hrsh7th/nvim-cmp`
 - **Purpose**: Autocompletion engine.
-- **Config**: `init.lua:862`
+- **Config**: `lua/plugins/editing/completion.lua`
 - **Sources**: `nvim_lsp`, `luasnip`, `path`.
 - **Keybinds** (insert mode): `<M-Down>`/`<M-Up>` (next/prev item), `<C-b>`/`<C-f>` (scroll docs), `<CR>` (confirm), `<C-Space>` (trigger completion), `<C-l>`/`<C-h>` (snippet jump forward/backward).
 
 ### LuaSnip
 - **Plugin**: `L3MON4D3/LuaSnip`
 - **Purpose**: Snippet engine used by nvim-cmp.
-- **Config**: `init.lua:871`
+- **Config**: `lua/plugins/editing/completion.lua`
 
 ### cmp-nvim-lsp / cmp-path / cmp_luasnip
 - **Purpose**: Completion sources for LSP, file paths, and snippets.
@@ -125,7 +125,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### nvim-treesitter
 - **Plugin**: `nvim-treesitter/nvim-treesitter`
 - **Purpose**: Syntax highlighting, indentation, and code understanding via tree-sitter parsers.
-- **Config**: `init.lua:1070`
+- **Config**: `lua/plugins/editing/treesitter.lua`
 - **Notes**: Parsers are managed by Nix when using nixCats, otherwise auto-installed.
 
 ### nvim-treesitter-textobjects
@@ -148,7 +148,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### ts-comments.nvim
 - **Plugin**: `folke/ts-comments.nvim`
 - **Purpose**: Tree-sitter aware commenting with the familiar `gc` mappings.
-- **Config**: `init.lua:181`
+- **Config**: `lua/plugins/editing/comments.lua`
 
 ---
 
@@ -257,7 +257,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### gitsigns.nvim
 - **Plugin**: `lewis6991/gitsigns.nvim`
 - **Purpose**: Git change signs in the gutter, hunk operations, blame, and diff.
-- **Config**: `init.lua:197` (signs config) and `lua/plugins/git/git.lua` (keybinds).
+- **Config**: `lua/plugins/git/git.lua`
 - **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gu` (undo stage), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (toggle deleted).
 - **Category**: Requires `kickstart-gitsigns`.
 
@@ -316,7 +316,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### mini.nvim
 - **Plugin**: `echasnovski/mini.nvim`
 - **Purpose**: Collection of small independent modules.
-- **Config**: `init.lua:993`
+- **Config**: `lua/plugins/editing/mini.lua`
 - **Modules used**:
   - **mini.ai**: Enhanced text objects with treesitter support (`af`/`if` for functions, `ac`/`ic` for classes, `ao`/`io` for blocks/loops, `at`/`it` for comments).
   - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category).
@@ -377,7 +377,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### vim-sleuth
 - **Plugin**: `tpope/vim-sleuth`
 - **Purpose**: Automatically detect tabstop and shiftwidth from file content.
-- **Config**: `init.lua:168`
+- **Config**: `lua/plugins/general.lua`
 
 ---
 
@@ -386,7 +386,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### ts-comments.nvim
 - **Plugin**: `folke/ts-comments.nvim`
 - **Purpose**: Treesitter-aware commenting with `gc` mappings.
-- **Config**: `init.lua:181`
+- **Config**: `lua/plugins/editing/comments.lua`
 
 ### nvim-ts-context-commentstring
 - **Plugin**: `JoosepAlviste/nvim-ts-context-commentstring`
@@ -440,7 +440,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### todo-comments.nvim
 - **Plugin**: `folke/todo-comments.nvim`
 - **Purpose**: Highlights TODO, FIXME, NOTE, HACK, WARN, etc. in comments.
-- **Config**: `init.lua:991`
+- **Config**: `lua/plugins/general.lua`
 
 ### reactive.nvim
 - **Plugin**: `rasulomaroff/reactive.nvim`
@@ -483,10 +483,9 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ## Diagnostics Display
 
-### tiny-inline-diagnostic (Nix-managed)
+### tiny-inline-diagnostic
 - **Purpose**: Shows diagnostic messages inline with custom signs and multiline support.
-- **Config**: `init.lua:1122`
-- **Notes**: Loaded directly via `pcall(require, 'tiny-inline-diagnostic')` outside of lazy.nvim.
+- **Config**: `lua/plugins/ui/tiny-inline-diagnostic.lua`
 
 ### spellwarn.nvim
 - **Plugin**: `ravibrock/spellwarn.nvim`
@@ -507,7 +506,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### conform.nvim
 - **Plugin**: `stevearc/conform.nvim`
 - **Purpose**: Formatter with format-on-save support.
-- **Config**: `init.lua:825`
+- **Config**: `lua/plugins/editing/format.lua`
 - **Configured formatters**: `stylua` for Lua.
 - **Keybinds**: `<leader>f` (format buffer), `<leader>fm` (format buffer/region).
 
@@ -582,15 +581,15 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 - **Category**: Requires `general`.
 - **Notes**: Custom Nix-packaged plugin.
 
-### precognition (Nix-managed)
+### precognition
 - **Purpose**: Shows vim motion hints above the current line (w, b, e, W, B, E, ^, %, {, }).
-- **Config**: `init.lua:1161`
+- **Config**: `lua/plugins/tools/precognition.lua`
 - **Keybinds**: `<leader>tp` (toggle).
 - **Notes**: Starts hidden; must be toggled on.
 
-### hardtime.nvim (Nix-managed)
+### hardtime.nvim
 - **Purpose**: Discourages bad vim habits by blocking repeated h/j/k/l presses (max 3).
-- **Config**: `init.lua:1199`
+- **Config**: `lua/plugins/tools/hardtime.lua`
 - **Keybinds**: `<leader>th` (toggle).
 - **Notes**: Enabled by default. Arrow keys and scroll wheel are allowed.
 
@@ -607,9 +606,6 @@ These plugins are packaged via Nix rather than fetched by lazy.nvim:
 | **indent-rainbowline.nvim** | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
 | **reactive.nvim** | Dynamic mode-based highlights | `lua/plugins/ui/reactive.lua` |
 
-Additional Nix-managed plugins (loaded outside lazy.nvim):
-- **tiny-inline-diagnostic** - Inline diagnostic display
-- **precognition** - Vim motion hints
-- **hardtime.nvim** - Bad habit blocker
+Additional Nix-managed plugins:
 - **copilot.vim** - GitHub Copilot
 - **sidekick.nvim** - AI coding assistant

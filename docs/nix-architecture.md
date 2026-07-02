@@ -256,7 +256,6 @@ The category names serve as feature flags. The current categories are:
 | `kickstart-gitsigns` | Pure Lua-side flag (no extra Nix packages needed) |
 | `neorg` | Neorg note-taking plugins |
 | `test` | Test environment variables and wrapper args |
-| `gitPlugins` / `customPlugins` | Flags for Lua-side logic |
 
 Categories with empty lists (like `kickstart-indent_line`) still serve a
 purpose: their boolean value is passed to Lua via the `nixCats` plugin,
@@ -302,9 +301,6 @@ Key settings explained:
 ```nix
 categories = {
   general = true;
-  gitPlugins = true;
-  customPlugins = true;
-  test = true;
   kickstart-autopairs = true;
   kickstart-neo-tree = true;
   kickstart-debug = true;
@@ -320,11 +316,6 @@ categories = {
   };
 
   have_nerd_font = false;
-
-  example = {
-    youCan = "add more than just booleans";
-    toThisSet = [ "accessible via nixCats('path.to.value')" ];
-  };
 };
 ```
 
