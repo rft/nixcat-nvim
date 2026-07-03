@@ -51,6 +51,25 @@ local function build_spec(source)
           modemsg = { skip = skip_reactive },
         },
       }
+
+      -- The skip above empties the snapshots, but stripping highlights the
+      -- main window carried into a picker (e.g. picker.lines previews in the
+      -- main window) still triggers reactive's forced :redraw — same clamp.
+      -- Suppress the redraw itself in skip contexts; the strip shows up on
+      -- the next natural redraw.
+      local Highlight = require 'reactive.highlight'
+      local orig_apply = Highlight.apply
+      Highlight.apply = function(self, opts)
+        if not skip_reactive() then
+          return orig_apply(self, opts)
+        end
+        vim.cmd.redraw = function() end
+        local ok, err = pcall(orig_apply, self, opts)
+        vim.cmd.redraw = nil -- restore vim.cmd's metatable dispatch
+        if not ok then
+          error(err)
+        end
+      end
     end,
   }
 
