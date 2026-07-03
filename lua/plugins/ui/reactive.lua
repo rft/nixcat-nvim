@@ -30,11 +30,25 @@ local function build_spec(source)
   local spec = {
     lazy = false,
     config = function()
+      -- Reactive redraws on win/mode events; while a snacks picker is open
+      -- (prompt input + transient preview mode flips) that :redraw clamps the
+      -- insert-mode cursor in the picker input one cell left, so skip all
+      -- prompt/snacks contexts.
+      local function skip_reactive()
+        if vim.bo.buftype == 'prompt' or vim.bo.filetype:find '^snacks_' then
+          return true
+        end
+        local ok, pickers = pcall(function()
+          return Snacks.picker.get()
+        end)
+        return ok and pickers ~= nil and #pickers > 0
+      end
+
       require('reactive').setup {
         builtin = {
-          cursorline = true,
-          cursor = true,
-          modemsg = true,
+          cursorline = { skip = skip_reactive },
+          cursor = { skip = skip_reactive },
+          modemsg = { skip = skip_reactive },
         },
       }
     end,
