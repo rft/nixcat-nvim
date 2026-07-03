@@ -1,23 +1,10 @@
 return {
   {
     'folke/persistence.nvim',
-    event = 'BufReadPre',
-    opts = {
-      dir = vim.fn.stdpath 'state' .. '/sessions/',
-      options = { 'buffers', 'curdir', 'tabpages', 'winsize' },
-      pre_save = function()
-        -- Skip saving sessions for special buffers and while in git commit messages
-        local ignore_ft = {
-          ['alpha'] = true,
-          ['gitcommit'] = true,
-          ['lazy'] = true,
-        }
-        return not ignore_ft[vim.bo.filetype]
-      end,
-    },
-    config = function(_, opts)
-      require('persistence').setup(opts)
-    end,
+    -- Loaded eagerly so setup() has run before the snacks dashboard's
+    -- session action calls require('persistence').load() directly.
+    lazy = false,
+    opts = {},
     keys = {
       {
         '<leader>qs',
