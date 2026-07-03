@@ -38,6 +38,10 @@
     # for specific tags, branches and commits, see:
     # https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-flake.html#examples
 
+    plugins-neojjit = {
+      url = "github:JulianNymark/neojjit";
+      flake = false;
+    };
   };
 
   # see :help nixCats.flake.outputs
@@ -144,6 +148,7 @@
               clang-tools
               haskell-language-server
               gleam
+              jujutsu # required by neojjit
             ];
             kickstart-debug = [
               delve
@@ -231,6 +236,7 @@
               vim-illuminate
               dropbar-nvim
               reactive-nvim
+              pkgs.neovimPlugins.neojjit
             ];
             kickstart-debug = [
               nvim-dap

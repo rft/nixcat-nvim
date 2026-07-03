@@ -31,10 +31,27 @@
         "type": "github"
       }
     },
+    "plugins-neojjit": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1762937410,
+        "narHash": "sha256-07set+eNna0DZewTrWK3DQ9jTHdbcvB4fb+mG3AC1/A=",
+        "owner": "JulianNymark",
+        "repo": "neojjit",
+        "rev": "04c26116ebac033e4d079dde1bcdc3be1aa96a89",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JulianNymark",
+        "repo": "neojjit",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixCats": "nixCats",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "plugins-neojjit": "plugins-neojjit"
       }
     }
   },
