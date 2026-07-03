@@ -34,6 +34,13 @@ return {
           always_show = true,
           trim_whitespaces = false,
           tabstop = 4,
+          -- Multiline diagnostics bypass the top-level severity filter,
+          -- so exclude HINT/spelling here as well
+          severity = {
+            vim.diagnostic.severity.ERROR,
+            vim.diagnostic.severity.WARN,
+            vim.diagnostic.severity.INFO,
+          },
         },
         -- Show all diagnostics on the line
         show_all_diags_on_cursorline = true,
