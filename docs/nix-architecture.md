@@ -187,6 +187,7 @@ startupPlugins = with pkgs.vimPlugins; {
   kickstart-autopairs = [ nvim-autopairs ];
   kickstart-neo-tree = [ neo-tree-nvim nui-nvim nvim-web-devicons plenary-nvim ];
   obsidian = [ obsidian-nvim ];
+  orgmode  = [ orgmode ];
 };
 ```
 
@@ -253,6 +254,7 @@ The category names serve as feature flags. The current categories are:
 | `kickstart-indent_line` | Indent line plugins (empty list, used as a flag) |
 | `kickstart-gitsigns` | Pure Lua-side flag (no extra Nix packages needed) |
 | `obsidian` | Obsidian note-taking plugin |
+| `orgmode` | Orgmode note-taking plugin |
 | `test` | Test environment variables and wrapper args |
 
 Categories with empty lists (like `kickstart-indent_line`) still serve a
@@ -312,6 +314,11 @@ categories = {
     vaults = {
       personal = "~/notes/obsidian/personal";
     };
+  };
+
+  orgmode = {
+    enabled = true;
+    orgDir = "~/notes/org";
   };
 
   have_nerd_font = false;

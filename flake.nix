@@ -266,6 +266,9 @@
             obsidian = [
               obsidian-nvim
             ];
+            orgmode = [
+              orgmode
+            ];
           };
 
           # not loaded automatically at startup.
@@ -357,6 +360,11 @@
                 vaults = {
                   personal = "~/notes/obsidian";
                 };
+              };
+
+              orgmode = {
+                enabled = true;
+                orgDir = "~/notes/org";
               };
 
               # we can pass whatever we want actually.

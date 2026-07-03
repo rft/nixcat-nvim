@@ -22,7 +22,7 @@ Comprehensive keybind reference for nixcat-nvim. This documents every explicitly
 | `SPC g` | **[G]it** | Git operations |
 | `SPC j` | **[J]ump** | Jump/navigation |
 | `SPC l` | **[L]SP** | LSP-specific actions |
-| `SPC m` | **[M]notes** | Notes (Obsidian) |
+| `SPC m` | **[M]notes** | Notes (Orgmode, Obsidian) |
 | `SPC n` | **[N]eominimap** | Code minimap |
 | `SPC o` | **[O]pen** | Open tools/panels |
 | `SPC p` | **[P]roject** | Project operations |
@@ -56,7 +56,7 @@ Source: `lua/core/keymaps.lua`
 |------|-----|--------|-------------|
 | n | `SPC w/` | `<C-w>v` | Split window vertically |
 | n | `SPC w-` | `<C-w>s` | Split window horizontally |
-| n | `SPC wc` | `<C-w>c` | Close window |
+| n | `SPC wc` | `:confirm close` | Close window (prompts to save if modified) |
 | n | `SPC ww` | `<C-w>w` | Cycle to next window |
 | n | `SPC wh` | `<C-w>h` | Move focus to left window |
 | n | `SPC wj` | `<C-w>j` | Move focus to lower window |
@@ -462,6 +462,21 @@ Sources: `lua/plugins/copilot.lua`, `lua/plugins/sidekick.lua`
 | n,v | `SPC ap` | sidekick.cli.prompt | Prompt Sidekick CLI |
 | v | `SPC as` | sidekick.cli.send | Send visual selection to Sidekick CLI |
 | n,x,i,t | `SPC af` | sidekick.cli.focus | Focus Sidekick CLI window |
+
+---
+
+## Notes / Writing (Orgmode)
+
+Source: `lua/plugins/orgmode/init.lua`
+
+| Mode | Key | Action | Description |
+|------|-----|--------|-------------|
+| n | `SPC mw` | Open org directory | Open the org workspace directory |
+| n | `SPC mi` | Open index.org | Open the org workspace index file |
+| n | `SPC mj` | Org capture (journal) | Capture today's journal entry |
+| n | `SPC ms` | Snacks picker (org files) | Search org notes |
+| n | `SPC ma` | Org agenda | Open the org agenda prompt |
+| n | `SPC mc` | Org capture | Open the org capture prompt |
 
 ---
 

@@ -98,7 +98,8 @@ The `--` ensures any arguments (filenames, flags) are passed through to Neovim.
 │       ├── lsp/           # Language server configuration
 │       ├── git/           # Git integration
 │       ├── tools/         # Debug, lint, AI, terminal, sessions
-│       └── obsidian/      # Note-taking (obsidian)
+│       ├── obsidian/      # Note-taking (obsidian)
+│       └── orgmode/       # Note-taking (orgmode)
 ```
 
 ## Credits

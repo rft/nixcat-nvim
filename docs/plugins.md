@@ -524,6 +524,14 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 
 ## Notes / Writing
 
+### orgmode
+- **Plugin**: `nvim-orgmode/orgmode`
+- **Purpose**: Orgmode clone for Neovim — agenda, capture templates, TODO tracking, and `.org` note files.
+- **Config**: `lua/plugins/orgmode/init.lua`
+- **Keybinds**: `<leader>mw` (open org directory), `<leader>mi` (open index), `<leader>mj` (journal capture), `<leader>ms` (search notes), `<leader>ma` (agenda), `<leader>mc` (capture).
+- **Category**: Requires `orgmode`.
+- **Features**: Org directory configured via Nix (`orgmode.orgDir`), journal datetree capture template, agenda/capture remapped into the `SPC m` notes group (defaults `<leader>oa`/`<leader>oc` collide with the Open group).
+
 ### obsidian.nvim
 - **Plugin**: `epwalsh/obsidian.nvim`
 - **Purpose**: Work with Obsidian vaults inside Neovim — wiki links, daily notes, backlinks, tags, and search.

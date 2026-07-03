@@ -79,6 +79,7 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
   { import = 'plugins.git' },
   { import = 'plugins.tools' },
   { import = 'plugins.obsidian' },
+  { import = 'plugins.orgmode' },
 }, lazyOptions)
 
 -- The line beneath this is called `modeline`. See `:help modeline`

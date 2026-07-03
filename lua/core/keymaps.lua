@@ -53,7 +53,9 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<leader>w/', '<C-w>v', { desc = 'Split window vertically' })
 vim.keymap.set('n', '<leader>w-', '<C-w>s', { desc = 'Split window horizontally' })
-vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window' })
+-- :confirm prompts to save/discard when the buffer is modified (e.g. orgmode
+-- capture buffers use bufhidden=wipe, so a plain <C-w>c errors with E37)
+vim.keymap.set('n', '<leader>wc', '<cmd>confirm close<CR>', { desc = 'Close window' })
 vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Switch windows' })
 vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Move to right window' })
 vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Move to left window' })
