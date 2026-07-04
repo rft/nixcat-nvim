@@ -143,7 +143,8 @@
               nixd
               nixfmt
               stylua
-              python3Packages.python-lsp-server # TODO: Change to Astral ones later
+              ruff # Astral: Python linter + formatter LSP (`ruff server`)
+              ty # Astral: Python type checker LSP (`ty server`)
               rust-analyzer
               clang-tools
               haskell-language-server

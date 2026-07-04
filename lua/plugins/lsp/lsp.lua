@@ -235,6 +235,13 @@ return {
           -- cursor rests there for a little while; clear on move.
           --    See `:help CursorHold` for information about when this is executed
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          -- Ruff and ty both attach to Python buffers. Let ty own hover so we
+          -- don't get an empty/duplicate popup from Ruff on `K`.
+          if client and client.name == 'ruff' then
+            client.server_capabilities.hoverProvider = false
+          end
+
           if client and client:supports_method 'textDocument/documentHighlight' then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -285,19 +292,11 @@ return {
       -- NOTE: nixCats: there is help in nixCats for lsps at `:h nixCats.LSPs` and also `:h nixCats.luaUtils`
       local servers = {}
 
-      -- Python LSP
-      servers.pylsp = {
-        settings = {
-          pylsp = {
-            plugins = {
-              pycodestyle = { enabled = true },
-              pyflakes = { enabled = true },
-              autopep8 = { enabled = true },
-              yapf = { enabled = false },
-            },
-          },
-        },
-      }
+      -- Python LSPs (Astral): `ruff` handles linting + formatting, `ty`
+      -- handles type checking and IDE features (hover, go-to-definition, etc.).
+      -- Both ship as `ruff server` / `ty server` and are installed via nix.
+      servers.ruff = {}
+      servers.ty = {}
 
       -- Rust LSP
       servers.rust_analyzer = {

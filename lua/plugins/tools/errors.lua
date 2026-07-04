@@ -9,21 +9,21 @@ return {
       {
         '<leader>en',
         function()
-          require('trouble').next { skip_groups = true, jump = true }
+          require('trouble').next { mode = 'diagnostics', skip_groups = true, jump = true }
         end,
         desc = 'Next Error',
       },
       {
         '<leader>eN',
         function()
-          require('trouble').prev { skip_groups = true, jump = true }
+          require('trouble').prev { mode = 'diagnostics', skip_groups = true, jump = true }
         end,
         desc = 'Previous error',
       },
       {
         '<leader>ep',
         function()
-          require('trouble').prev { skip_groups = true, jump = true }
+          require('trouble').prev { mode = 'diagnostics', skip_groups = true, jump = true }
         end,
         desc = 'Previous error',
       },
