@@ -565,14 +565,20 @@ return {
           end
           return fallback
         end
+        -- Titanium accents, blended back toward the editor background so the
+        -- guides sit behind the code the way the old onedark ramp did.
+        local titanium = require 'core.palette'
+        local function guide(color)
+          return { fg = titanium.blend(color, 0.55), nocombine = true }
+        end
         local palette = {
-          SnacksIndent1 = { fg = '#E06C75', nocombine = true },
-          SnacksIndent2 = { fg = '#E5C07B', nocombine = true },
-          SnacksIndent3 = { fg = '#98C379', nocombine = true },
-          SnacksIndent4 = { fg = '#56B6C2', nocombine = true },
-          SnacksIndent5 = { fg = '#61AFEF', nocombine = true },
-          SnacksIndent6 = { fg = '#C678DD', nocombine = true },
-          SnacksIndentScope = { fg = hex('Function', '#ffffff'), bold = true, nocombine = true },
+          SnacksIndent1 = guide(titanium.electricBlue),
+          SnacksIndent2 = guide(titanium.deepBlue),
+          SnacksIndent3 = guide(titanium.readoutGreen),
+          SnacksIndent4 = guide(titanium.titaniumGold),
+          SnacksIndent5 = guide(titanium.warningAmber),
+          SnacksIndent6 = guide(titanium.dimAluminum),
+          SnacksIndentScope = { fg = hex('Function', titanium.readoutGreen), bold = true, nocombine = true },
         }
         for group, spec in pairs(palette) do
           vim.api.nvim_set_hl(0, group, spec)

@@ -262,7 +262,7 @@ return {
           left = { enabled = true },
           right = { enabled = true },
           colors = {
-            background = '#1a1b26', -- Dark background color
+            background = require('core.palette').darkTitanium, -- Dark background color
             blend = -0.2,
           },
           bo = {
