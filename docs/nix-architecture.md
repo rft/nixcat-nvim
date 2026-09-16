@@ -155,10 +155,10 @@ formatters, linters, and CLI tools go.
 lspsAndRuntimeDeps = with pkgs; {
   general = [
     universal-ctags ripgrep fd
-    stdenv.cc.cc nix-doc
+    nix-doc
     lua-language-server nixd nixfmt stylua
     python3Packages.python-lsp-server
-    rust-analyzer clang-tools
+    rust-analyzer
     gleam
   ];
   kickstart-debug = [ delve ];

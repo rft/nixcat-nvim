@@ -79,8 +79,8 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `neovim/nvim-lspconfig`
 - **Purpose**: Configuration for built-in Neovim LSP client.
 - **Config**: `lua/plugins/lsp/lsp.lua`
-- **Configured servers**: `lua_ls`, `pylsp`, `rust_analyzer`, `clangd`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
-- **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>ti` (toggle inlay hints).
+- **Configured servers**: `lua_ls`, `pylsp`, `rust_analyzer`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
+- **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>tI` (toggle inlay hints).
 - **Code action keybinds** (`lua/plugins/lsp/lsp.lua`): `<leader>;` (toggle comment), `<leader>cc` (make), `<leader>cd` (definition), `<leader>cr` (references), `<leader>ck` (hover), `<leader>cR` (floating rename), `<leader>cx` (diagnostics float), `<leader>ct` (type definition), `<leader>co` (organize imports), `<leader>cw` (remove trailing whitespace), `<leader>cW` (remove trailing newlines), `<leader>ce`/`cE` (next/prev diagnostic), `]e`/`[e` (next/prev error), `]w`/`[w` (next/prev warning), `]h`/`[h` (next/prev hint).
 
 ### mason.nvim / mason-lspconfig.nvim / mason-tool-installer.nvim
@@ -269,7 +269,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `mfussenegger/nvim-dap`
 - **Purpose**: Debug Adapter Protocol client for Neovim.
 - **Config**: `lua/plugins/tools/debug.lua`
-- **Keybinds**: `<F5>` (start/continue), `<F1>` (step into), `<F2>` (step over), `<F3>` (step out), `<F7>` (toggle UI), `<leader>db` (toggle breakpoint), `<leader>dB` (conditional breakpoint), `<leader>dl` (run last), `<leader>dr` (toggle REPL), `<leader>dc` (continue), `<leader>de` (evaluate), `<leader>dx` (terminate + close UI), `<leader>du` (toggle UI). In DAP buffers: `q` (close).
+- **Keybinds**: `<F5>` (start/continue), `<F1>` (step into), `<F2>` (step over), `<F3>` (step out), `<F7>` (toggle UI), `<leader>db` (toggle breakpoint), `<leader>dB` (conditional breakpoint), `<leader>dl` (run last), `<leader>dr` (toggle REPL), `<leader>dc` (continue), `<leader>dE` (evaluate), `<leader>dx` (terminate + close UI), `<leader>du` (toggle UI). In DAP buffers: `q` (close).
 - **Category**: Requires `kickstart-debug`.
 
 ### nvim-dap-ui
@@ -320,7 +320,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Modules used**:
   - **mini.ai**: Enhanced text objects with treesitter support (`af`/`if` for functions, `ac`/`ic` for classes, `ao`/`io` for blocks/loops, `at`/`it` for comments).
   - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category).
-  - **mini.operators**: Replace (`gs`), exchange (`gX`), multiply (`gm`) operators.
+  - **mini.operators**: Replace (`gs`), sort (`gS`), exchange (`gX`), multiply (`gm`) operators.
   - **mini.surround**: Add/delete/replace surroundings (brackets, quotes, etc.). Default keybinds: `sa` (add), `sd` (delete), `sr` (replace).
   - **mini.statusline**: Simple statusline showing cursor position as `LINE:COL`.
 
@@ -406,7 +406,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `B0o/dropbar.nvim`
 - **Purpose**: Breadcrumb-style winbar showing the current code context path.
 - **Config**: `lua/plugins/ui/dropbar.lua`
-- **Keybinds**: `<leader>wp` (pick symbol), `<leader>wm` (pick in current window).
+- **Keybinds**: `<leader>wP` (pick symbol), `<leader>wM` (pick in current window).
 - **Category**: Requires `general`.
 
 ### lensline.nvim
@@ -453,7 +453,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `shortcuts/no-neck-pain.nvim`
 - **Purpose**: Centers the active buffer for focused writing/coding.
 - **Config**: `lua/plugins/general.lua`
-- **Keybinds**: `<leader>tn` / `<leader>tc` (toggle center mode), `<leader>t+` (increase width), `<leader>t-` (decrease width).
+- **Keybinds**: `<leader>tn` (toggle center mode), `<leader>t+` (increase width), `<leader>t-` (decrease width).
 
 ---
 
@@ -567,7 +567,7 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 - **Plugin**: `jpalardy/vim-slime`
 - **Purpose**: Send code to a REPL running in another terminal/pane (configured for Zellij).
 - **Config**: `lua/plugins/tools/slime.lua`
-- **Keybinds**: `<leader>cl` (send current line), `<leader>cr` (visual: send selection), `<leader>cc` (configure Slime target).
+- **Keybinds**: `<leader>cl` (send current line), `<leader>cr` (visual: send selection), `<leader>cC` (configure Slime target).
 
 ---
 

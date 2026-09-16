@@ -19,8 +19,8 @@ return {
 
       local ok_api, api = pcall(require, 'dropbar.api')
       if ok_api then
-        vim.keymap.set('n', '<leader>wp', api.pick, { desc = '[W]inbar pick symbol (dropbar)' })
-        vim.keymap.set('n', '<leader>wm', function()
+        vim.keymap.set('n', '<leader>wP', api.pick, { desc = '[W]inbar [P]ick symbol (dropbar)' })
+        vim.keymap.set('n', '<leader>wM', function()
           api.pick(vim.api.nvim_get_current_win())
         end, { desc = '[W]inbar pick in current window (dropbar)' })
       end

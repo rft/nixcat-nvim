@@ -236,7 +236,6 @@ return {
     'shortcuts/no-neck-pain.nvim',
     keys = {
       { '<leader>tn', '<cmd>NoNeckPain<cr>', desc = '[T]oggle [n]eck saver (center mode)' },
-      { '<leader>tc', '<cmd>NoNeckPain<cr>', desc = '[T]oggle [c]enter mode' },
       {
         '<leader>t+',
         function()

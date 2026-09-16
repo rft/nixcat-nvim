@@ -49,6 +49,7 @@ return {
 
       require('mini.operators').setup {
         replace = { prefix = 'gs' },
+        sort = { prefix = 'gS' },
         -- Keep gx free for open-url mapping in core/keymaps.lua
         exchange = { prefix = 'gX' },
         multiply = { prefix = 'gm' },

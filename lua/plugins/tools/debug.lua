@@ -88,7 +88,7 @@ return {
     vim.keymap.set('n', '<leader>dl', dap.run_last, { desc = '[D]ebug: Run Last' })
     vim.keymap.set('n', '<leader>dr', dap.repl.toggle, { desc = '[D]ebug: Toggle REPL' })
     vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[D]ebug: Continue' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>de', function()
+    vim.keymap.set({ 'n', 'v' }, '<leader>dE', function()
       dapui.eval(nil, { enter = true })
     end, { desc = '[D]ebug: Evaluate' })
     vim.keymap.set('n', '<leader>dx', function()
@@ -172,7 +172,7 @@ return {
       console = 'internalConsole',
     })
 
-    -- C/C++/Rust (lldb-dap)
+    -- Rust (lldb-dap)
     dap.adapters.lldb = {
       type = 'executable',
       command = 'lldb-dap',
@@ -210,8 +210,6 @@ return {
         pid = require('dap.utils').pick_process,
       },
     }
-    dap.configurations.c = lldb_configs
-    dap.configurations.cpp = lldb_configs
     dap.configurations.rust = lldb_configs
 
     -- JavaScript/TypeScript (vscode-js-debug)

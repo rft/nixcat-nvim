@@ -137,7 +137,6 @@
               universal-ctags
               ripgrep
               fd
-              stdenv.cc.cc
               nix-doc
               lua-language-server
               nixd
@@ -146,13 +145,12 @@
               ruff # Astral: Python linter + formatter LSP (`ruff server`)
               ty # Astral: Python type checker LSP (`ty server`)
               rust-analyzer
-              clang-tools
               gleam
               jujutsu # required by neojjit
             ];
             kickstart-debug = [
               delve
-              lldb # provides lldb-dap for C/C++/Rust
+              lldb # provides lldb-dap for Rust
             ];
             kickstart-lint = [
               markdownlint-cli

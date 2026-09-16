@@ -71,9 +71,7 @@ return {
     keys = {
       {
         '<leader>ti',
-        function()
-          require('ibl').toggle()
-        end,
+        '<cmd>IBLToggle<cr>',
         desc = '[T]oggle [i]ndent guides',
       },
     },

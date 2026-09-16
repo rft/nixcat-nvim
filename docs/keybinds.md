@@ -216,7 +216,7 @@ Source: `lua/core/keymaps.lua`
 
 ## LSP (buffer-local on LspAttach)
 
-Source: `init.lua` (LspAttach autocmd)
+Source: `lua/plugins/lsp/lsp.lua` (LspAttach autocmd)
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
@@ -230,7 +230,7 @@ Source: `init.lua` (LspAttach autocmd)
 | n | `SPC ws` | Snacks picker lsp_workspace_symbols | Workspace symbols |
 | n | `SPC lr` | lsp.buf.rename | LSP rename |
 | n | `SPC la` | lsp.buf.code_action | LSP code action |
-| n | `SPC ti` | Toggle inlay hints | Toggle LSP inlay hints |
+| n | `SPC tI` | Toggle inlay hints | Toggle LSP inlay hints |
 
 ---
 
@@ -337,7 +337,7 @@ Source: `lua/plugins/debug.lua`
 | n | `SPC dl` | dap.run_last | Run last debug config |
 | n | `SPC dr` | dap.repl.toggle | Toggle REPL |
 | n | `SPC dc` | dap.continue | Continue |
-| n,v | `SPC de` | dapui.eval | Evaluate under cursor/selection |
+| n,v | `SPC dE` | dapui.eval | Evaluate under cursor/selection |
 | n | `SPC dx` | dap.terminate + dapui.close | Terminate session and close UI |
 | n | `SPC du` | dapui.toggle | Toggle debug UI |
 
@@ -443,6 +443,7 @@ Sources: `lua/plugins/text-manipulation.lua`, `init.lua` (mini.nvim)
 | Mode | Key | Description |
 |------|-----|-------------|
 | n | `gs{motion}` | Replace with register content |
+| n | `gS{motion}` | Sort text |
 | n | `gX{motion}` | Exchange regions |
 | n | `gm{motion}` | Multiply (duplicate) text |
 
@@ -500,7 +501,7 @@ Source: `lua/plugins/slime.lua`
 |------|-----|--------|-------------|
 | n | `SPC cl` | SlimeSendCurrentLine | Send current line to REPL |
 | v | `SPC cr` | SlimeSend | Send visual selection to REPL |
-| n | `SPC cc` | SlimeConfig | Configure Slime target |
+| n | `SPC cC` | SlimeConfig | Configure Slime target |
 
 **Note**: Slime is configured for Zellij as the target multiplexer.
 
@@ -559,10 +560,9 @@ Sources: `lua/plugins/neoMiniMap.lua`, `lua/plugins/myeyeshurt.lua`, `init.lua`,
 | n | `SPC tx` | myeyeshurt.stop | Stop eye break reminder |
 | n | `SPC tp` | precognition.toggle | Toggle vim motion hints |
 | n | `SPC th` | hardtime.toggle | Toggle hardtime (bad habit blocker) |
-| n | `SPC ti` | ibl.toggle | Toggle indent guides |
+| n | `SPC ti` | IBLToggle | Toggle indent guides |
 | n | `SPC tc` | treesitter-context.toggle | Toggle treesitter context |
 | n | `SPC tn` | NoNeckPain | Toggle center mode (No Neck Pain) |
-| n | `SPC tc` | NoNeckPain | Toggle center mode (alias) |
 | n | `SPC t+` | NoNeckPain resize | Increase center width by 5 |
 | n | `SPC t-` | NoNeckPain resize | Decrease center width by 5 |
 
@@ -570,8 +570,8 @@ Sources: `lua/plugins/neoMiniMap.lua`, `lua/plugins/myeyeshurt.lua`, `init.lua`,
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `SPC wp` | dropbar.api.pick | Pick winbar symbol |
-| n | `SPC wm` | dropbar.api.pick (current) | Pick symbol in current window |
+| n | `SPC wP` | dropbar.api.pick | Pick winbar symbol |
+| n | `SPC wM` | dropbar.api.pick (current) | Pick symbol in current window |
 
 ### Workspace Marks (Arrow)
 
@@ -612,16 +612,18 @@ reactive.nvim provides automatic mode-based highlight changes (cursorline, curso
 
 ---
 
-## Known Conflicts / Overlaps
+## Mapping Ownership
 
-Some keybinds are used by multiple plugins. In practice, the last one to set the keymap wins, or buffer-local mappings take precedence:
+Related actions use distinct keys so plugin load order and LSP attachment do not replace another feature's mapping:
 
-| Keybind | Conflict | Notes |
-|---------|----------|-------|
-| `SPC ti` | LSP inlay hints vs indent guides | LSP version is buffer-local (takes precedence when LSP attached) |
-| `SPC tc` | Treesitter context vs No-Neck-Pain | Both set globally; last loaded wins |
-| `SPC wp` | Dropbar pick vs Arrow previous mark | Both set globally; last loaded wins |
-| `SPC wm` | Dropbar pick (current) vs Arrow menu | Both set globally; last loaded wins |
-| `SPC de` | Diagnostics float vs DAP eval | DAP version is buffer-local in debug mode |
-| `SPC cc` | `:make` (lsp.lua) vs Slime config | Both set globally; last loaded wins |
-| `SPC cr` | LSP references (lsp.lua) vs Slime send (visual) | Different modes (normal vs visual) |
+| Keys | Actions |
+|------|---------|
+| `gs` / `gS` | Replace with register content / sort text |
+| `SPC ti` / `SPC tI` | Indent guides / LSP inlay hints (buffer-local) |
+| `SPC tc` / `SPC tn` | Treesitter context / No Neck Pain centering |
+| `SPC wp` / `SPC wP` | Arrow previous mark / Dropbar symbol picker |
+| `SPC wm` / `SPC wM` | Arrow menu / Dropbar current-window picker |
+| `SPC de` / `SPC dE` | Diagnostics float / DAP evaluation |
+| `SPC cc` / `SPC cC` | `:make` / Slime target configuration |
+
+`SPC cr` remains shared intentionally: LSP references in normal mode and Slime send in visual mode.

@@ -4,7 +4,7 @@ return {
     keys = {
       { '<leader>cl', '<cmd>SlimeSendCurrentLine<cr>', desc = 'Send current line to Slime' },
       { '<leader>cr', '<cmd>SlimeSend<cr>', mode = 'v', desc = 'Send selection to Slime' },
-      { '<leader>cc', '<cmd>SlimeConfig<cr>', desc = 'Slime target config' },
+      { '<leader>cC', '<cmd>SlimeConfig<cr>', desc = 'Slime target config' },
     },
     init = function()
       vim.g.slime_target = 'zellij'
