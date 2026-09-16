@@ -79,7 +79,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `neovim/nvim-lspconfig`
 - **Purpose**: Configuration for built-in Neovim LSP client.
 - **Config**: `lua/plugins/lsp/lsp.lua`
-- **Configured servers**: `lua_ls`, `pylsp`, `rust_analyzer`, `clangd`, `hls`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
+- **Configured servers**: `lua_ls`, `pylsp`, `rust_analyzer`, `clangd`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
 - **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>ti` (toggle inlay hints).
 - **Code action keybinds** (`lua/plugins/lsp/lsp.lua`): `<leader>;` (toggle comment), `<leader>cc` (make), `<leader>cd` (definition), `<leader>cr` (references), `<leader>ck` (hover), `<leader>cR` (floating rename), `<leader>cx` (diagnostics float), `<leader>ct` (type definition), `<leader>co` (organize imports), `<leader>cw` (remove trailing whitespace), `<leader>cW` (remove trailing newlines), `<leader>ce`/`cE` (next/prev diagnostic), `]e`/`[e` (next/prev error), `]w`/`[w` (next/prev warning), `]h`/`[h` (next/prev hint).
 

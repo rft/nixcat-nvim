@@ -319,16 +319,6 @@ return {
         filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
       }
 
-      -- Haskell LSP
-      servers.hls = {
-        filetypes = { 'haskell', 'lhaskell' },
-        settings = {
-          haskell = {
-            formattingProvider = 'ormolu',
-          },
-        },
-      }
-
       -- Gleam LSP
       servers.gleam = {}
 

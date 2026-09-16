@@ -147,7 +147,6 @@
               ty # Astral: Python type checker LSP (`ty server`)
               rust-analyzer
               clang-tools
-              haskell-language-server
               gleam
               jujutsu # required by neojjit
             ];

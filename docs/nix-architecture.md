@@ -159,7 +159,7 @@ lspsAndRuntimeDeps = with pkgs; {
     lua-language-server nixd nixfmt stylua
     python3Packages.python-lsp-server
     rust-analyzer clang-tools
-    haskell-language-server gleam
+    gleam
   ];
   kickstart-debug = [ delve ];
   kickstart-lint  = [ markdownlint-cli ];
