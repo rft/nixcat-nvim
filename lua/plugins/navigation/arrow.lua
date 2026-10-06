@@ -13,32 +13,32 @@ return {
     },
     opts = {
       show_icons = true,
-      leader_key = '<leader>wm',
+      leader_key = '<leader>pmm',
     },
     config = function(_, opts)
       local arrow = require 'arrow'
       local persist = require 'arrow.persist'
       arrow.setup(opts or {})
 
-      vim.keymap.set('n', '<leader>wt', function()
+      vim.keymap.set('n', '<leader>pmt', function()
         persist.toggle()
       end, { desc = '[W]orkspace marks toggle' })
 
-      vim.keymap.set('n', '<leader>wn', function()
+      vim.keymap.set('n', '<leader>pmn', function()
         persist.next()
       end, { desc = '[W]orkspace marks next' })
 
-      vim.keymap.set('n', '<leader>wp', function()
+      vim.keymap.set('n', '<leader>pmp', function()
         persist.previous()
       end, { desc = '[W]orkspace marks previous' })
 
       local ui = require 'arrow.ui'
-      vim.keymap.set('n', '<leader>wm', function()
+      vim.keymap.set('n', '<leader>pmm', function()
         ui.openMenu()
       end, { desc = '[W]orkspace marks menu' })
 
       for i = 1, 9 do
-        local key = string.format('<leader>w%s', i)
+        local key = string.format('<leader>pm%s', i)
         vim.keymap.set('n', key, function()
           persist.go_to(i)
         end, { desc = string.format('[W]orkspace mark %d', i) })

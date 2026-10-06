@@ -51,6 +51,10 @@ local function git_blame_line_with_count()
   snacks.git.blame_line { count = count }
 end
 
+local function search_project()
+  snacks.picker.grep { hidden = true, ignored = true }
+end
+
 local function toggle_scratch()
   snacks.scratch()
 end
@@ -178,10 +182,8 @@ return {
       },
       {
         '<leader>/',
-        function()
-          snacks.picker.lines()
-        end,
-        desc = '[/] Fuzzily search in current buffer',
+        search_project,
+        desc = '[/] Search project',
       },
       {
         '<leader>s/',
@@ -199,9 +201,7 @@ return {
       },
       {
         '<leader>sp',
-        function()
-          snacks.picker.grep { hidden = true, ignored = true }
-        end,
+        search_project,
         desc = '[S]earch [p]roject (enhanced fuzzy)',
       },
       {

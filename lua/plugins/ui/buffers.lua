@@ -52,10 +52,12 @@ return {
     keys = {
       { '[b', '<cmd>BufferLineCyclePrev<cr>', desc = 'Previous buffer' },
       { ']b', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
-      { '<leader>bp', '<cmd>BufferLineTogglePin<cr>', desc = 'Toggle buffer pin' },
+      { '<leader>bn', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
+      { '<leader>bp', '<cmd>BufferLineCyclePrev<cr>', desc = 'Previous buffer' },
+      { '<leader>bt', '<cmd>BufferLineTogglePin<cr>', desc = 'Toggle buffer pin' },
       { '<leader>bP', '<cmd>BufferLineGroupClose ungrouped<cr>', desc = 'Close unpinned buffers' },
       {
-        '<leader>bn',
+        '<leader>bN',
         function()
           vim.cmd.enew()
           vim.cmd.startinsert()

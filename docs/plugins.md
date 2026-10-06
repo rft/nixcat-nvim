@@ -220,7 +220,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `otavioschwanck/arrow.nvim`
 - **Purpose**: Quick file bookmark navigator for workspace-level marks.
 - **Config**: `lua/plugins/navigation/arrow.lua`
-- **Keybinds**: `<leader>wt` (toggle mark), `<leader>wn` (next mark), `<leader>wp` (previous mark), `<leader>wm` (open menu), `<leader>w1`..`<leader>w9` (jump to mark 1-9).
+- **Keybinds**: `<leader>pmt` (toggle mark), `<leader>pmn` (next mark), `<leader>pmp` (previous mark), `<leader>pmm` (open menu), `<leader>pm1`..`<leader>pm9` (jump to mark 1-9).
 - **Category**: Requires `general`.
 
 ---
@@ -231,7 +231,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `akinsho/bufferline.nvim`
 - **Purpose**: Buffer tab bar with diagnostics indicators, pin support, and hover previews.
 - **Config**: `lua/plugins/ui/buffers.lua`
-- **Keybinds**: `[b` (prev buffer), `]b` (next buffer), `<leader>bp` (toggle pin), `<leader>bP` (close unpinned), `<leader>bn` (new buffer).
+- **Keybinds**: `[b` / `<leader>bp` (previous buffer), `]b` / `<leader>bn` (next buffer), `<leader>bt` (toggle pin), `<leader>bP` (close unpinned), `<leader>bN` (new buffer).
 
 ### Buffer operations (via Snacks and plenary)
 - **Config**: `lua/plugins/tools/snacks.lua`, `lua/plugins/ui/buffers.lua`
@@ -567,7 +567,7 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 - **Plugin**: `jpalardy/vim-slime`
 - **Purpose**: Send code to a REPL running in another terminal/pane (configured for Zellij).
 - **Config**: `lua/plugins/tools/slime.lua`
-- **Keybinds**: `<leader>cl` (send current line), `<leader>cr` (visual: send selection), `<leader>cC` (configure Slime target).
+- **Keybinds**: `<leader>rl` (send current line), `<leader>rs` (visual: send selection), `<leader>rc` (configure Slime target). `<leader>cr` is reserved for LSP references in normal and visual mode.
 
 ---
 

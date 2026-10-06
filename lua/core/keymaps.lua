@@ -105,7 +105,7 @@ vim.api.nvim_create_autocmd('WinClosed', {
   end,
 })
 
-vim.keymap.set('n', '<leader>wf', toggle_window_focus, { desc = 'Toggle focused window' })
+vim.keymap.set('n', '<leader>wm', toggle_window_focus, { desc = 'Toggle focused window' })
 
 local function open_url_under_cursor()
   local line = vim.api.nvim_get_current_line()

@@ -219,6 +219,7 @@ return {
           -- <leader>c aliases for the same operations
           map('<leader>cd', goto_definition, 'Jump to definition')
           map('<leader>cr', goto_references, 'Find references')
+          vim.keymap.set('x', '<leader>cr', goto_references, { buffer = event.buf, desc = 'LSP: Find references' })
           map('<leader>ck', vim.lsp.buf.hover, 'Jump to documentation')
           map('<leader>ct', goto_type_definition, 'Find type definition')
           map('<leader>cR', floating_rename, 'Rename symbol')

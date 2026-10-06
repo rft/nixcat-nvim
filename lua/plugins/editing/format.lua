@@ -6,10 +6,28 @@ return {
       {
         '<leader>cf',
         function()
-          require('conform').format { async = true, lsp_fallback = true }
+          local opts = { async = true, lsp_fallback = true }
+          local mode = vim.fn.mode()
+          if mode == 'v' or mode == 'V' or mode == '\22' then
+            local regions = vim.fn.getregionpos(vim.fn.getpos 'v', vim.fn.getpos '.', {
+              type = mode,
+              exclusive = vim.o.selection == 'exclusive',
+            })
+            local first, last = regions[1][1], regions[#regions][2]
+            local line = vim.api.nvim_buf_get_lines(0, last[2] - 1, last[2], true)[1]
+            local start_col, end_col = 0, #line
+            if mode == 'v' then
+              start_col = first[3] - 1
+              -- Convert the inclusive byte position to an exclusive range end.
+              end_col = last[3] - 1 + #vim.fn.strcharpart(line:sub(last[3]), 0, 1)
+            end
+            -- Linewise and block selections format their covered lines.
+            opts.range = { start = { first[2], start_col }, ['end'] = { last[2], end_col } }
+          end
+          require('conform').format(opts)
         end,
-        mode = '',
-        desc = '[C]ode [F]ormat buffer',
+        mode = { 'n', 'x' },
+        desc = '[C]ode [F]ormat buffer or selection',
       },
     },
     opts = {

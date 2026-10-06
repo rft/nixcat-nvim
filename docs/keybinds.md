@@ -9,6 +9,11 @@ Comprehensive keybind reference for nixcat-nvim. This documents every explicitly
 
 `SPC` is used as shorthand for `<Space>` (leader) throughout this document.
 
+The common file, buffer, search, code, Git, and window actions are aligned with
+VSpaceCode in `rft/nix-config/modules/editors/vscode.nix`. Bare comma remains the
+native Vim reverse-character-search motion. Editor-specific notes, REPLs, and
+native editing plugins remain distinct.
+
 ## Leader Prefix Groups
 
 | Prefix | Group | Purpose |
@@ -27,7 +32,7 @@ Comprehensive keybind reference for nixcat-nvim. This documents every explicitly
 | `SPC o` | **[O]pen** | Open tools/panels |
 | `SPC p` | **[P]roject** | Project operations |
 | `SPC q` | **[Q]uick/quit** | Session/quit |
-| `SPC r` | **[R]ename** | Rename operations |
+| `SPC r` | **[R]EPL** | Send code and configure the REPL target |
 | `SPC s` | **[S]earch** | Search/find |
 | `SPC t` | **[T]oggle** | UI toggles |
 | `SPC w` | **[W]indow** | Window management |
@@ -67,7 +72,7 @@ Source: `lua/core/keymaps.lua`
 | n | `SPC wK` | `<C-w>K` | Move window to top |
 | n | `SPC wL` | `<C-w>L` | Move window to far right |
 | n | `SPC wo` | `<C-w>o` | Keep only current window |
-| n | `SPC wf` | toggle_window_focus | Toggle maximized/equalized window |
+| n | `SPC wm` | toggle_window_focus | Toggle maximized/equalized window |
 
 ---
 
@@ -145,10 +150,10 @@ Source: `lua/plugins/tools/snacks.lua`
 | n | `SPC s.` | Snacks picker recent | Search recent files |
 | n | `SPC st` | Snacks picker pickers | List all pickers |
 | n | `SPC SPC` | Snacks picker commands | Command palette |
-| n | `SPC /` | Snacks picker lines | Fuzzy search current buffer |
+| n | `SPC /` | Snacks picker grep | Project grep including hidden and ignored files (same as `SPC sp`) |
 | n | `SPC s/` | Snacks picker grep_buffers | Grep in open files only |
 | n | `SPC sn` | Snacks picker files | Search Neovim config files |
-| n | `SPC sp` | Snacks picker grep | Project grep including hidden files |
+| n | `SPC sp` | Snacks picker grep | Project grep including hidden and ignored files |
 | n | `SPC sP` | Snacks picker grep | Project grep (standard) |
 | n | `SPC pp` | Snacks picker projects | Projects picker |
 | n | `<C-S-f>` | Snacks picker grep | Search whole project |
@@ -187,12 +192,14 @@ Sources: `lua/plugins/tools/snacks.lua`, `lua/plugins/ui/buffers.lua`
 | n | `SPC bc` | Custom function | Close buffer (prompts to save if modified) |
 | n | `SPC bs` | `:enew` | New scratch buffer |
 | n | `SPC bu` | `:e #` | Reopen last buffer |
-| n | `SPC bn` | New + insert | New buffer and enter insert mode |
+| n | `SPC bn` | BufferLine cycle next | Next buffer |
+| n | `SPC bp` | BufferLine cycle prev | Previous buffer |
+| n | `SPC bN` | New + insert | New buffer and enter insert mode |
 | n | `SPC bd` | Snacks bufdelete | Delete buffer |
 | n | `SPC bD` | Snacks bufdelete | Force delete buffer |
 | n | `[b` | BufferLine cycle prev | Previous buffer |
 | n | `]b` | BufferLine cycle next | Next buffer |
-| n | `SPC bp` | BufferLine toggle pin | Toggle buffer pin |
+| n | `SPC bt` | BufferLine toggle pin | Toggle buffer pin |
 | n | `SPC bP` | BufferLine group close | Close unpinned buffers |
 | n | `SPC bl` | Move to right window | Move buffer to right window |
 | n | `SPC bh` | Move to left window | Move buffer to left window |
@@ -244,7 +251,7 @@ Source: `lua/plugins/lsp.lua`
 | x | `SPC ;` | Toggle comment | Comment out selection |
 | n | `SPC cc` | `:make` | Compile |
 | n | `SPC cd` | lsp.buf.definition | Jump to definition |
-| n | `SPC cr` | lsp.buf.references | Find references |
+| n, x | `SPC cr` | Snacks picker lsp_references | Find references (buffer-local when LSP attaches) |
 | n | `SPC ck` | lsp.buf.hover | Hover documentation |
 | n | `SPC cR` | Floating rename | Rename symbol (custom floating prompt) |
 | n | `SPC cx` | diagnostic.open_float | Open diagnostics float |
@@ -269,7 +276,8 @@ Sources: `lua/plugins/editing/format.lua`, `lua/plugins/general.lua`
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| any | `SPC cf` | conform.format | Format buffer (conform.nvim) |
+| n | `SPC cf` | conform.format | Format buffer |
+| x | `SPC cf` | conform.format with explicit range | Format selection; linewise/block selections format covered lines |
 | n | `SPC fm` | lsp.buf.format | Format buffer (LSP) |
 | v | `SPC fm` | lsp.buf.format | Format selection (LSP) |
 
@@ -495,13 +503,13 @@ Source: `lua/plugins/dbee.lua`
 
 ## REPL (vim-slime)
 
-Source: `lua/plugins/slime.lua`
+Source: `lua/plugins/tools/slime.lua`
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `SPC cl` | SlimeSendCurrentLine | Send current line to REPL |
-| v | `SPC cr` | SlimeSend | Send visual selection to REPL |
-| n | `SPC cC` | SlimeConfig | Configure Slime target |
+| n | `SPC rl` | SlimeSendCurrentLine | Send current line to REPL |
+| x | `SPC rs` | SlimeSend | Send visual selection to REPL |
+| n | `SPC rc` | SlimeConfig | Configure Slime target |
 
 **Note**: Slime is configured for Zellij as the target multiplexer.
 
@@ -577,11 +585,11 @@ Sources: `lua/plugins/neoMiniMap.lua`, `lua/plugins/myeyeshurt.lua`, `init.lua`,
 
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
-| n | `SPC wt` | arrow.persist.toggle | Toggle workspace mark on file |
-| n | `SPC wn` | arrow.persist.next | Next workspace mark |
-| n | `SPC wp` | arrow.persist.previous | Previous workspace mark |
-| n | `SPC wm` | arrow.ui.openMenu | Open workspace marks menu |
-| n | `SPC w1`..`SPC w9` | arrow.persist.go_to(n) | Jump to workspace mark 1-9 |
+| n | `SPC pmt` | arrow.persist.toggle | Toggle workspace mark on file |
+| n | `SPC pmn` | arrow.persist.next | Next workspace mark |
+| n | `SPC pmp` | arrow.persist.previous | Previous workspace mark |
+| n | `SPC pmm` | arrow.ui.openMenu | Open workspace marks menu |
+| n | `SPC pm1`..`SPC pm9` | arrow.persist.go_to(n) | Jump to workspace mark 1-9 |
 
 ---
 
@@ -621,9 +629,13 @@ Related actions use distinct keys so plugin load order and LSP attachment do not
 | `gs` / `gS` | Replace with register content / sort text |
 | `SPC ti` / `SPC tI` | Indent guides / LSP inlay hints (buffer-local) |
 | `SPC tc` / `SPC tn` | Treesitter context / No Neck Pain centering |
-| `SPC wp` / `SPC wP` | Arrow previous mark / Dropbar symbol picker |
-| `SPC wm` / `SPC wM` | Arrow menu / Dropbar current-window picker |
+| `SPC pmp` / `SPC wP` | Arrow previous mark / Dropbar symbol picker |
+| `SPC pmm` / `SPC wm` / `SPC wM` | Arrow menu / maximize window / Dropbar current-window picker |
 | `SPC de` / `SPC dE` | Diagnostics float / DAP evaluation |
-| `SPC cc` / `SPC cC` | `:make` / Slime target configuration |
+| `SPC cc` / `SPC rc` | `:make` / Slime target configuration |
 
-`SPC cr` remains shared intentionally: LSP references in normal mode and Slime send in visual mode.
+`SPC cr` finds references in normal and visual mode when an LSP is attached.
+Sending selected code to Slime is exclusively `SPC rs`.
+
+Arrow's `SPC pm` bindings replace `SPC w1`–`SPC w9`, `SPC wm`, `SPC wt`,
+`SPC wn`, and `SPC wp`, reserving the `SPC w` group for window operations.

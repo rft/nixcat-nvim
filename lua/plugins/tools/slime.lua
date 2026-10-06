@@ -2,9 +2,9 @@ return {
   {
     'jpalardy/vim-slime',
     keys = {
-      { '<leader>cl', '<cmd>SlimeSendCurrentLine<cr>', desc = 'Send current line to Slime' },
-      { '<leader>cr', '<cmd>SlimeSend<cr>', mode = 'v', desc = 'Send selection to Slime' },
-      { '<leader>cC', '<cmd>SlimeConfig<cr>', desc = 'Slime target config' },
+      { '<leader>rl', '<cmd>SlimeSendCurrentLine<cr>', desc = 'Send current line to Slime' },
+      { '<leader>rs', '<cmd>SlimeSend<cr>', mode = 'v', desc = 'Send selection to Slime' },
+      { '<leader>rc', '<cmd>SlimeConfig<cr>', desc = 'Slime target config' },
     },
     init = function()
       vim.g.slime_target = 'zellij'

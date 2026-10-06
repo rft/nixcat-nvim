@@ -21,14 +21,16 @@ return {
         { '<leader>n', group = '[N]eominimap' },
         { '<leader>o', group = '[O]pen' },
         { '<leader>p', group = '[P]roject' },
+        { '<leader>pm', group = 'Workspace [M]arks' },
         { '<leader>q', group = '[Q]uick/quit' },
-        { '<leader>r', group = '[R]ename' },
+        { '<leader>r', group = '[R]EPL', mode = { 'n', 'v' } },
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>w', group = '[W]indow' },
         {
           mode = { 'v' },
-          { '<leader>h', group = 'Git [H]unk' },
+          { '<leader>c', group = '[C]ode' },
+          { '<leader>g', group = '[G]it' },
         },
       }
     end,
