@@ -5,6 +5,12 @@ A not so finished Neovim configuration built with [nixCats](https://github.com/B
 Mostly vibecoded so do not take what I have in here seriously. Reason for being so is that if my neovim config is not on parity with vscode, I will not use it, so it's a starting point.
 
 
+![Dashboard](docs/screenshots/dashboard.png)
+
+![Editor overview](docs/screenshots/overview.png)
+
+More screenshots are in the [Plugin Reference](docs/plugins.md).
+
 ## Quick Start
 
 ### Try Without Installing
@@ -77,7 +83,7 @@ The `--` ensures any arguments (filenames, flags) are passed through to Neovim.
 
 ## Documentation
 
-- **[Plugin Reference](docs/plugins.md)** - Every plugin with purpose, keybinds, and config locations
+- **[Plugin Reference](docs/plugins.md)** - Every plugin with purpose, keybinds, config locations, and screenshots
 - **[Keybind Reference](docs/keybinds.md)** - Complete keybind reference organized by category
 - **[Nix Architecture](docs/nix-architecture.md)** - How nixCats, flakes, overlays, and the Lua-Nix bridge work
 
