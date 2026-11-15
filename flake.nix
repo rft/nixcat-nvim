@@ -275,8 +275,45 @@
         devShells = {
           default = pkgs.mkShell {
             name = defaultPackageName;
-            packages = [ defaultPackage ];
+            packages = [
+              defaultPackage
+              pkgs.stylua
+              pkgs.nixfmt
+            ];
           };
+        };
+
+        formatter = pkgs.nixfmt-tree;
+
+        # Run by `nix flake check` (and CI).
+        checks = {
+          # Builds the package, starts it headless and loads every plugin.
+          # git is not part of the package (it comes from the user's PATH),
+          # but gitsigns and obsidian.nvim expect to find it.
+          startup =
+            pkgs.runCommand "nvim-startup-check"
+              {
+                nativeBuildInputs = [
+                  defaultPackage
+                  pkgs.git
+                ];
+              }
+              ''
+                export HOME=$(mktemp -d)
+                nvim --headless -c "luafile ${./checks/startup.lua}" -c "qa!"
+                touch $out
+              '';
+
+          stylua = pkgs.runCommand "stylua-check" { nativeBuildInputs = [ pkgs.stylua ]; } ''
+            cd ${self}
+            stylua --check .
+            touch $out
+          '';
+
+          nixfmt = pkgs.runCommand "nixfmt-check" { nativeBuildInputs = [ pkgs.nixfmt ]; } ''
+            nixfmt --check ${self}/flake.nix
+            touch $out
+          '';
         };
       }
     )

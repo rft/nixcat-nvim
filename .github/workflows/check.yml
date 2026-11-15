@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
-      - name: Evaluate flake outputs
-        run: nix flake check
-
-  stylua:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
-      - name: Check Lua formatting
-        run: nix run nixpkgs#stylua -- --check .
+      - uses: nixbuild/nix-quick-install-action@v34
+      - name: Restore and save Nix store
+        uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.nix', 'flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          # Trim the store before saving so the cache stays within GitHub's quota
+          gc-max-store-size-linux: 5G
+      # Evaluates every output and builds the checks in flake.nix: the package
+      # itself, a headless startup that loads every plugin, stylua and nixfmt.
+      - name: Check flake
+        run: nix flake check -L
