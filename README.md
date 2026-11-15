@@ -41,35 +41,23 @@ Add to your `flake.nix` inputs:
 }
 ```
 
-Then in your system or home-manager configuration:
+Then add the package to your NixOS or home-manager configuration:
 
 ```nix
-# For system configuration
-environment.systemPackages = [ inputs.nano-nvim.packages.${system}.default ];
+{ inputs, pkgs, ... }: {
+  # NixOS (configuration.nix)
+  environment.systemPackages = [ inputs.nano-nvim.packages.${pkgs.system}.default ];
 
-# For home-manager
-home.packages = [ inputs.nano-nvim.packages.${system}.default ];
-```
-
-#### NixOS Configuration
-```nix
-# In your configuration.nix
-{ inputs, ... }: {
-  environment.systemPackages = [
-    inputs.nano-nvim.packages.${pkgs.system}.default
-  ];
+  # or home-manager (home.nix)
+  home.packages = [ inputs.nano-nvim.packages.${pkgs.system}.default ];
 }
 ```
 
-#### Home Manager
-```nix
-# In your home.nix
-{ inputs, ... }: {
-  home.packages = [
-    inputs.nano-nvim.packages.${pkgs.system}.default
-  ];
-}
-```
+#### NixOS / Home Manager Modules
+If you want to change categories or settings without forking, import the
+module instead of the package: `inputs.nano-nvim.nixosModules.default` or
+`inputs.nano-nvim.homeModules.default`. See
+[Nix Architecture](docs/nix-architecture.md#installation-methods).
 
 ### Shell Alias
 If you'd like to use `nvim` to launch this configuration via `nix run`:
@@ -90,22 +78,38 @@ The `--` ensures any arguments (filenames, flags) are passed through to Neovim.
 ## Configuration Structure
 
 ```
-├── flake.nix              # Nix configuration and package definitions
+├── flake.nix              # Inputs, plugin/tool lists, package definition, checks
 ├── init.lua               # Main Neovim configuration entry point
+├── checks/
+│   └── startup.lua        # Headless smoke test run by `nix flake check`
 ├── lua/
 │   ├── core/
 │   │   ├── keymaps.lua    # Core keybind definitions
-│   │   └── options.lua    # Neovim options and settings
+│   │   ├── options.lua    # Neovim options and settings
+│   │   └── palette.lua    # Shared colour palette
+│   ├── nixCatsUtils/      # Nix-to-Lua helpers and the lazy.nvim wrapper
 │   └── plugins/
 │       ├── general.lua    # Core plugins (Oil, undotree, etc.)
 │       ├── ui/            # Visual/display plugins
 │       ├── navigation/    # Search, jump, file tree
-│       ├── editing/       # Text manipulation, autopairs, comments
+│       ├── editing/       # Text manipulation, completion, comments
 │       ├── lsp/           # Language server configuration
 │       ├── git/           # Git integration
 │       ├── tools/         # Debug, lint, AI, terminal, sessions
 │       ├── obsidian/      # Note-taking (obsidian)
 │       └── orgmode/       # Note-taking (orgmode)
+```
+
+This configuration only works when built through Nix: every plugin, LSP and
+tool comes from the flake, and there is no Mason or lazy.nvim download
+fallback. `git` is the one thing expected on your own `PATH`.
+
+## Development
+
+```bash
+nix flake check          # build, headless startup test, stylua and nixfmt checks
+nix fmt                  # format flake.nix
+nix develop -c stylua .  # format Lua
 ```
 
 ## Credits
