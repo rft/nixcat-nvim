@@ -478,7 +478,7 @@ return {
           },
         },
         animate = {
-          enabled = vim.fn.has 'nvim-0.10' == 1,
+          enabled = true,
           style = 'out',
           duration = { step = 15, total = 300 },
         },

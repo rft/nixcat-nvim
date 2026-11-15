@@ -47,7 +47,7 @@ Source: `lua/core/keymaps.lua`
 |------|-----|--------|-------------|
 | n | `<Esc>` | Clear search + hlslens | Clear search highlighting |
 | t | `<Esc>` | `<C-\><C-n>` | Exit terminal mode |
-| n | `gx` | Open URL | Open URL under cursor in browser |
+| n | `gx` | builtin (`vim.ui.open`) | Open file or URL under cursor (Neovim default, not remapped) |
 | n | `x` | `"_x` | Delete character without yanking |
 | n | `SPC qq` | `:confirm qa` | Quit all with confirmation |
 

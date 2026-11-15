@@ -268,7 +268,7 @@ return {
 
           -- Toggle inlay hints, if the language server supports them.
           -- This may be unwanted, since they displace some of your code.
-          if client and client:supports_method 'textDocument/inlayHint' and vim.lsp.inlay_hint then
+          if client and client:supports_method 'textDocument/inlayHint' then
             map('<leader>tI', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end, '[T]oggle [I]nlay hints')
