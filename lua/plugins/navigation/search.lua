@@ -11,7 +11,7 @@ return {
         nearest_only = true,
         nearest_float_when = 'never',
         override_lens = function(_, _, _, _, _)
-          -- suppress [n/total] virtual text; lualine already shows it
+          -- suppress the [n/total] virtual text lens
         end,
       }
 

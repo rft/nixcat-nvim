@@ -32,7 +32,7 @@ return {
 
         -- Disable autopairs where it tends to get in the way (prompts, tree UIs)
         vim.api.nvim_create_autocmd('FileType', {
-          pattern = { 'snacks_picker_input', 'oil', 'neo-tree', 'spectre_panel', 'minifiles' },
+          pattern = { 'snacks_picker_input', 'oil', 'neo-tree' },
           callback = function()
             vim.b.minipairs_disable = true
           end,

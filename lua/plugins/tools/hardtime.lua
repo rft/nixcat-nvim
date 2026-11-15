@@ -14,7 +14,7 @@ return {
     opts = {
       enabled = true,
       -- Disable in certain filetypes
-      disabled_filetypes = { 'qf', 'netrw', 'NvimTree', 'lazy', 'mason', 'oil' },
+      disabled_filetypes = { 'qf', 'netrw', 'lazy', 'oil' },
       -- Maximum allowed repetitions
       max_count = 3,
       restriction_mode = 'block',

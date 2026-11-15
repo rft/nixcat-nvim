@@ -102,7 +102,7 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
-      -- Picker keybinds (replaces Telescope)
+      -- Picker keybinds
       {
         '<leader>sh',
         function()

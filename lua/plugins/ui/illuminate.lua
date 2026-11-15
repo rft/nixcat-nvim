@@ -25,7 +25,6 @@ return {
         'git',
         'neo-tree',
         'lazy',
-        'mason',
         'oil',
         'Outline',
         'snacks_picker_input',

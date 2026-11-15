@@ -12,11 +12,9 @@ return {
       },
       enable = true,
       ft_config = {
-        alpha = false,
         help = false,
         lazy = false,
         lspinfo = false,
-        mason = false,
       },
       ft_default = 'iter',
       max_file_size = 4000,
