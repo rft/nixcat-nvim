@@ -502,7 +502,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 ![markview.nvim rendering the README](screenshots/markview.png)
 
 ### nvim-colorizer.lua
-- **Plugin**: `norcalli/nvim-colorizer.lua`
+- **Plugin**: `catgoose/nvim-colorizer.lua`
 - **Purpose**: Inline color previews for hex codes, RGB, HSL, CSS colors, and Tailwind classes.
 - **Config**: `lua/plugins/ui/colorizer.lua`
 
@@ -616,7 +616,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 ![Orgmode week agenda (`<leader>ma`)](screenshots/orgmode.png)
 
 ### obsidian.nvim
-- **Plugin**: `epwalsh/obsidian.nvim`
+- **Plugin**: `obsidian-nvim/obsidian.nvim`
 - **Purpose**: Work with Obsidian vaults inside Neovim — wiki links, daily notes, backlinks, tags, and search.
 - **Config**: `lua/plugins/obsidian/init.lua`
 - **Keybinds**: `<leader>mon` (new note), `<leader>moo` (open in Obsidian app), `<leader>mos` (search), `<leader>moq` (quick switch), `<leader>mob` (backlinks), `<leader>mot` (tags), `<leader>mod` (daily note), `<leader>moy` (yesterday's note), `<leader>mol` (link selection, visual), `<leader>moL` (link to new note, visual).

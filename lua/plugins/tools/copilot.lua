@@ -1,26 +1,6 @@
-local nixCatsUtils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
-
-local function resolve_copilot_path()
-  if not (nixCatsUtils.isNixCats and nixCats and nixCats.pawsible) then
-    return nil
-  end
-
-  local start_path = nixCats.pawsible { 'allPlugins', 'start', 'copilot-vim' }
-  if type(start_path) == 'string' and start_path ~= '' then
-    return start_path
-  end
-
-  local opt_path = nixCats.pawsible { 'allPlugins', 'opt', 'copilot-vim' }
-  if type(opt_path) == 'string' and opt_path ~= '' then
-    return opt_path
-  end
-
-  return nil
-end
-
-local function build_spec(source)
-  local spec = {
+return {
+  {
+    'github/copilot.vim',
     event = 'InsertEnter',
     config = function()
       -- Disable default Copilot mapping so we can provide our own
@@ -53,23 +33,5 @@ local function build_spec(source)
       -- Toggle Copilot per-buffer
       vim.keymap.set('n', '<leader>cT', '<cmd>Copilot toggle<CR>', { desc = 'Copilot toggle buffer' })
     end,
-  }
-
-  if source.dir then
-    spec.dir = source.dir
-    spec.name = 'copilot.vim'
-  else
-    spec[1] = source.repo
-  end
-
-  return spec
-end
-
-local copilot_path = resolve_copilot_path()
-
-if copilot_path then
-  return { build_spec { dir = copilot_path } }
-end
-
--- Fallback for non-nix usage
-return { build_spec { repo = 'github/copilot.vim' } }
+  },
+}

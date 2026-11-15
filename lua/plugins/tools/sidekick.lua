@@ -1,26 +1,6 @@
-local nixCatsUtils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
-
-local function resolve_sidekick_path()
-  if not (nixCatsUtils.isNixCats and nixCats and nixCats.pawsible) then
-    return nil
-  end
-
-  local start_path = nixCats.pawsible { 'allPlugins', 'start', 'sidekick.nvim' }
-  if type(start_path) == 'string' and start_path ~= '' then
-    return start_path
-  end
-
-  local opt_path = nixCats.pawsible { 'allPlugins', 'opt', 'sidekick.nvim' }
-  if type(opt_path) == 'string' and opt_path ~= '' then
-    return opt_path
-  end
-
-  return nil
-end
-
-local function build_spec(source)
-  local spec = {
+return {
+  {
+    'folke/sidekick.nvim',
     event = 'VeryLazy',
     dependencies = {
       'folke/snacks.nvim',
@@ -95,21 +75,5 @@ local function build_spec(source)
     config = function(_, opts)
       require('sidekick').setup(opts)
     end,
-  }
-
-  if source.dir then
-    spec.dir = source.dir
-    spec.name = 'sidekick.nvim'
-  else
-    spec[1] = source.repo
-  end
-
-  return spec
-end
-
-local path = resolve_sidekick_path()
-if path then
-  return { build_spec { dir = path } }
-end
-
-return { build_spec { repo = 'folke/sidekick.nvim' } }
+  },
+}

@@ -1,5 +1,4 @@
 local nixcats_utils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
 
 if not nixcats_utils.enableForCategory 'obsidian' then
   return {}
@@ -27,26 +26,6 @@ if type(default_vault) ~= 'string' or default_vault == '' or not normalized_vaul
   default_vault = next(normalized_vaults)
 end
 
-local function plugin_path(name)
-  if not nixCats or not nixCats.pawsible then
-    return nil
-  end
-
-  local start_path = nixCats.pawsible { 'allPlugins', 'start', name }
-  if type(start_path) == 'string' and start_path ~= '' then
-    return start_path
-  end
-
-  local opt_path = nixCats.pawsible { 'allPlugins', 'opt', name }
-  if type(opt_path) == 'string' and opt_path ~= '' then
-    return opt_path
-  end
-
-  return nil
-end
-
-local obsidian_path = plugin_path 'obsidian.nvim'
-
 local function ensure_vault_dirs()
   for _, location in pairs(normalized_vaults) do
     if vim.fn.isdirectory(location) == 0 then
@@ -63,11 +42,8 @@ end
 
 return {
   {
-    'epwalsh/obsidian.nvim',
-    name = 'obsidian',
-    enabled = true,
+    'obsidian-nvim/obsidian.nvim',
     ft = 'markdown',
-    dir = obsidian_path,
     dependencies = {
       'nvim-lua/plenary.nvim',
       'hrsh7th/nvim-cmp',
