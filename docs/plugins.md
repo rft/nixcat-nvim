@@ -67,7 +67,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### nvim-web-devicons
 - **Plugin**: `nvim-tree/nvim-web-devicons`
 - **Purpose**: File type icons (requires Nerd Font). Used by many UI plugins.
-- **Config**: `init.lua` (enabled based on `have_nerd_font`).
+- **Notes**: Icon-related options across the config (statusline, bufferline, lazy UI) follow `have_nerd_font` in `flake.nix`, which is `true`.
 
 ---
 
