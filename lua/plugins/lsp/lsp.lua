@@ -121,23 +121,6 @@ return {
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for Neovim
-      {
-        'williamboman/mason.nvim',
-        -- NOTE: nixCats: use lazyAdd to only enable mason if nix wasnt involved.
-        -- because we will be using nix to download things instead.
-        enabled = require('nixCatsUtils').lazyAdd(true, false),
-        config = true,
-      }, -- NOTE: Must be loaded before dependants
-      {
-        'williamboman/mason-lspconfig.nvim',
-        enabled = require('nixCatsUtils').lazyAdd(true, false),
-      },
-      {
-        'WhoIsSethDaniel/mason-tool-installer.nvim',
-        enabled = require('nixCatsUtils').lazyAdd(true, false),
-      },
-
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
 
@@ -149,7 +132,7 @@ return {
         opts = {
           library = {
             -- adds type hints for nixCats global
-            { path = (nixCats.nixCatsPath or '') .. '/lua', words = { 'nixCats' } },
+            { path = nixCats.nixCatsPath .. '/lua', words = { 'nixCats' } },
           },
         },
       },
@@ -317,15 +300,9 @@ return {
       -- Gleam LSP
       servers.gleam = {}
 
-      -- NOTE: nixCats: nixd is not available on mason.
-      -- Feel free to check the nixd docs for more configuration options:
+      -- Nix LSP. See the nixd docs for more configuration options:
       -- https://github.com/nix-community/nixd/blob/main/nixd/docs/configuration.md
-      if require('nixCatsUtils').isNixCats then
-        servers.nixd = {}
-      else
-        servers.rnix = {}
-        servers.nil_ls = {}
-      end
+      servers.nixd = {}
 
       servers.lua_ls = {
         settings = {
@@ -345,33 +322,11 @@ return {
       -- GitHub Copilot LSP (required for sidekick.nvim NES)
       servers.copilot = {}
 
-      -- NOTE: nixCats: if nix, use lspconfig instead of mason.
-      -- Just add the lsp to lspsAndRuntimeDeps in the flake.
-      if require('nixCatsUtils').isNixCats then
-        for server_name, cfg in pairs(servers) do
-          vim.lsp.config(server_name, cfg)
-          vim.lsp.enable(server_name)
-        end
-      else
-        -- NOTE: nixCats: and if no nix, use mason
-        require('mason').setup()
-
-        -- You can add other tools here that you want Mason to install
-        -- for you, so that they are available from within Neovim.
-        local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, {
-          'stylua', -- Used to format Lua code
-        })
-        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-        require('mason-lspconfig').setup {
-          handlers = {
-            function(server_name)
-              vim.lsp.config(server_name, servers[server_name] or {})
-              vim.lsp.enable(server_name)
-            end,
-          },
-        }
+      -- NOTE: nixCats: the servers themselves come from nix. To add one, put
+      -- it in lspsAndRuntimeDeps in the flake and add an entry above.
+      for server_name, cfg in pairs(servers) do
+        vim.lsp.config(server_name, cfg)
+        vim.lsp.enable(server_name)
       end
     end,
   },

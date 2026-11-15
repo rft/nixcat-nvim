@@ -37,7 +37,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### lazy.nvim
 - **Purpose**: Plugin manager. Handles lazy-loading, dependencies, and plugin lifecycle.
 - **Config**: `init.lua`
-- **Notes**: Wrapped via `nixCatsUtils.lazyCat` to support both Nix and non-Nix installations.
+- **Notes**: Wrapped via `nixCatsUtils.lazyCat`, which points lazy.nvim at the plugins Nix provides instead of downloading them.
 
 ![lazy.nvim plugin overview (`:Lazy`)](screenshots/lazy.png)
 
@@ -89,14 +89,11 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `neovim/nvim-lspconfig`
 - **Purpose**: Configuration for built-in Neovim LSP client.
 - **Config**: `lua/plugins/lsp/lsp.lua`
-- **Configured servers**: `lua_ls`, `ruff` + `ty` (Python linting/formatting and type checking), `rust_analyzer`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
+- **Configured servers**: `lua_ls`, `ruff` + `ty` (Python linting/formatting and type checking), `rust_analyzer`, `gleam`, `nixd` (Nix), `copilot`.
 - **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>tI` (toggle inlay hints).
 - **Code action keybinds** (`lua/plugins/lsp/lsp.lua`): `<leader>;` (toggle comment), `<leader>cc` (make), `<leader>cd` (definition), `<leader>cr` (references), `<leader>ck` (hover), `<leader>cR` (floating rename), `<leader>cx` (diagnostics float), `<leader>ct` (type definition), `<leader>co` (organize imports), `<leader>cw` (remove trailing whitespace), `<leader>cW` (remove trailing newlines), `<leader>ce`/`cE` (next/prev diagnostic), `]e`/`[e` (next/prev error), `]w`/`[w` (next/prev warning), `]h`/`[h` (next/prev hint).
 
-### mason.nvim / mason-lspconfig.nvim / mason-tool-installer.nvim
-- **Plugins**: `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `WhoIsSethDaniel/mason-tool-installer.nvim`
-- **Purpose**: Automatic LSP server installation (only enabled when NOT using Nix).
-- **Config**: `lua/plugins/lsp/lsp.lua` (disabled under nix)
+LSP servers, formatters, and debug adapters are all provided by Nix (`lspsAndRuntimeDeps` in `flake.nix`); there is no Mason.
 
 ### fidget.nvim
 - **Plugin**: `j-hui/fidget.nvim`
@@ -350,7 +347,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `nvim-neotest/nvim-nio`
 - **Purpose**: Async IO library required by nvim-dap-ui.
 
-Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured directly in `lua/plugins/tools/debug.lua`. Outside Nix, `mason.nvim` and `mason-nvim-dap.nvim` install the adapters instead.
+Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured directly in `lua/plugins/tools/debug.lua`.
 
 ---
 

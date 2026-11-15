@@ -4,12 +4,8 @@
 -- lua/plugins/ organized by category (see docs/plugins.md).
 -- Originally based on kickstart.nvim.
 
--- NOTE: nixCats: this gives the nixCats global command a default value
--- so that it doesnt throw an error if you didnt install via nix.
--- It is very useful for passing info from nix to lua, so you will likely use it at least once.
-require('nixCatsUtils').setup {
-  non_nix_value = true,
-}
+-- NOTE: nixCats: this config is always loaded through nix, which provides the
+-- `nixCats` global for passing info from nix to lua (see :help nixCats).
 require 'core.keymaps'
 require 'core.options'
 
@@ -31,7 +27,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- NOTE: nixCats: the nix store is read-only, so keep the lockfile
 -- somewhere writable when nix manages the config.
 local function getlockfilepath()
-  if require('nixCatsUtils').isNixCats and type(nixCats.settings.unwrappedCfgPath) == 'string' then
+  if type(nixCats.settings.unwrappedCfgPath) == 'string' then
     return nixCats.settings.unwrappedCfgPath .. '/lazy-lock.json'
   else
     return vim.fn.stdpath 'config' .. '/lazy-lock.json'
@@ -65,8 +61,7 @@ local lazyOptions = {
 --  Check plugin status with :Lazy (press `?` for help, `:q` to close).
 --
 -- NOTE: nixCats: this is the lazy wrapper. Use it like require('lazy').setup()
--- but with an extra first argument: the path to lazy.nvim as downloaded by nix,
--- or nil, before the normal arguments.
+-- but with an extra first argument: the path to lazy.nvim as provided by nix.
 --
 -- Subdirectories of lua/plugins/ must be imported explicitly
 -- (lazy.nvim does not recurse).
