@@ -31,6 +31,38 @@
         "type": "github"
       }
     },
+    "plugins-indent-rainbowline": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1733179713,
+        "narHash": "sha256-dSXNtbyPY5ZWT/RCYsmy/swgErJm7zSfaDd5J+15wYc=",
+        "owner": "TheGLander",
+        "repo": "indent-rainbowline.nvim",
+        "rev": "572e8157de85d7af3f0085b5c74c059518900649",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TheGLander",
+        "repo": "indent-rainbowline.nvim",
+        "type": "github"
+      }
+    },
+    "plugins-myeyeshurt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1714856181,
+        "narHash": "sha256-/ZLaQbb0o201H92JlqYdtwBVbHSCrNAiBgSFKIE7iGs=",
+        "owner": "wildfunctions",
+        "repo": "myeyeshurt",
+        "rev": "02922e14aeaba6d305ac93b70668774963554938",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wildfunctions",
+        "repo": "myeyeshurt",
+        "type": "github"
+      }
+    },
     "plugins-neojjit": {
       "flake": false,
       "locked": {
@@ -47,11 +79,30 @@
         "type": "github"
       }
     },
+    "plugins-neominimap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775964467,
+        "narHash": "sha256-EcV/mdleyopQsJ/t/Whl6Yf/2ORb9rnhHuc2Ue1E1Bw=",
+        "owner": "Isrothy",
+        "repo": "neominimap.nvim",
+        "rev": "0676085d898019f06044923934e38663f5efa290",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Isrothy",
+        "repo": "neominimap.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixCats": "nixCats",
         "nixpkgs": "nixpkgs",
-        "plugins-neojjit": "plugins-neojjit"
+        "plugins-indent-rainbowline": "plugins-indent-rainbowline",
+        "plugins-myeyeshurt": "plugins-myeyeshurt",
+        "plugins-neojjit": "plugins-neojjit",
+        "plugins-neominimap": "plugins-neominimap"
       }
     }
   },

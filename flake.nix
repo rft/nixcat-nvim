@@ -42,6 +42,18 @@
       url = "github:JulianNymark/neojjit";
       flake = false;
     };
+    plugins-myeyeshurt = {
+      url = "github:wildfunctions/myeyeshurt";
+      flake = false;
+    };
+    plugins-neominimap = {
+      url = "github:Isrothy/neominimap.nvim";
+      flake = false;
+    };
+    plugins-indent-rainbowline = {
+      url = "github:TheGLander/indent-rainbowline.nvim";
+      flake = false;
+    };
   };
 
   # see :help nixCats.flake.outputs
@@ -89,16 +101,6 @@
           # Once we add this overlay to our nixpkgs, we are able to
           # use `pkgs.neovimPlugins`, which is a set of our plugins.
           (utils.standardPluginOverlay inputs)
-          (final: prev: {
-            vimPlugins = prev.vimPlugins // {
-              myeyeshurt = prev.callPackage ./packages/myEyesHurt { };
-              neominimap = prev.callPackage ./packages/neoMiniMap { };
-              indentRainbowline = prev.callPackage ./packages/indentRainbowline {
-                indent-blankline-nvim = prev.vimPlugins.indent-blankline-nvim;
-              };
-              # reactive-nvim is now packaged upstream in nixpkgs
-            };
-          })
           # add any other flake overlays here.
 
           # when other people mess up their overlays by wrapping them with system,
@@ -226,15 +228,15 @@
               nvim-colorizer-lua
               spellwarn-nvim
               sidekick-nvim
-              myeyeshurt
-              neominimap
-              indentRainbowline
               persistence-nvim
               substitute-nvim
               vim-illuminate
               dropbar-nvim
               reactive-nvim
               pkgs.neovimPlugins.neojjit
+              pkgs.neovimPlugins.myeyeshurt
+              pkgs.neovimPlugins.neominimap
+              pkgs.neovimPlugins.indent-rainbowline
             ];
             kickstart-debug = [
               nvim-dap

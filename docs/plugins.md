@@ -538,25 +538,25 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 
 ## Code Minimap
 
-### neominimap.nvim (Nix-packaged)
+### neominimap.nvim (flake input)
 - **Plugin**: `Isrothy/neominimap.nvim`
 - **Purpose**: Code minimap overlay showing a condensed view of the buffer with git changes, diagnostics, and search highlights.
 - **Config**: `lua/plugins/ui/neoMiniMap.lua`
 - **Keybinds**: `<leader>nt` (toggle), `<leader>ne` (enable), `<leader>nd` (disable), `<leader>nw` (toggle for window), `<leader>nr` (refresh), `<leader>nf` (focus), `<leader>nF` (unfocus).
 - **Category**: Requires `general`.
-- **Notes**: Custom Nix-packaged plugin. Floats at the right side of the window.
+- **Notes**: Not in nixpkgs; built from the `plugins-neominimap` flake input. Floats at the right side of the window.
 
 ---
 
 ## Indent Guides
 
-### indent-blankline.nvim + indent-rainbowline.nvim (Nix-packaged)
+### indent-blankline.nvim + indent-rainbowline.nvim (flake input)
 - **Plugins**: `lukas-reineke/indent-blankline.nvim` + `TheGLander/indent-rainbowline.nvim`
 - **Purpose**: Rainbow-colored indent guide lines.
 - **Config**: `lua/plugins/ui/indent-rainbowline.lua`
 - **Keybinds**: `<leader>ti` (toggle indent guides).
 - **Category**: Requires `general`.
-- **Notes**: `indent-rainbowline.nvim` is a custom Nix-packaged plugin that adds color to indent-blankline.
+- **Notes**: `indent-rainbowline.nvim` adds color to indent-blankline. It is not in nixpkgs; it is built from the `plugins-indent-rainbowline` flake input.
 
 ---
 
@@ -656,13 +656,13 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 
 ## Quality of Life
 
-### myeyeshurt (Nix-packaged)
+### myeyeshurt (flake input)
 - **Plugin**: `wildfunctions/myeyeshurt`
 - **Purpose**: Eye strain reminder that shows ASCII snowflakes after a configurable interval (20 minutes).
 - **Config**: `lua/plugins/tools/myeyeshurt.lua`
 - **Keybinds**: `<leader>ts` (start), `<leader>tx` (stop).
 - **Category**: Requires `general`.
-- **Notes**: Custom Nix-packaged plugin.
+- **Notes**: Not in nixpkgs; built from the `plugins-myeyeshurt` flake input.
 
 ### precognition
 - **Purpose**: Shows vim motion hints above the current line (w, b, e, W, B, E, ^, %, {, }).
@@ -680,17 +680,15 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 
 ---
 
-## Custom Nix-Packaged Plugins Summary
+## Plugins Outside nixpkgs
 
-These plugins are packaged via Nix rather than fetched by lazy.nvim:
+Every plugin is provided by Nix. Most come from nixpkgs; these four are not
+packaged there, so they are `plugins-*` flake inputs (see
+[Nix Architecture](nix-architecture.md#plugins-outside-nixpkgs)):
 
-| Plugin | Purpose | Config File |
-|--------|---------|-------------|
-| **myeyeshurt** | Eye strain break reminders | `lua/plugins/tools/myeyeshurt.lua` |
-| **neominimap.nvim** | Code minimap overlay | `lua/plugins/ui/neoMiniMap.lua` |
-| **indent-rainbowline.nvim** | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
-| **neojjit** | Jujutsu status UI (flake input `plugins-neojjit`) | `lua/plugins/git/neojjit.lua` |
-
-Additional Nix-managed plugins:
-- **copilot.vim** - GitHub Copilot
-- **sidekick.nvim** - AI coding assistant
+| Plugin | Flake input | Purpose | Config File |
+|--------|-------------|---------|-------------|
+| **myeyeshurt** | `plugins-myeyeshurt` | Eye strain break reminders | `lua/plugins/tools/myeyeshurt.lua` |
+| **neominimap.nvim** | `plugins-neominimap` | Code minimap overlay | `lua/plugins/ui/neoMiniMap.lua` |
+| **indent-rainbowline.nvim** | `plugins-indent-rainbowline` | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
+| **neojjit** | `plugins-neojjit` | Jujutsu status UI | `lua/plugins/git/neojjit.lua` |
