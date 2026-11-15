@@ -22,26 +22,26 @@ return {
 
       vim.keymap.set('n', '<leader>pmt', function()
         persist.toggle()
-      end, { desc = '[W]orkspace marks toggle' })
+      end, { desc = 'Workspace [M]arks toggle' })
 
       vim.keymap.set('n', '<leader>pmn', function()
         persist.next()
-      end, { desc = '[W]orkspace marks next' })
+      end, { desc = 'Workspace [M]arks next' })
 
       vim.keymap.set('n', '<leader>pmp', function()
         persist.previous()
-      end, { desc = '[W]orkspace marks previous' })
+      end, { desc = 'Workspace [M]arks previous' })
 
       local ui = require 'arrow.ui'
       vim.keymap.set('n', '<leader>pmm', function()
         ui.openMenu()
-      end, { desc = '[W]orkspace marks menu' })
+      end, { desc = 'Workspace [M]arks menu' })
 
       for i = 1, 9 do
         local key = string.format('<leader>pm%s', i)
         vim.keymap.set('n', key, function()
           persist.go_to(i)
-        end, { desc = string.format('[W]orkspace mark %d', i) })
+        end, { desc = string.format('Workspace [M]ark %d', i) })
       end
     end,
   },

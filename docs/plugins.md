@@ -589,7 +589,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 - **Purpose**: Formatter with format-on-save support.
 - **Config**: `lua/plugins/editing/format.lua`
 - **Configured formatters**: `stylua` for Lua.
-- **Keybinds**: `<leader>f` (format buffer), `<leader>fm` (format buffer/region).
+- **Keybinds**: `<leader>cf` (format buffer or selection). `<leader>fm` is plain LSP formatting, defined in `lua/core/keymaps.lua`.
 
 ---
 

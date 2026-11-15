@@ -5,14 +5,6 @@ return {
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  -- File operations keybinds
-  {
-    'nvim-neo-tree/neo-tree.nvim',
-    keys = {
-      { '<leader>ft', '<cmd>Neotree toggle<cr>', desc = '[F]ile [t]ree' },
-    },
-  },
-
   -- Oil file browser
   {
     'stevearc/oil.nvim',
@@ -209,28 +201,6 @@ return {
     end,
   },
 
-  -- Format commands
-  {
-    'neovim/nvim-lspconfig',
-    keys = {
-      {
-        '<leader>fm',
-        function()
-          vim.lsp.buf.format()
-        end,
-        desc = '[F]ormat [m]arkup/code',
-      },
-      {
-        '<leader>fm',
-        function()
-          vim.lsp.buf.format()
-        end,
-        mode = 'v',
-        desc = '[F]ormat region',
-      },
-    },
-  },
-
   -- No Neck Pain - Center buffer for focused writing
   {
     'shortcuts/no-neck-pain.nvim',
@@ -296,13 +266,5 @@ return {
         },
       }
     end,
-  },
-
-  -- Save file keybind
-  {
-    'nvim-lua/plenary.nvim',
-    keys = {
-      { '<leader>fs', '<cmd>w<cr>', desc = '[F]ile [s]ave' },
-    },
   },
 }

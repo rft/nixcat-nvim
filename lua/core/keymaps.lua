@@ -302,13 +302,20 @@ end, { desc = '[F]ile copy relative [P]ath' })
 
 vim.keymap.set('n', '<leader>fe', open_in_file_manager, { desc = '[F]ile open in system [e]xplorer' })
 
+vim.keymap.set('n', '<leader>fs', '<cmd>w<cr>', { desc = '[F]ile [s]ave' })
+
+-- LSP formatting; <leader>cf (conform) is the formatter-aware variant
+vim.keymap.set('n', '<leader>fm', function()
+  vim.lsp.buf.format()
+end, { desc = '[F]ormat [m]arkup/code' })
+vim.keymap.set('v', '<leader>fm', function()
+  vim.lsp.buf.format()
+end, { desc = '[F]ormat region' })
+
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x', { desc = 'Delete single character without copying into register' })
 
--- Recent files mapping
-vim.keymap.set('n', '<leader>fr', function()
-  Snacks.picker.recent()
-end, { desc = '[F]ile [r]ecent' }) -- Confirm quit all; warns about unsaved buffers
+-- Confirm quit all; warns about unsaved buffers
 vim.keymap.set('n', '<leader>qq', '<cmd>confirm qa<CR>', {
   desc = '[Q]uit all (confirm)',
 })
