@@ -311,19 +311,18 @@ Sources: `lua/plugins/git.lua`, `lua/plugins/snacks.lua`
 | n | `SPC gdt` | `:DiffviewToggleFiles` | Diffview toggle files panel |
 | n | `]c` | Gitsigns nav_hunk next | Next git hunk |
 | n | `[c` | Gitsigns nav_hunk prev | Previous git hunk |
-| n | `SPC gs` | Gitsigns stage_hunk | Stage hunk |
+| n | `SPC gs` | Gitsigns stage_hunk | Stage hunk (unstages a hunk that is already staged) |
 | v | `SPC gs` | Gitsigns stage_hunk | Stage selected hunk |
 | n | `SPC gr` | Gitsigns reset_hunk | Reset hunk |
 | v | `SPC gr` | Gitsigns reset_hunk | Reset selected hunk |
 | n | `SPC gS` | Gitsigns stage_buffer | Stage entire buffer |
-| n | `SPC gu` | Gitsigns undo_stage_hunk | Undo stage hunk |
 | n | `SPC gR` | Gitsigns reset_buffer | Reset entire buffer |
 | n | `SPC gp` | Gitsigns preview_hunk | Preview hunk |
 | n | `SPC gb` | Gitsigns blame_line | Blame current line |
 | n | `SPC gdd` | Gitsigns diffthis | Diff against index |
 | n | `SPC gD` | Gitsigns diffthis('@') | Diff against last commit |
 | n | `SPC gtb` | Gitsigns toggle_current_line_blame | Toggle line blame |
-| n | `SPC gtd` | Gitsigns toggle_deleted | Toggle deleted lines |
+| n | `SPC gtd` | Gitsigns preview_hunk_inline | Show the hunk's deleted lines inline |
 | n,v | `SPC gB` | Snacks gitbrowse | Open file/selection in browser |
 | n | `SPC gl` | Snacks git blame_line | Blame line history (count-aware) |
 

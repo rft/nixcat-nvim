@@ -295,7 +295,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `lewis6991/gitsigns.nvim`
 - **Purpose**: Git change signs in the gutter, hunk operations, blame, and diff.
 - **Config**: `lua/plugins/git/git.lua`
-- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gu` (undo stage), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gdd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (toggle deleted).
+- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk, or unstage a staged one), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gdd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (show deleted lines inline).
 - **Category**: Requires `kickstart-gitsigns`.
 
 ### neojjit

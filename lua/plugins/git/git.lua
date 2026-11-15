@@ -96,11 +96,12 @@ return {
 
       -- Hunk operations following <leader>g pattern
       {
+        -- On an already staged hunk this unstages it again
         '<leader>gs',
         function()
           require('gitsigns').stage_hunk()
         end,
-        desc = '[G]it [s]tage hunk',
+        desc = '[G]it [s]tage/unstage hunk',
       },
       {
         '<leader>gr',
@@ -115,13 +116,6 @@ return {
           require('gitsigns').stage_buffer()
         end,
         desc = '[G]it [S]tage buffer',
-      },
-      {
-        '<leader>gu',
-        function()
-          require('gitsigns').undo_stage_hunk()
-        end,
-        desc = '[G]it [u]ndo stage hunk',
       },
       {
         '<leader>gR',
@@ -190,9 +184,9 @@ return {
       {
         '<leader>gtd',
         function()
-          require('gitsigns').toggle_deleted()
+          require('gitsigns').preview_hunk_inline()
         end,
-        desc = '[G]it [t]oggle [d]eleted',
+        desc = '[G]it [t]oggle [d]eleted (inline hunk preview)',
       },
     },
   },
