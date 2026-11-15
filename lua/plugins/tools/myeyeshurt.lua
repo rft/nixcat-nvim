@@ -5,29 +5,9 @@ if not require('nixCatsUtils').enableForCategory 'general' then
   return {}
 end
 
-local nixCatsUtils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
-
-local function resolve_plugin_path()
-  if not (nixCatsUtils.isNixCats and nixCats and nixCats.pawsible) then
-    return nil
-  end
-
-  local start_path = nixCats.pawsible { 'allPlugins', 'start', 'myeyeshurt' }
-  if type(start_path) == 'string' and start_path ~= '' then
-    return start_path
-  end
-
-  local opt_path = nixCats.pawsible { 'allPlugins', 'opt', 'myeyeshurt' }
-  if type(opt_path) == 'string' and opt_path ~= '' then
-    return opt_path
-  end
-
-  return nil
-end
-
-local function build_spec(source)
-  local spec = {
+return {
+  {
+    'wildfunctions/myeyeshurt',
     event = 'VeryLazy',
     opts = {
       useDefaultKeymaps = false,
@@ -57,22 +37,5 @@ local function build_spec(source)
     config = function(_, opts)
       require('myeyeshurt').setup(opts)
     end,
-  }
-
-  if source.dir then
-    spec.dir = source.dir
-    spec.name = 'myeyeshurt'
-  else
-    spec[1] = source.repo
-  end
-
-  return spec
-end
-
-local plugin_path = resolve_plugin_path()
-
-if not plugin_path then
-  return {}
-end
-
-return { build_spec { dir = plugin_path } }
+  },
+}

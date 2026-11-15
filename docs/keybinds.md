@@ -47,7 +47,7 @@ Source: `lua/core/keymaps.lua`
 |------|-----|--------|-------------|
 | n | `<Esc>` | Clear search + hlslens | Clear search highlighting |
 | t | `<Esc>` | `<C-\><C-n>` | Exit terminal mode |
-| n | `gx` | Open URL | Open URL under cursor in browser |
+| n | `gx` | builtin (`vim.ui.open`) | Open file or URL under cursor (Neovim default, not remapped) |
 | n | `x` | `"_x` | Delete character without yanking |
 | n | `SPC qq` | `:confirm qa` | Quit all with confirmation |
 
@@ -311,19 +311,18 @@ Sources: `lua/plugins/git.lua`, `lua/plugins/snacks.lua`
 | n | `SPC gdt` | `:DiffviewToggleFiles` | Diffview toggle files panel |
 | n | `]c` | Gitsigns nav_hunk next | Next git hunk |
 | n | `[c` | Gitsigns nav_hunk prev | Previous git hunk |
-| n | `SPC gs` | Gitsigns stage_hunk | Stage hunk |
+| n | `SPC gs` | Gitsigns stage_hunk | Stage hunk (unstages a hunk that is already staged) |
 | v | `SPC gs` | Gitsigns stage_hunk | Stage selected hunk |
 | n | `SPC gr` | Gitsigns reset_hunk | Reset hunk |
 | v | `SPC gr` | Gitsigns reset_hunk | Reset selected hunk |
 | n | `SPC gS` | Gitsigns stage_buffer | Stage entire buffer |
-| n | `SPC gu` | Gitsigns undo_stage_hunk | Undo stage hunk |
 | n | `SPC gR` | Gitsigns reset_buffer | Reset entire buffer |
 | n | `SPC gp` | Gitsigns preview_hunk | Preview hunk |
 | n | `SPC gb` | Gitsigns blame_line | Blame current line |
-| n | `SPC gd` | Gitsigns diffthis | Diff against index |
+| n | `SPC gdd` | Gitsigns diffthis | Diff against index |
 | n | `SPC gD` | Gitsigns diffthis('@') | Diff against last commit |
 | n | `SPC gtb` | Gitsigns toggle_current_line_blame | Toggle line blame |
-| n | `SPC gtd` | Gitsigns toggle_deleted | Toggle deleted lines |
+| n | `SPC gtd` | Gitsigns preview_hunk_inline | Show the hunk's deleted lines inline |
 | n,v | `SPC gB` | Snacks gitbrowse | Open file/selection in browser |
 | n | `SPC gl` | Snacks git blame_line | Blame line history (count-aware) |
 
@@ -364,7 +363,7 @@ Sources: `lua/plugins/jump.lua`, `lua/plugins/illuminate.lua`
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
 | n,x,o | `SPC jw` | flash.jump | Jump to word (flash labels) |
-| n,x,o | `SPC jt` | flash.treesitter | Jump to treesitter node |
+| n,x,o | `SPC jtt` | flash.treesitter | Jump to treesitter node |
 | n | `SPC jf` | vim.ui.select | Jump to another window (picker) |
 | n,x,o | `SPC jtf` | flash.treesitter | Jump to function/method |
 | n,x,o | `SPC jtc` | flash.treesitter | Jump to class/struct |

@@ -2,8 +2,9 @@
 
 This document explains how Nix is used in this Neovim configuration via the
 [nixCats](https://github.com/BirdeeHub/nixCats-nvim) framework. It covers the
-flake structure, category system, overlay pipeline, custom plugin packaging,
-and the Lua-Nix bridge that lets Lua code query Nix-defined values at runtime.
+flake structure, category system, how plugins outside nixpkgs are pulled in,
+the Lua-Nix bridge that lets Lua code query Nix-defined values at runtime,
+and the checks that CI runs.
 
 ---
 
@@ -13,9 +14,9 @@ and the Lua-Nix bridge that lets Lua code query Nix-defined values at runtime.
 2. [Flake Structure](#flake-structure)
 3. [Category System](#category-system)
 4. [Package Definitions](#package-definitions)
-5. [Overlay System](#overlay-system)
-6. [Custom Plugin Packaging](#custom-plugin-packaging)
-7. [Lua-Nix Bridge](#lua-nix-bridge)
+5. [Plugins Outside nixpkgs](#plugins-outside-nixpkgs)
+6. [Lua-Nix Bridge](#lua-nix-bridge)
+7. [Checks and Formatting](#checks-and-formatting)
 8. [Installation Methods](#installation-methods)
 9. [Dependency Flow](#dependency-flow)
 
@@ -38,6 +39,10 @@ plugins, LSPs, and tools, nixCats uses Nix to:
 - Expose a **category system** that lets you toggle groups of dependencies
   on and off, producing different package variants from the same config.
 
+This configuration is **Nix-only**: there is no Mason and no fallback path
+where lazy.nvim downloads plugins. lazy.nvim is still used, but only to
+decide *when* each Nix-provided plugin loads.
+
 ### Why nixCats over plain Nix?
 
 Writing raw Nix expressions to wrap Neovim is verbose and error-prone. nixCats
@@ -58,7 +63,7 @@ dependencies, and settings, then produces a derivation that:
 
 1. Creates a Neovim package directory with `start/` and `opt/` plugin
    subdirectories.
-2. Wraps the `nvim` binary using `makeWrapper` to prepend tools to `PATH`
+2. Wraps the `nvim` binary using `makeWrapper` to add tools to `PATH`
    and set environment variables.
 3. Injects the `nixCats` Lua plugin into the runtime path so your config
    can query Nix-defined values.
@@ -71,33 +76,37 @@ dependencies, and settings, then produces a derivation that:
 
 ### Inputs
 
-The flake declares two inputs:
-
 ```nix
 inputs = {
   nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   nixCats.url = "github:BirdeeHub/nixCats-nvim";
+
+  plugins-neojjit            = { url = "github:JulianNymark/neojjit"; flake = false; };
+  plugins-myeyeshurt         = { url = "github:wildfunctions/myeyeshurt"; flake = false; };
+  plugins-neominimap         = { url = "github:Isrothy/neominimap.nvim"; flake = false; };
+  plugins-indent-rainbowline = { url = "github:TheGLander/indent-rainbowline.nvim"; flake = false; };
 };
 ```
 
 | Input | Purpose |
 |---|---|
-| `nixpkgs` (unstable) | Primary package set for plugins, LSPs, and tools. Provides the latest versions. |
+| `nixpkgs` (unstable) | Primary package set for plugins, LSPs, and tools. |
 | `nixCats` | The framework itself. Provides the builder, utilities, module generators, and the `nixCats` Lua plugin. |
+| `plugins-*` | Source trees of plugins that are not in nixpkgs. See [Plugins Outside nixpkgs](#plugins-outside-nixpkgs). |
 
-Flake inputs named with the prefix `plugins-` (e.g. `plugins-someplugin`)
-are automatically picked up by `utils.standardPluginOverlay` and made
-available as `pkgs.neovimPlugins.<name>`. This project does not currently use
-any `plugins-` inputs but the mechanism is available.
+Everything is pinned by `flake.lock`, so `nix flake update` is the single
+way to bump nixpkgs, nixCats, and the extra plugins.
 
 ### Outputs structure
 
 ```
 outputs
-  +-- per-system (via forEachSystem)
+  +-- per-system (x86_64-linux, aarch64-linux, aarch64-darwin)
   |     +-- packages.default     (the built Neovim)
   |     +-- packages.nvim        (same, by name)
-  |     +-- devShells.default    (shell with Neovim available)
+  |     +-- devShells.default    (shell with Neovim, stylua and nixfmt)
+  |     +-- formatter            (nixfmt, for `nix fmt`)
+  |     +-- checks               (startup smoke test, stylua, nixfmt)
   |
   +-- cross-system
         +-- overlays             (for consuming from other flakes)
@@ -122,8 +131,9 @@ Arguments:
   project, meaning the flake root).
 - **`nixpkgs`**, **`system`**, **`dependencyOverlays`**,
   **`extra_pkg_config`** -- Standard Nix plumbing. `extra_pkg_config` is
-  where `allowUnfreePredicate` lives (currently allowing `copilot.vim` and
-  `copilot-language-server`).
+  where `allowUnfreePredicate` lives; it allows exactly the unfree packages
+  this config uses (`copilot.vim`, `copilot-language-server`,
+  `eyeliner.nvim`, `nvim-dap-vscode-js`, `vscode-js-debug`).
 - **`categoryDefinitions`** -- The mapping from category names to lists of
   packages (see next section).
 - **`packageDefinitions`** -- Named package configs that select which
@@ -143,25 +153,25 @@ all packages in that category's lists are included in the build.
 
 ### Dependency Types
 
-The `categoryDefinitions` function receives `{ pkgs, settings, categories, ... }`
-and returns an attribute set with the following keys:
+The `categoryDefinitions` function receives `{ pkgs, ... }` and returns an
+attribute set. This config uses two of the available keys:
 
 #### `lspsAndRuntimeDeps`
 
 Programs added to `PATH` inside the Neovim wrapper. This is where LSPs,
-formatters, linters, and CLI tools go.
+formatters, linters, debug adapters, and CLI tools go.
 
 ```nix
 lspsAndRuntimeDeps = with pkgs; {
   general = [
-    universal-ctags ripgrep fd
-    nix-doc
+    universal-ctags ripgrep fd nix-doc
     lua-language-server nixd nixfmt stylua
-    python3Packages.python-lsp-server
+    ruff ty            # Python: linting/formatting and type checking
     rust-analyzer
     gleam
+    jujutsu            # required by neojjit
   ];
-  kickstart-debug = [ delve ];
+  kickstart-debug = [ delve lldb ];
   kickstart-lint  = [ markdownlint-cli ];
 };
 ```
@@ -170,75 +180,42 @@ When the `general` category is enabled in a package definition, all of
 those tools become available to Neovim at runtime without any system-wide
 installation.
 
+`git` is not in this list: it is expected to come from your own `PATH`.
+
 #### `startupPlugins`
 
-Vim plugins loaded at startup (placed in `pack/*/start/`). This is the
-primary plugin list since this config uses lazy.nvim for loading control.
+Vim plugins placed in `pack/*/start/`. This is the only plugin list, since
+lazy.nvim controls when each plugin actually loads.
 
 ```nix
 startupPlugins = with pkgs.vimPlugins; {
   general = [
     vim-sleuth lazy-nvim snacks-nvim nvim-lspconfig
     nvim-treesitter.withAllGrammars
-    # ... 60+ plugins
+    # ... 70+ plugins
+    pkgs.neovimPlugins.neojjit
+    pkgs.neovimPlugins.myeyeshurt
+    pkgs.neovimPlugins.neominimap
+    pkgs.neovimPlugins.indent-rainbowline
   ];
-  kickstart-debug    = [ nvim-dap nvim-dap-ui nvim-dap-go nvim-nio ];
+  kickstart-debug = [
+    nvim-dap nvim-dap-ui nvim-dap-go nvim-nio
+    nvim-dap-python nvim-dap-vscode-js one-small-step-for-vimkind
+  ];
   kickstart-lint     = [ nvim-lint ];
-  kickstart-autopairs = [ nvim-autopairs ];
   kickstart-neo-tree = [ neo-tree-nvim nui-nvim nvim-web-devicons plenary-nvim ];
   obsidian = [ obsidian-nvim ];
   orgmode  = [ orgmode ];
 };
 ```
 
-Note: Although there is an `optionalPlugins` type (for `pack/*/opt/`
-plugins loaded via `:packadd`), this config puts everything in
-`startupPlugins` because lazy.nvim handles the actual lazy-loading. The
-distinction between `startupPlugins` and `optionalPlugins` is irrelevant
-when lazy.nvim manages loading.
+#### Other dependency types
 
-#### `sharedLibraries`
-
-Native shared libraries added to `LD_LIBRARY_PATH`. Currently empty but
-available for plugins that need `.so` files at runtime (e.g. `libgit2`).
-
-```nix
-sharedLibraries = {
-  general = with pkgs; [
-    # libgit2
-  ];
-};
-```
-
-#### `environmentVariables`
-
-Environment variables injected into the Neovim wrapper.
-
-```nix
-environmentVariables = {
-  test = {
-    CATTESTVAR = "It worked!";
-  };
-};
-```
-
-#### `extraWrapperArgs`
-
-Raw arguments passed to `makeWrapper`. Useful for `--set`, `--prefix`, or
-other wrapper flags.
-
-```nix
-extraWrapperArgs = {
-  test = [
-    ''--set CATTESTVAR2 "It worked again!"''
-  ];
-};
-```
-
-#### `python3.libraries` and `extraLuaPackages`
-
-For Python and Lua package dependencies, respectively. These populate
-`python3_host_prog` and `$LUA_PATH`/`$LUA_CPATH`.
+nixCats also supports `optionalPlugins` (`pack/*/opt/`), `sharedLibraries`
+(`LD_LIBRARY_PATH`), `environmentVariables`, `extraWrapperArgs`,
+`python3.libraries`, and `extraLuaPackages`. None of them are needed here,
+so they are not defined; see `:help nixCats.flake.outputs.categories` if
+you want to add one.
 
 ### Feature Flag Categories
 
@@ -247,19 +224,18 @@ The category names serve as feature flags. The current categories are:
 | Category | What it controls |
 |---|---|
 | `general` | Core tools, LSPs, and the main plugin set |
-| `kickstart-debug` | DAP (Debug Adapter Protocol) plugins and `delve` |
+| `kickstart-debug` | DAP (Debug Adapter Protocol) plugins, `delve`, and `lldb` |
 | `kickstart-lint` | `nvim-lint` and `markdownlint-cli` |
-| `kickstart-autopairs` | `nvim-autopairs` |
 | `kickstart-neo-tree` | Neo-tree file explorer and its dependencies |
-| `kickstart-indent_line` | Indent line plugins (empty list, used as a flag) |
-| `kickstart-gitsigns` | Pure Lua-side flag (no extra Nix packages needed) |
+| `kickstart-autopairs` | Lua-side flag only: enables `mini.pairs` |
+| `kickstart-indent_line` | Lua-side flag only: enables Snacks scope/indent guides |
+| `kickstart-gitsigns` | Lua-side flag only: enables gitsigns |
 | `obsidian` | Obsidian note-taking plugin |
 | `orgmode` | Orgmode note-taking plugin |
-| `test` | Test environment variables and wrapper args |
 
-Categories with empty lists (like `kickstart-indent_line`) still serve a
-purpose: their boolean value is passed to Lua via the `nixCats` plugin,
-where it can gate configuration blocks.
+The "Lua-side flag only" categories need no extra Nix packages, so they
+have no entry in `categoryDefinitions`. Their value is still passed to Lua
+via the `nixCats` plugin, where it gates configuration blocks.
 
 ---
 
@@ -267,7 +243,7 @@ where it can gate configuration blocks.
 
 Package definitions select which categories to enable and configure
 package-level settings. Each entry in `packageDefinitions` is a function
-receiving `{ pkgs, name, ... }` and returning `{ settings, categories }`.
+receiving `{ pkgs, ... }` and returning `{ settings, categories }`.
 
 ### Settings
 
@@ -301,10 +277,16 @@ Key settings explained:
 ```nix
 categories = {
   general = true;
-  kickstart-autopairs = true;
+
   kickstart-neo-tree = true;
-  kickstart-debug = true;
+  kickstart-debug = {
+    enabled = true;
+    debugpy_python = "${pkgs.python3.withPackages (ps: [ ps.debugpy ])}/bin/python3";
+    js_debug_cmd = "${pkgs.vscode-js-debug}/bin/js-debug";
+  };
   kickstart-lint = true;
+
+  kickstart-autopairs = true;
   kickstart-indent_line = true;
   kickstart-gitsigns = true;
 
@@ -312,7 +294,7 @@ categories = {
     enabled = true;
     defaultVault = "personal";
     vaults = {
-      personal = "~/notes/obsidian/personal";
+      personal = "~/notes/obsidian";
     };
   };
 
@@ -321,14 +303,19 @@ categories = {
     orgDir = "~/notes/org";
   };
 
-  have_nerd_font = false;
+  have_nerd_font = true;
 };
 ```
 
 Categories are not limited to booleans. Any Nix value assigned to a
 category name is passed through to Lua. The `obsidian` category above is a
 table with vault paths that Lua code reads at runtime via
-`nixCats('obsidian.defaultVault')`.
+`nixCats('obsidian.defaultVault')`, and `kickstart-debug` carries the store
+paths of the Python and JavaScript debug adapters.
+
+`have_nerd_font` controls icon-related options across the config
+(statusline, bufferline, the lazy.nvim UI). Set it to `false` if your
+terminal font has no Nerd Font glyphs.
 
 ### Multiple Packages
 
@@ -339,229 +326,64 @@ with only `general = true` and no debug/lint categories. The
 
 ---
 
-## Overlay System
+## Plugins Outside nixpkgs
 
-The `dependencyOverlays` list contains two overlays applied to nixpkgs
-before building:
-
-### 1. Standard Plugin Overlay
+A few plugins are not packaged in nixpkgs. They are declared as flake
+inputs named `plugins-<name>` with `flake = false`, and a single overlay
+turns every such input into a plugin:
 
 ```nix
-(utils.standardPluginOverlay inputs)
+dependencyOverlays = [
+  (utils.standardPluginOverlay inputs)
+];
 ```
 
-Scans flake inputs for names matching `plugins-<name>` and adds them to
-`pkgs.neovimPlugins.<name>`. This is nixCats' mechanism for pulling in
-plugins not yet in nixpkgs. Currently unused in this config but available
-for future use.
+`standardPluginOverlay` scans the flake inputs for the `plugins-` prefix,
+builds each one with `vimUtils.buildVimPlugin`, and exposes it as
+`pkgs.neovimPlugins.<name>`. Their revisions live in `flake.lock`
+alongside everything else, so there are no hand-written hashes to maintain.
 
-### 2. Custom Plugin Overlay
+### Plugin names and lazy.nvim
 
-```nix
-(final: prev: {
-  vimPlugins = prev.vimPlugins // {
-    myeyeshurt = prev.callPackage ./packages/myEyesHurt {};
-    neominimap = prev.callPackage ./packages/neoMiniMap {};
-    indentRainbowline = prev.callPackage ./packages/indentRainbowline {
-      indent-blankline-nvim = prev.vimPlugins.indent-blankline-nvim;
-    };
-  };
-})
-```
+`<name>` also becomes the plugin's directory name, and lazy.nvim looks
+plugins up by the name it derives from the spec (`'owner/repo'` gives
+`repo`). When the two differ, tell lazy the directory name:
 
-Adds locally-packaged plugins (from the `packages/` directory) to
-`pkgs.vimPlugins` so they can be referenced by name in `startupPlugins`
-just like any nixpkgs plugin. See [Custom Plugin Packaging](#custom-plugin-packaging)
-below.
-
----
-
-## Custom Plugin Packaging
-
-Plugins not available in nixpkgs are packaged locally in the `packages/`
-directory. Each package is a Nix file that uses `vimUtils.buildVimPlugin`
-to fetch source from GitHub and produce a Vim plugin derivation.
-
-### Basic plugin: `packages/myEyesHurt/default.nix`
-
-```nix
-{ lib, vimUtils, fetchFromGitHub }:
-
-vimUtils.buildVimPlugin {
-  pname = "myeyeshurt";
-  version = "2024-05-04";
-  src = fetchFromGitHub {
-    owner = "wildfunctions";
-    repo = "myeyeshurt";
-    rev = "02922e14aeaba6d305ac93b70668774963554938";
-    sha256 = "0sw87f0ji1840qid1b42fin5a05p3nk9d2fx3wsnv8zlnr0xm4px";
-  };
-  meta = with lib; {
-    description = "Neovim wellness plugin that animates snowflakes to prompt screen breaks";
-    homepage = "https://github.com/wildfunctions/myeyeshurt";
-    license = licenses.mit;
-  };
+```lua
+{
+  'Isrothy/neominimap.nvim',
+  -- built from the `plugins-neominimap` flake input
+  name = 'neominimap',
 }
 ```
 
-### Plugin with dependencies: `packages/indentRainbowline/default.nix`
+Input names cannot contain dots (Nix rejects them as flake IDs in places
+like `--inputs-from`), which is why `neominimap.nvim` and
+`indent-rainbowline.nvim` are named without their `.nvim` suffix.
 
-```nix
-{ lib, vimUtils, fetchFromGitHub, indent-blankline-nvim }:
+### How to add a plugin that is not in nixpkgs
 
-vimUtils.buildVimPlugin {
-  pname = "indent-rainbowline-nvim";
-  version = "2024-10-08";
-  src = fetchFromGitHub {
-    owner = "TheGLander";
-    repo = "indent-rainbowline.nvim";
-    rev = "572e8157de85d7af3f0085b5c74c059518900649";
-    sha256 = "11y1g7njfy9pd2gk9vv6n8921k7ynb4n4hpl9xb9cqwgpjsws9bm";
-  };
-  meta = with lib; { /* ... */ };
-  dependencies = [ indent-blankline-nvim ];
-}
-```
-
-The `dependencies` field tells Nix to include `indent-blankline-nvim`
-alongside this plugin. The dependency is passed in from the overlay via
-`callPackage`.
-
-### How to add a new custom plugin
-
-1. Create `packages/<name>/default.nix` following the pattern above.
-2. Add it to the custom plugin overlay in `flake.nix`:
+1. Add an input to `flake.nix`:
    ```nix
-   myNewPlugin = prev.callPackage ./packages/<name> {};
+   plugins-myplugin = { url = "github:owner/myplugin.nvim"; flake = false; };
    ```
-3. Reference it by name in a `startupPlugins` category:
+2. Reference it in a `startupPlugins` category:
    ```nix
-   startupPlugins = {
-     general = [ /* ... */ pkgs.vimPlugins.myNewPlugin ];
-   };
+   general = [ /* ... */ pkgs.neovimPlugins.myplugin ];
    ```
+3. Add a lazy spec under `lua/plugins/`, with `name = 'myplugin'` if the
+   repository name differs.
+4. Run `nix flake lock` to pin it.
 
 ---
 
 ## Lua-Nix Bridge
 
-The `lua/nixCatsUtils/` directory provides utilities that let Lua code
-work both with and without Nix. When Neovim is loaded via nixCats, the
-`nixCats` Lua plugin is injected into the runtime path automatically.
-
-### `nixCatsUtils/init.lua`
-
-#### `isNixCats`
-
-```lua
-local isNixCats = require('nixCatsUtils').isNixCats
--- true when loaded via nixCats, false otherwise
-```
-
-Detects whether the current Neovim instance was built by nixCats by
-checking for a special runtime path entry.
-
-#### `setup()`
-
-```lua
-require('nixCatsUtils').setup {
-  non_nix_value = true,
-}
-```
-
-When **not** running under nixCats, this creates a mock `nixCats` plugin
-so that `nixCats('some.category')` calls do not error out. The
-`non_nix_value` sets the default return value for all category queries
-in non-Nix mode (defaults to `true`).
-
-When running under nixCats, `setup()` does nothing -- the real plugin is
-already available.
-
-#### `enableForCategory(category, default)`
-
-```lua
-if require('nixCatsUtils').enableForCategory('kickstart-autopairs') then
-  -- configure autopairs
-end
-```
-
-Returns a boolean indicating whether a category is enabled. Under Nix, it
-queries `nixCats(category)`. Without Nix, it returns the `default` argument
-(or the `non_nix_value` from `setup()` if no default is given).
-
-#### `getCatOrDefault(category, default)`
-
-```lua
-local vault = require('nixCatsUtils').getCatOrDefault(
-  'obsidian.defaultVault', 'personal'
-)
-```
-
-Like `enableForCategory` but returns the raw value instead of coercing to
-boolean. Useful for categories that hold strings, tables, or other
-non-boolean data.
-
-#### `lazyAdd(non_nix_value, nix_value)`
-
-```lua
-build = require('nixCatsUtils').lazyAdd('make'),
--- Under Nix: returns nil (nix already built it)
--- Without Nix: returns 'make' (needs to build at runtime)
-
-enabled = require('nixCatsUtils').lazyAdd(true, false),
--- Under Nix: returns false (e.g., disable Mason)
--- Without Nix: returns true (enable Mason)
-```
-
-Returns the first argument when not using Nix, or the second argument
-(default `nil`) when using Nix. This is the primary tool for writing
-dual-mode plugin specs that work both with and without Nix. Common uses:
-
-- **Disable build steps under Nix** (Nix already compiled them):
-  `build = require('nixCatsUtils').lazyAdd(':TSUpdate')`
-- **Disable Mason under Nix** (Nix provides LSPs):
-  `enabled = require('nixCatsUtils').lazyAdd(true, false)`
-- **Skip runtime conditions under Nix**:
-  `cond = require('nixCatsUtils').lazyAdd(function() return vim.fn.executable('make') == 1 end)`
-
-### `nixCatsUtils/lazyCat.lua` -- lazy.nvim Integration
-
-```lua
-require('nixCatsUtils.lazyCat').setup(
-  nixCats.pawsible { 'allPlugins', 'start', 'lazy.nvim' },
-  { /* plugin specs */ },
-  lazyOptions
-)
-```
-
-This wrapper around `require('lazy').setup()` handles the integration
-between nixCats-managed plugins and lazy.nvim:
-
-1. **Finds lazy.nvim**: Accepts the Nix-provided path to lazy.nvim as the
-   first argument. Falls back to git-cloning if `nil` (non-Nix mode).
-
-2. **Configures `dev.path`**: Tells lazy.nvim to find plugins in the
-   nixCats package directory (`pack/myNeovimPackages/start/` and `opt/`)
-   instead of downloading them.
-
-3. **Sets `dev.patterns = { "" }`**: Makes lazy.nvim treat *all* plugins as
-   "dev" plugins (i.e., use the local Nix-provided copies).
-
-4. **Disables runtime features under Nix**:
-   - `performance.rtp.reset = false` -- preserves the Nix-configured
-     runtime path.
-   - `install.missing = false` -- prevents lazy from downloading plugins
-     that Nix already provides.
-   - `checker.enabled = false` -- disables update checking.
-
-5. **Rebuilds the runtime path**: Sets a minimal `rtp` that includes the
-   config dir, nixCats path, treesitter grammar path, and standard Neovim
-   directories.
+When Neovim is built by nixCats, a `nixCats` Lua plugin is injected into
+the runtime path and a global `nixCats` function is defined before
+`init.lua` runs.
 
 ### The `nixCats()` global function
-
-After `nixCatsUtils.setup()` runs (or when loaded via Nix), a global
-`nixCats` function is available:
 
 ```lua
 -- Query a boolean category
@@ -579,6 +401,89 @@ local allPlugins = nixCats.pawsible.allPlugins
 
 The `nixCats.pawsible` table contains information about what Nix made
 available, including `allPlugins.start` and `allPlugins.opt`.
+
+### `nixCatsUtils/init.lua`
+
+Two small helpers for plugin specs:
+
+#### `enableForCategory(category)`
+
+```lua
+enabled = require('nixCatsUtils').enableForCategory 'kickstart-lint',
+```
+
+Returns a strict boolean. Use it for lazy.nvim's `enabled` field: a bare
+`nixCats('...')` returns `nil` for an unset category, and lazy treats
+`enabled = nil` as *enabled*.
+
+#### `getCatOrDefault(category, default)`
+
+```lua
+local vault = require('nixCatsUtils').getCatOrDefault(
+  { 'obsidian', 'defaultVault' }, 'personal'
+)
+```
+
+Returns the raw value Nix passed for a category, or `default` when it is
+unset. Useful for categories that hold strings, tables, or other
+non-boolean data.
+
+### `nixCatsUtils/lazyCat.lua` -- lazy.nvim Integration
+
+```lua
+require('nixCatsUtils.lazyCat').setup(
+  nixCats.pawsible { 'allPlugins', 'start', 'lazy.nvim' },
+  { /* plugin specs */ },
+  lazyOptions
+)
+```
+
+This wrapper around `require('lazy').setup()` handles the integration
+between nixCats-managed plugins and lazy.nvim:
+
+1. **Takes the Nix-provided lazy.nvim path** as its first argument.
+
+2. **Configures `dev.path`**: Tells lazy.nvim to find plugins in the
+   nixCats package directory (`pack/myNeovimPackages/start/` and `opt/`)
+   instead of downloading them. Plugins are matched **by name**, which is
+   why a spec only needs a `name =` override when the directory name
+   differs from the repository name.
+
+3. **Sets `dev.patterns = { "" }`**: Makes lazy.nvim treat *all* plugins as
+   "dev" plugins (i.e., use the local Nix-provided copies).
+
+4. **Disables lazy.nvim's package-manager features**:
+   - `performance.rtp.reset = false` -- preserves the Nix-configured
+     runtime path.
+   - `install.missing = false` -- lazy never downloads anything.
+   - `checker.enabled = false` -- disables update checking.
+
+5. **Rebuilds the runtime path**: Sets a minimal `rtp` that includes the
+   config dir, nixCats path, treesitter grammar path, and standard Neovim
+   directories.
+
+---
+
+## Checks and Formatting
+
+`nix flake check` evaluates every output and builds three checks:
+
+| Check | What it does |
+|---|---|
+| `checks.<system>.startup` | Builds the package, starts it headless, loads every plugin (`checks/startup.lua`), and fails on any error raised during startup or by a plugin's config. |
+| `checks.<system>.stylua` | `stylua --check .` with the stylua pinned by `flake.lock`. |
+| `checks.<system>.nixfmt` | `nixfmt --check flake.nix`. |
+
+CI (`.github/workflows/check.yml`) runs exactly this command, so a local
+`nix flake check` reproduces it. The startup check is what catches a
+`nix flake update` that pulls in a plugin with a breaking change.
+
+To format before committing:
+
+```bash
+nix fmt                       # flake.nix
+nix develop -c stylua .       # Lua
+```
 
 ---
 
@@ -650,8 +555,8 @@ the configuration without forking the flake.
 nix develop github:rft/nixcat-nvim
 ```
 
-Drops you into a shell with the Neovim package available. Useful for
-testing or CI environments.
+Drops you into a shell with the Neovim package, `stylua`, and `nixfmt`
+available.
 
 ---
 
@@ -673,47 +578,32 @@ available at runtime in Neovim.
 2. **Wrapped onto PATH**: The nixCats builder uses `makeWrapper` to add
    these to the Neovim binary's `PATH`.
 
-3. **Configured in Lua**: `nvim-lspconfig` is told to use `vim.lsp.config`
-   and `vim.lsp.enable` directly (no Mason):
+3. **Configured in Lua**: `lua/plugins/lsp/lsp.lua` enables each server
+   with the built-in `vim.lsp.config` / `vim.lsp.enable`:
    ```lua
-   if require('nixCatsUtils').isNixCats then
-     for server_name, cfg in pairs(servers) do
-       vim.lsp.config(server_name, cfg)
-       vim.lsp.enable(server_name)
-     end
-   else
-     -- Non-Nix: use Mason to install and configure
-     require('mason').setup()
-     require('mason-lspconfig').setup { ... }
+   for server_name, cfg in pairs(servers) do
+     vim.lsp.config(server_name, cfg)
+     vim.lsp.enable(server_name)
    end
    ```
 
-4. **Mason is disabled under Nix**: `lazyAdd(true, false)` on Mason's
-   `enabled` field ensures it never runs when Nix provides the tools.
+Adding a server is therefore two edits: the package in `flake.nix` and an
+entry in the `servers` table.
 
 ### Treesitter Grammars
 
-1. **All grammars included**: `nvim-treesitter.withAllGrammars` in
-   `startupPlugins.general` bundles every available grammar.
-
-2. **Auto-install disabled under Nix**:
-   ```lua
-   auto_install = require('nixCatsUtils').lazyAdd(true, false),
-   ```
-
-3. **`:TSUpdate` skipped under Nix**:
-   ```lua
-   build = require('nixCatsUtils').lazyAdd(':TSUpdate'),
-   ```
+`nvim-treesitter.withAllGrammars` in `startupPlugins.general` bundles
+every available grammar, so nothing is installed or updated at runtime.
+`lua/plugins/editing/treesitter.lua` only has to start highlighting per
+buffer.
 
 ### Plugins
 
 1. **Nixpkgs plugins**: Referenced directly from `pkgs.vimPlugins.*` in
    category lists.
 
-2. **Custom plugins**: Packaged in `packages/`, added to
-   `pkgs.vimPlugins` via the custom plugin overlay, then referenced like
-   any other plugin.
+2. **Plugins outside nixpkgs**: Declared as `plugins-*` flake inputs and
+   referenced from `pkgs.neovimPlugins.*`.
 
 3. **lazy.nvim integration**: The `lazyCat.setup` wrapper configures
    lazy.nvim to find plugins in the Nix package directory instead of
@@ -740,13 +630,14 @@ available at runtime in Neovim.
 ```
 flake.nix
   |
+  +-- inputs              (nixpkgs, nixCats, plugins-* sources)
   +-- categoryDefinitions (what packages exist per category)
   +-- packageDefinitions  (which categories are enabled)
   |
   v
 nixCats builder
   |
-  +-- Resolves overlays (standard plugin, treesitter, custom)
+  +-- Applies the plugin overlay (plugins-* inputs -> pkgs.neovimPlugins)
   +-- Collects enabled packages from enabled categories
   +-- Wraps nvim binary (PATH, LD_LIBRARY_PATH, env vars)
   +-- Bundles Lua config (wrapRc = true)
@@ -755,9 +646,8 @@ nixCats builder
   v
 Neovim starts
   |
-  +-- init.lua calls nixCatsUtils.setup()
   +-- nixCats('category') queries drive conditional config
-  +-- lazyCat.setup() integrates lazy.nvim with Nix-provided plugins
-  +-- LSPs found on PATH, no Mason needed
-  +-- Treesitter grammars pre-installed, no :TSUpdate needed
+  +-- lazyCat.setup() points lazy.nvim at the Nix-provided plugins
+  +-- LSPs and tools found on PATH
+  +-- Treesitter grammars pre-installed
 ```

@@ -102,7 +102,7 @@ return {
         select_scratch,
         desc = '[P]ad pick [S]cratch',
       },
-      -- Picker keybinds (replaces Telescope)
+      -- Picker keybinds
       {
         '<leader>sh',
         function()
@@ -478,7 +478,7 @@ return {
           },
         },
         animate = {
-          enabled = vim.fn.has 'nvim-0.10' == 1,
+          enabled = true,
           style = 'out',
           duration = { step = 15, total = 300 },
         },

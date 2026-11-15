@@ -5,33 +5,12 @@ if not require('nixCatsUtils').enableForCategory 'general' then
   return {}
 end
 
-local nixCatsUtils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
-
-local function resolve_plugin_path()
-  if not (nixCatsUtils.isNixCats and nixCats and nixCats.pawsible) then
-    return nil
-  end
-
-  local candidates = { 'neominimap', 'neoMiniMap', 'neominimap.nvim' }
-
-  for _, name in ipairs(candidates) do
-    local start_path = nixCats.pawsible { 'allPlugins', 'start', name }
-    if type(start_path) == 'string' and start_path ~= '' then
-      return start_path
-    end
-
-    local opt_path = nixCats.pawsible { 'allPlugins', 'opt', name }
-    if type(opt_path) == 'string' and opt_path ~= '' then
-      return opt_path
-    end
-  end
-
-  return nil
-end
-
-local function build_spec(source)
-  local spec = {
+return {
+  {
+    'Isrothy/neominimap.nvim',
+    -- NOTE: nixCats: built from the `plugins-neominimap` flake input, so the
+    -- directory is called neominimap. Tell lazy about that.
+    name = 'neominimap',
     lazy = false,
     opts = {
       auto_enable = true,
@@ -76,22 +55,5 @@ local function build_spec(source)
     config = function(_, opts)
       vim.g.neominimap = vim.tbl_deep_extend('force', {}, opts or {})
     end,
-  }
-
-  if source.dir then
-    spec.dir = source.dir
-    spec.name = 'neominimap'
-  else
-    spec[1] = source.repo
-  end
-
-  return spec
-end
-
-local plugin_path = resolve_plugin_path()
-
-if not plugin_path then
-  return {}
-end
-
-return { build_spec { dir = plugin_path } }
+  },
+}

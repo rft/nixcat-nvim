@@ -1,5 +1,4 @@
 local nixcats_utils = require 'nixCatsUtils'
-local nixCats = _G.nixCats
 
 if not nixcats_utils.enableForCategory 'orgmode' then
   return {}
@@ -14,26 +13,6 @@ org_dir = vim.fn.expand(org_dir)
 local index_file = org_dir .. '/index.org'
 local journal_file = org_dir .. '/journal.org'
 
-local function plugin_path(name)
-  if not nixCats or not nixCats.pawsible then
-    return nil
-  end
-
-  local start_path = nixCats.pawsible { 'allPlugins', 'start', name }
-  if type(start_path) == 'string' and start_path ~= '' then
-    return start_path
-  end
-
-  local opt_path = nixCats.pawsible { 'allPlugins', 'opt', name }
-  if type(opt_path) == 'string' and opt_path ~= '' then
-    return opt_path
-  end
-
-  return nil
-end
-
-local orgmode_path = plugin_path 'orgmode'
-
 local function ensure_org_dir()
   if vim.fn.isdirectory(org_dir) == 0 then
     vim.fn.mkdir(org_dir, 'p')
@@ -43,11 +22,8 @@ end
 return {
   {
     'nvim-orgmode/orgmode',
-    name = 'orgmode',
-    enabled = true,
     ft = 'org',
     cmd = 'Org',
-    dir = orgmode_path,
     dependencies = {
       -- orgmode's init requires 'cmp' to register its completion source;
       -- without this, lazy loads nvim-cmp mid-require and hits a module loop

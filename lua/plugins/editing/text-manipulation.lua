@@ -120,7 +120,6 @@ return {
     },
     config = function(_, opts)
       require('substitute').setup(opts)
-      require('substitute.exchange').setup()
     end,
   },
 

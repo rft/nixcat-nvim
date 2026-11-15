@@ -37,7 +37,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### lazy.nvim
 - **Purpose**: Plugin manager. Handles lazy-loading, dependencies, and plugin lifecycle.
 - **Config**: `init.lua`
-- **Notes**: Wrapped via `nixCatsUtils.lazyCat` to support both Nix and non-Nix installations.
+- **Notes**: Wrapped via `nixCatsUtils.lazyCat`, which points lazy.nvim at the plugins Nix provides instead of downloading them.
 
 ![lazy.nvim plugin overview (`:Lazy`)](screenshots/lazy.png)
 
@@ -67,7 +67,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 ### nvim-web-devicons
 - **Plugin**: `nvim-tree/nvim-web-devicons`
 - **Purpose**: File type icons (requires Nerd Font). Used by many UI plugins.
-- **Config**: `init.lua` (enabled based on `have_nerd_font`).
+- **Notes**: Icon-related options across the config (statusline, bufferline, lazy UI) follow `have_nerd_font` in `flake.nix`, which is `true`.
 
 ---
 
@@ -89,14 +89,11 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `neovim/nvim-lspconfig`
 - **Purpose**: Configuration for built-in Neovim LSP client.
 - **Config**: `lua/plugins/lsp/lsp.lua`
-- **Configured servers**: `lua_ls`, `ruff` + `ty` (Python linting/formatting and type checking), `rust_analyzer`, `gleam`, `nixd` (Nix) or `rnix`/`nil_ls` (non-Nix), `copilot`.
+- **Configured servers**: `lua_ls`, `ruff` + `ty` (Python linting/formatting and type checking), `rust_analyzer`, `gleam`, `nixd` (Nix), `copilot`.
 - **LSP keybinds** (buffer-local on attach): `gd` (definition), `gr` (references), `gI` (implementation), `gD` (declaration), `K` (hover), `<leader>D` (type definition), `<leader>ds` (document symbols), `<leader>ws` (workspace symbols), `<leader>lr` (rename), `<leader>la` (code action), `<leader>tI` (toggle inlay hints).
 - **Code action keybinds** (`lua/plugins/lsp/lsp.lua`): `<leader>;` (toggle comment), `<leader>cc` (make), `<leader>cd` (definition), `<leader>cr` (references), `<leader>ck` (hover), `<leader>cR` (floating rename), `<leader>cx` (diagnostics float), `<leader>ct` (type definition), `<leader>co` (organize imports), `<leader>cw` (remove trailing whitespace), `<leader>cW` (remove trailing newlines), `<leader>ce`/`cE` (next/prev diagnostic), `]e`/`[e` (next/prev error), `]w`/`[w` (next/prev warning), `]h`/`[h` (next/prev hint).
 
-### mason.nvim / mason-lspconfig.nvim / mason-tool-installer.nvim
-- **Plugins**: `williamboman/mason.nvim`, `williamboman/mason-lspconfig.nvim`, `WhoIsSethDaniel/mason-tool-installer.nvim`
-- **Purpose**: Automatic LSP server installation (only enabled when NOT using Nix).
-- **Config**: `lua/plugins/lsp/lsp.lua` (disabled under nix)
+LSP servers, formatters, and debug adapters are all provided by Nix (`lspsAndRuntimeDeps` in `flake.nix`); there is no Mason.
 
 ### fidget.nvim
 - **Plugin**: `j-hui/fidget.nvim`
@@ -181,7 +178,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `folke/flash.nvim`
 - **Purpose**: Fast jump/motion plugin with labels. Supports word jump, treesitter node jump, remote flash, and treesitter search.
 - **Config**: `lua/plugins/navigation/jump.lua`
-- **Keybinds**: `<leader>jw` (jump to word), `<leader>jt` (treesitter node), `<leader>jf` (jump to window), `<leader>jtf` (treesitter function/method), `<leader>jtc` (treesitter class/struct), `<leader>jtb` (treesitter loop/conditional), `<leader>jr` (remote flash, operator mode), `<leader>jR` (treesitter search), `<leader>jl` (jump to line).
+- **Keybinds**: `<leader>jw` (jump to word), `<leader>jtt` (treesitter node), `<leader>jf` (jump to window), `<leader>jtf` (treesitter function/method), `<leader>jtc` (treesitter class/struct), `<leader>jtb` (treesitter loop/conditional), `<leader>jr` (remote flash, operator mode), `<leader>jR` (treesitter search), `<leader>jl` (jump to line).
 - **Notes**: Flash char mode is disabled during vim-visual-multi sessions.
 
 ![flash.nvim jump labels (`<leader>jw`)](screenshots/flash.png)
@@ -295,7 +292,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `lewis6991/gitsigns.nvim`
 - **Purpose**: Git change signs in the gutter, hunk operations, blame, and diff.
 - **Config**: `lua/plugins/git/git.lua`
-- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gu` (undo stage), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (toggle deleted).
+- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk, or unstage a staged one), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gdd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (show deleted lines inline).
 - **Category**: Requires `kickstart-gitsigns`.
 
 ### neojjit
@@ -350,7 +347,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `nvim-neotest/nvim-nio`
 - **Purpose**: Async IO library required by nvim-dap-ui.
 
-Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured directly in `lua/plugins/tools/debug.lua`. Outside Nix, `mason.nvim` and `mason-nvim-dap.nvim` install the adapters instead.
+Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured directly in `lua/plugins/tools/debug.lua`.
 
 ---
 
@@ -392,7 +389,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 - **Config**: `lua/plugins/editing/mini.lua`
 - **Modules used**:
   - **mini.ai**: Enhanced text objects with treesitter support (`af`/`if` for functions, `ac`/`ic` for classes, `ao`/`io` for blocks/loops, `at`/`it` for comments).
-  - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category). This replaces `nvim-autopairs`, which is still listed in `flake.nix` but has no Lua spec (`lua/plugins/editing/autopairs.lua` is empty).
+  - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category).
   - **mini.operators**: Replace (`gs`), sort (`gS`), exchange (`gX`), multiply (`gm`) operators.
   - **mini.surround**: Add/delete/replace surroundings (brackets, quotes, etc.). Default keybinds: `sa` (add), `sd` (delete), `sr` (replace).
   - **mini.statusline**: Simple statusline showing cursor position as `LINE:COL`.
@@ -502,7 +499,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 ![markview.nvim rendering the README](screenshots/markview.png)
 
 ### nvim-colorizer.lua
-- **Plugin**: `norcalli/nvim-colorizer.lua`
+- **Plugin**: `catgoose/nvim-colorizer.lua`
 - **Purpose**: Inline color previews for hex codes, RGB, HSL, CSS colors, and Tailwind classes.
 - **Config**: `lua/plugins/ui/colorizer.lua`
 
@@ -538,25 +535,25 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 
 ## Code Minimap
 
-### neominimap.nvim (Nix-packaged)
+### neominimap.nvim (flake input)
 - **Plugin**: `Isrothy/neominimap.nvim`
 - **Purpose**: Code minimap overlay showing a condensed view of the buffer with git changes, diagnostics, and search highlights.
 - **Config**: `lua/plugins/ui/neoMiniMap.lua`
 - **Keybinds**: `<leader>nt` (toggle), `<leader>ne` (enable), `<leader>nd` (disable), `<leader>nw` (toggle for window), `<leader>nr` (refresh), `<leader>nf` (focus), `<leader>nF` (unfocus).
 - **Category**: Requires `general`.
-- **Notes**: Custom Nix-packaged plugin. Floats at the right side of the window.
+- **Notes**: Not in nixpkgs; built from the `plugins-neominimap` flake input. Floats at the right side of the window.
 
 ---
 
 ## Indent Guides
 
-### indent-blankline.nvim + indent-rainbowline.nvim (Nix-packaged)
+### indent-blankline.nvim + indent-rainbowline.nvim (flake input)
 - **Plugins**: `lukas-reineke/indent-blankline.nvim` + `TheGLander/indent-rainbowline.nvim`
 - **Purpose**: Rainbow-colored indent guide lines.
 - **Config**: `lua/plugins/ui/indent-rainbowline.lua`
 - **Keybinds**: `<leader>ti` (toggle indent guides).
 - **Category**: Requires `general`.
-- **Notes**: `indent-rainbowline.nvim` is a custom Nix-packaged plugin that adds color to indent-blankline.
+- **Notes**: `indent-rainbowline.nvim` adds color to indent-blankline. It is not in nixpkgs; it is built from the `plugins-indent-rainbowline` flake input.
 
 ---
 
@@ -589,7 +586,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 - **Purpose**: Formatter with format-on-save support.
 - **Config**: `lua/plugins/editing/format.lua`
 - **Configured formatters**: `stylua` for Lua.
-- **Keybinds**: `<leader>f` (format buffer), `<leader>fm` (format buffer/region).
+- **Keybinds**: `<leader>cf` (format buffer or selection). `<leader>fm` is plain LSP formatting, defined in `lua/core/keymaps.lua`.
 
 ---
 
@@ -616,7 +613,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 ![Orgmode week agenda (`<leader>ma`)](screenshots/orgmode.png)
 
 ### obsidian.nvim
-- **Plugin**: `epwalsh/obsidian.nvim`
+- **Plugin**: `obsidian-nvim/obsidian.nvim`
 - **Purpose**: Work with Obsidian vaults inside Neovim — wiki links, daily notes, backlinks, tags, and search.
 - **Config**: `lua/plugins/obsidian/init.lua`
 - **Keybinds**: `<leader>mon` (new note), `<leader>moo` (open in Obsidian app), `<leader>mos` (search), `<leader>moq` (quick switch), `<leader>mob` (backlinks), `<leader>mot` (tags), `<leader>mod` (daily note), `<leader>moy` (yesterday's note), `<leader>mol` (link selection, visual), `<leader>moL` (link to new note, visual).
@@ -656,13 +653,13 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 
 ## Quality of Life
 
-### myeyeshurt (Nix-packaged)
+### myeyeshurt (flake input)
 - **Plugin**: `wildfunctions/myeyeshurt`
 - **Purpose**: Eye strain reminder that shows ASCII snowflakes after a configurable interval (20 minutes).
 - **Config**: `lua/plugins/tools/myeyeshurt.lua`
 - **Keybinds**: `<leader>ts` (start), `<leader>tx` (stop).
 - **Category**: Requires `general`.
-- **Notes**: Custom Nix-packaged plugin.
+- **Notes**: Not in nixpkgs; built from the `plugins-myeyeshurt` flake input.
 
 ### precognition
 - **Purpose**: Shows vim motion hints above the current line (w, b, e, W, B, E, ^, %, {, }).
@@ -680,17 +677,15 @@ Terminal and scratch functionality is provided by **snacks.nvim** (see [Core / F
 
 ---
 
-## Custom Nix-Packaged Plugins Summary
+## Plugins Outside nixpkgs
 
-These plugins are packaged via Nix rather than fetched by lazy.nvim:
+Every plugin is provided by Nix. Most come from nixpkgs; these four are not
+packaged there, so they are `plugins-*` flake inputs (see
+[Nix Architecture](nix-architecture.md#plugins-outside-nixpkgs)):
 
-| Plugin | Purpose | Config File |
-|--------|---------|-------------|
-| **myeyeshurt** | Eye strain break reminders | `lua/plugins/tools/myeyeshurt.lua` |
-| **neominimap.nvim** | Code minimap overlay | `lua/plugins/ui/neoMiniMap.lua` |
-| **indent-rainbowline.nvim** | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
-| **neojjit** | Jujutsu status UI (flake input `plugins-neojjit`) | `lua/plugins/git/neojjit.lua` |
-
-Additional Nix-managed plugins:
-- **copilot.vim** - GitHub Copilot
-- **sidekick.nvim** - AI coding assistant
+| Plugin | Flake input | Purpose | Config File |
+|--------|-------------|---------|-------------|
+| **myeyeshurt** | `plugins-myeyeshurt` | Eye strain break reminders | `lua/plugins/tools/myeyeshurt.lua` |
+| **neominimap.nvim** | `plugins-neominimap` | Code minimap overlay | `lua/plugins/ui/neoMiniMap.lua` |
+| **indent-rainbowline.nvim** | `plugins-indent-rainbowline` | Rainbow indent guide colors | `lua/plugins/ui/indent-rainbowline.lua` |
+| **neojjit** | `plugins-neojjit` | Jujutsu status UI | `lua/plugins/git/neojjit.lua` |

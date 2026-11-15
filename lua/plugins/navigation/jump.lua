@@ -129,8 +129,10 @@ return {
         end,
         desc = 'Jump to word',
       },
+      -- <leader>jtt rather than a bare <leader>jt, which would have to wait
+      -- out timeoutlen because of the <leader>jtf/jtc/jtb maps below.
       {
-        '<leader>jt',
+        '<leader>jtt',
         mode = { 'n', 'x', 'o' },
         function()
           require('flash').treesitter()

@@ -38,7 +38,6 @@ return {
           'oil',
           'help',
           'lazy',
-          'mason',
           'NeogitStatus',
           'NeogitPopup',
           'NeogitCommitMessage',
