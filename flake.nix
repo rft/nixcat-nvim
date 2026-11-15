@@ -245,12 +245,8 @@
               nvim-dap-vscode-js
               one-small-step-for-vimkind
             ];
-            kickstart-indent_line = [ ];
             kickstart-lint = [
               nvim-lint
-            ];
-            kickstart-autopairs = [
-              nvim-autopairs
             ];
             kickstart-neo-tree = [
               neo-tree-nvim

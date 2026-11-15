@@ -392,7 +392,7 @@ Rust debugging uses `lldb-dap` (from the `lldb` runtime dependency) configured d
 - **Config**: `lua/plugins/editing/mini.lua`
 - **Modules used**:
   - **mini.ai**: Enhanced text objects with treesitter support (`af`/`if` for functions, `ac`/`ic` for classes, `ao`/`io` for blocks/loops, `at`/`it` for comments).
-  - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category). This replaces `nvim-autopairs`, which is still listed in `flake.nix` but has no Lua spec (`lua/plugins/editing/autopairs.lua` is empty).
+  - **mini.pairs**: Autopair brackets and quotes (gated behind `kickstart-autopairs` category).
   - **mini.operators**: Replace (`gs`), sort (`gS`), exchange (`gX`), multiply (`gm`) operators.
   - **mini.surround**: Add/delete/replace surroundings (brackets, quotes, etc.). Default keybinds: `sa` (add), `sd` (delete), `sr` (replace).
   - **mini.statusline**: Simple statusline showing cursor position as `LINE:COL`.
