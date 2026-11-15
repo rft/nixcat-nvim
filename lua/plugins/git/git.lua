@@ -144,12 +144,14 @@ return {
         end,
         desc = '[G]it [b]lame line',
       },
+      -- Lives under the <leader>gd group next to the diffview maps; a bare
+      -- <leader>gd would have to wait out timeoutlen before firing.
       {
-        '<leader>gd',
+        '<leader>gdd',
         function()
           require('gitsigns').diffthis()
         end,
-        desc = '[G]it [d]iff against index',
+        desc = '[G]it [D]iff against in[d]ex',
       },
       {
         '<leader>gD',

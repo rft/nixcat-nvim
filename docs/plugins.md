@@ -181,7 +181,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `folke/flash.nvim`
 - **Purpose**: Fast jump/motion plugin with labels. Supports word jump, treesitter node jump, remote flash, and treesitter search.
 - **Config**: `lua/plugins/navigation/jump.lua`
-- **Keybinds**: `<leader>jw` (jump to word), `<leader>jt` (treesitter node), `<leader>jf` (jump to window), `<leader>jtf` (treesitter function/method), `<leader>jtc` (treesitter class/struct), `<leader>jtb` (treesitter loop/conditional), `<leader>jr` (remote flash, operator mode), `<leader>jR` (treesitter search), `<leader>jl` (jump to line).
+- **Keybinds**: `<leader>jw` (jump to word), `<leader>jtt` (treesitter node), `<leader>jf` (jump to window), `<leader>jtf` (treesitter function/method), `<leader>jtc` (treesitter class/struct), `<leader>jtb` (treesitter loop/conditional), `<leader>jr` (remote flash, operator mode), `<leader>jR` (treesitter search), `<leader>jl` (jump to line).
 - **Notes**: Flash char mode is disabled during vim-visual-multi sessions.
 
 ![flash.nvim jump labels (`<leader>jw`)](screenshots/flash.png)
@@ -295,7 +295,7 @@ This document lists every plugin used in the nixcat-nvim configuration, grouped 
 - **Plugin**: `lewis6991/gitsigns.nvim`
 - **Purpose**: Git change signs in the gutter, hunk operations, blame, and diff.
 - **Config**: `lua/plugins/git/git.lua`
-- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gu` (undo stage), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (toggle deleted).
+- **Keybinds**: `]c`/`[c` (next/prev hunk), `<leader>gs` (stage hunk), `<leader>gr` (reset hunk), `<leader>gS` (stage buffer), `<leader>gu` (undo stage), `<leader>gR` (reset buffer), `<leader>gp` (preview hunk), `<leader>gb` (blame line), `<leader>gdd` (diff index), `<leader>gD` (diff last commit), `<leader>gtb` (toggle line blame), `<leader>gtd` (toggle deleted).
 - **Category**: Requires `kickstart-gitsigns`.
 
 ### neojjit

@@ -320,7 +320,7 @@ Sources: `lua/plugins/git.lua`, `lua/plugins/snacks.lua`
 | n | `SPC gR` | Gitsigns reset_buffer | Reset entire buffer |
 | n | `SPC gp` | Gitsigns preview_hunk | Preview hunk |
 | n | `SPC gb` | Gitsigns blame_line | Blame current line |
-| n | `SPC gd` | Gitsigns diffthis | Diff against index |
+| n | `SPC gdd` | Gitsigns diffthis | Diff against index |
 | n | `SPC gD` | Gitsigns diffthis('@') | Diff against last commit |
 | n | `SPC gtb` | Gitsigns toggle_current_line_blame | Toggle line blame |
 | n | `SPC gtd` | Gitsigns toggle_deleted | Toggle deleted lines |
@@ -364,7 +364,7 @@ Sources: `lua/plugins/jump.lua`, `lua/plugins/illuminate.lua`
 | Mode | Key | Action | Description |
 |------|-----|--------|-------------|
 | n,x,o | `SPC jw` | flash.jump | Jump to word (flash labels) |
-| n,x,o | `SPC jt` | flash.treesitter | Jump to treesitter node |
+| n,x,o | `SPC jtt` | flash.treesitter | Jump to treesitter node |
 | n | `SPC jf` | vim.ui.select | Jump to another window (picker) |
 | n,x,o | `SPC jtf` | flash.treesitter | Jump to function/method |
 | n,x,o | `SPC jtc` | flash.treesitter | Jump to class/struct |
